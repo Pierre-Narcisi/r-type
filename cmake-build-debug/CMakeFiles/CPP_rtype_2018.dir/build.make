@@ -109,18 +109,18 @@ CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seb/CPP_rtype_2018/src/game_engine/sfml/Graphic.cpp -o CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.s
 
-CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o: CMakeFiles/CPP_rtype_2018.dir/flags.make
-CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o: ../src/game_engine/system/controll/Controls.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o -c /home/seb/CPP_rtype_2018/src/game_engine/system/controll/Controls.cpp
+CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o: CMakeFiles/CPP_rtype_2018.dir/flags.make
+CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o: ../src/game_engine/system/control/Controls.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o -c /home/seb/CPP_rtype_2018/src/game_engine/system/control/Controls.cpp
 
-CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/seb/CPP_rtype_2018/src/game_engine/system/controll/Controls.cpp > CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.i
+CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/seb/CPP_rtype_2018/src/game_engine/system/control/Controls.cpp > CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.i
 
-CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seb/CPP_rtype_2018/src/game_engine/system/controll/Controls.cpp -o CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.s
+CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/seb/CPP_rtype_2018/src/game_engine/system/control/Controls.cpp -o CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.s
 
 # Object files for target CPP_rtype_2018
 CPP_rtype_2018_OBJECTS = \
@@ -128,7 +128,7 @@ CPP_rtype_2018_OBJECTS = \
 "CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.o" \
 "CMakeFiles/CPP_rtype_2018.dir/src/game_engine/core/Time.cpp.o" \
 "CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.o" \
-"CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o"
+"CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o"
 
 # External object files for target CPP_rtype_2018
 CPP_rtype_2018_EXTERNAL_OBJECTS =
@@ -137,7 +137,7 @@ CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/src/game_engine/ecs/Entity.cpp.o
 CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.o
 CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/src/game_engine/core/Time.cpp.o
 CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.o
-CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o
+CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o
 CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/build.make
 CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable CPP_rtype_2018"

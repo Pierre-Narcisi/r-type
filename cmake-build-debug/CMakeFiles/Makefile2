@@ -65,39 +65,39 @@ CMAKE_SOURCE_DIR = /home/seb/CPP_rtype_2018
 CMAKE_BINARY_DIR = /home/seb/CPP_rtype_2018/cmake-build-debug
 
 #=============================================================================
-# Target rules for target CMakeFiles/CPP_rtype_2018.dir
+# Target rules for target CMakeFiles/rtype.dir
 
 # All Build rule for target.
-CMakeFiles/CPP_rtype_2018.dir/all:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/depend
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target CPP_rtype_2018"
-.PHONY : CMakeFiles/CPP_rtype_2018.dir/all
+CMakeFiles/rtype.dir/all:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/depend
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target rtype"
+.PHONY : CMakeFiles/rtype.dir/all
 
 # Include target in all.
-all: CMakeFiles/CPP_rtype_2018.dir/all
+all: CMakeFiles/rtype.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/CPP_rtype_2018.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles 6
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/CPP_rtype_2018.dir/all
+CMakeFiles/rtype.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles 7
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/rtype.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/CPP_rtype_2018.dir/rule
+.PHONY : CMakeFiles/rtype.dir/rule
 
 # Convenience name for target.
-CPP_rtype_2018: CMakeFiles/CPP_rtype_2018.dir/rule
+rtype: CMakeFiles/rtype.dir/rule
 
-.PHONY : CPP_rtype_2018
-
-# clean rule for target.
-CMakeFiles/CPP_rtype_2018.dir/clean:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/clean
-.PHONY : CMakeFiles/CPP_rtype_2018.dir/clean
+.PHONY : rtype
 
 # clean rule for target.
-clean: CMakeFiles/CPP_rtype_2018.dir/clean
+CMakeFiles/rtype.dir/clean:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/clean
+.PHONY : CMakeFiles/rtype.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/rtype.dir/clean
 
 .PHONY : clean
 

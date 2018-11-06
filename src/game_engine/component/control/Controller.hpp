@@ -12,10 +12,10 @@
 namespace ecs {namespace component {
 	struct Controller {
 		int 		id;
-		float		axeLX;
-		float		axeLY;
-		float		axeRX;
-		float		axeRY;
+		float		joystickLeft;
+		bool 		joystickLeftState;
+		float		joystickRight;
+		bool 		joystickRightState;
 		bool 		rightT;
 		bool 		rightB;
 		bool 		leftT;

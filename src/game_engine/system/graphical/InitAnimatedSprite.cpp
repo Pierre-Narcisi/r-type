@@ -32,9 +32,9 @@ namespace ecs{namespace system {
 			closedir(dir);
 			for (auto it = sorted.begin(); it != sorted.end(); it++) {
 				if (*it != path + "/." && *it != path + "/..") {
-					auto sprite = game::Game::get().getGraphicalLib()->createSprite(*it, pos, size, 1);
+					/*auto sprite = game::Game::get().getGraphicalLib()->createSprite(*it, pos, size, 1);
 					game::Game::get().getGraphicalLib()->setVisible(sprite, false);
-					anim.animation.push_back(sprite);
+					anim.animation.push_back(sprite);*/
 				}
 			}
 		} else {

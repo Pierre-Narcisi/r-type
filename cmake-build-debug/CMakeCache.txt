@@ -144,7 +144,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=CPP_rtype_2018
+CMAKE_PROJECT_NAME:STATIC=rtype
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -216,6 +216,12 @@ ProcessorCount_cmd_getconf:FILEPATH=/usr/bin/getconf
 
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/sbin/sysctl
+
+//Value Computed by CMake
+rtype_BINARY_DIR:STATIC=/home/seb/CPP_rtype_2018/cmake-build-debug
+
+//Value Computed by CMake
+rtype_SOURCE_DIR:STATIC=/home/seb/CPP_rtype_2018
 
 
 ########################

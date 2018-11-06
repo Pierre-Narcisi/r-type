@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/seb/CPP_rtype_2018/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/seb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4892.24/bin/cmake/linux/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/home/seb/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/182.4892.24/bin/cmake/linux/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,17 +111,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named CPP_rtype_2018
+# Target rules for targets named rtype
 
 # Build rule for target.
-CPP_rtype_2018: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 CPP_rtype_2018
-.PHONY : CPP_rtype_2018
+rtype: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rtype
+.PHONY : rtype
 
 # fast build rule for target.
-CPP_rtype_2018/fast:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/build
-.PHONY : CPP_rtype_2018/fast
+rtype/fast:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/build
+.PHONY : rtype/fast
+
+src/Main.o: src/Main.cpp.o
+
+.PHONY : src/Main.o
+
+# target to build an object file
+src/Main.cpp.o:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/Main.cpp.o
+.PHONY : src/Main.cpp.o
+
+src/Main.i: src/Main.cpp.i
+
+.PHONY : src/Main.i
+
+# target to preprocess a source file
+src/Main.cpp.i:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/Main.cpp.i
+.PHONY : src/Main.cpp.i
+
+src/Main.s: src/Main.cpp.s
+
+.PHONY : src/Main.s
+
+# target to generate assembly for a file
+src/Main.cpp.s:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/Main.cpp.s
+.PHONY : src/Main.cpp.s
 
 src/game_engine/core/Time.o: src/game_engine/core/Time.cpp.o
 
@@ -129,7 +156,7 @@ src/game_engine/core/Time.o: src/game_engine/core/Time.cpp.o
 
 # target to build an object file
 src/game_engine/core/Time.cpp.o:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/core/Time.cpp.o
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/core/Time.cpp.o
 .PHONY : src/game_engine/core/Time.cpp.o
 
 src/game_engine/core/Time.i: src/game_engine/core/Time.cpp.i
@@ -138,7 +165,7 @@ src/game_engine/core/Time.i: src/game_engine/core/Time.cpp.i
 
 # target to preprocess a source file
 src/game_engine/core/Time.cpp.i:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/core/Time.cpp.i
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/core/Time.cpp.i
 .PHONY : src/game_engine/core/Time.cpp.i
 
 src/game_engine/core/Time.s: src/game_engine/core/Time.cpp.s
@@ -147,7 +174,7 @@ src/game_engine/core/Time.s: src/game_engine/core/Time.cpp.s
 
 # target to generate assembly for a file
 src/game_engine/core/Time.cpp.s:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/core/Time.cpp.s
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/core/Time.cpp.s
 .PHONY : src/game_engine/core/Time.cpp.s
 
 src/game_engine/ecs/Entity.o: src/game_engine/ecs/Entity.cpp.o
@@ -156,7 +183,7 @@ src/game_engine/ecs/Entity.o: src/game_engine/ecs/Entity.cpp.o
 
 # target to build an object file
 src/game_engine/ecs/Entity.cpp.o:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/ecs/Entity.cpp.o
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/ecs/Entity.cpp.o
 .PHONY : src/game_engine/ecs/Entity.cpp.o
 
 src/game_engine/ecs/Entity.i: src/game_engine/ecs/Entity.cpp.i
@@ -165,7 +192,7 @@ src/game_engine/ecs/Entity.i: src/game_engine/ecs/Entity.cpp.i
 
 # target to preprocess a source file
 src/game_engine/ecs/Entity.cpp.i:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/ecs/Entity.cpp.i
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/ecs/Entity.cpp.i
 .PHONY : src/game_engine/ecs/Entity.cpp.i
 
 src/game_engine/ecs/Entity.s: src/game_engine/ecs/Entity.cpp.s
@@ -174,7 +201,7 @@ src/game_engine/ecs/Entity.s: src/game_engine/ecs/Entity.cpp.s
 
 # target to generate assembly for a file
 src/game_engine/ecs/Entity.cpp.s:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/ecs/Entity.cpp.s
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/ecs/Entity.cpp.s
 .PHONY : src/game_engine/ecs/Entity.cpp.s
 
 src/game_engine/sfml/Graphic.o: src/game_engine/sfml/Graphic.cpp.o
@@ -183,7 +210,7 @@ src/game_engine/sfml/Graphic.o: src/game_engine/sfml/Graphic.cpp.o
 
 # target to build an object file
 src/game_engine/sfml/Graphic.cpp.o:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.o
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/sfml/Graphic.cpp.o
 .PHONY : src/game_engine/sfml/Graphic.cpp.o
 
 src/game_engine/sfml/Graphic.i: src/game_engine/sfml/Graphic.cpp.i
@@ -192,7 +219,7 @@ src/game_engine/sfml/Graphic.i: src/game_engine/sfml/Graphic.cpp.i
 
 # target to preprocess a source file
 src/game_engine/sfml/Graphic.cpp.i:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.i
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/sfml/Graphic.cpp.i
 .PHONY : src/game_engine/sfml/Graphic.cpp.i
 
 src/game_engine/sfml/Graphic.s: src/game_engine/sfml/Graphic.cpp.s
@@ -201,35 +228,35 @@ src/game_engine/sfml/Graphic.s: src/game_engine/sfml/Graphic.cpp.s
 
 # target to generate assembly for a file
 src/game_engine/sfml/Graphic.cpp.s:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.s
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/sfml/Graphic.cpp.s
 .PHONY : src/game_engine/sfml/Graphic.cpp.s
 
-src/game_engine/system/controll/Controls.o: src/game_engine/system/controll/Controls.cpp.o
+src/game_engine/system/control/Controls.o: src/game_engine/system/control/Controls.cpp.o
 
-.PHONY : src/game_engine/system/controll/Controls.o
+.PHONY : src/game_engine/system/control/Controls.o
 
 # target to build an object file
-src/game_engine/system/controll/Controls.cpp.o:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o
-.PHONY : src/game_engine/system/controll/Controls.cpp.o
+src/game_engine/system/control/Controls.cpp.o:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/system/control/Controls.cpp.o
+.PHONY : src/game_engine/system/control/Controls.cpp.o
 
-src/game_engine/system/controll/Controls.i: src/game_engine/system/controll/Controls.cpp.i
+src/game_engine/system/control/Controls.i: src/game_engine/system/control/Controls.cpp.i
 
-.PHONY : src/game_engine/system/controll/Controls.i
+.PHONY : src/game_engine/system/control/Controls.i
 
 # target to preprocess a source file
-src/game_engine/system/controll/Controls.cpp.i:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.i
-.PHONY : src/game_engine/system/controll/Controls.cpp.i
+src/game_engine/system/control/Controls.cpp.i:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/system/control/Controls.cpp.i
+.PHONY : src/game_engine/system/control/Controls.cpp.i
 
-src/game_engine/system/controll/Controls.s: src/game_engine/system/controll/Controls.cpp.s
+src/game_engine/system/control/Controls.s: src/game_engine/system/control/Controls.cpp.s
 
-.PHONY : src/game_engine/system/controll/Controls.s
+.PHONY : src/game_engine/system/control/Controls.s
 
 # target to generate assembly for a file
-src/game_engine/system/controll/Controls.cpp.s:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.s
-.PHONY : src/game_engine/system/controll/Controls.cpp.s
+src/game_engine/system/control/Controls.cpp.s:
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/system/control/Controls.cpp.s
+.PHONY : src/game_engine/system/control/Controls.cpp.s
 
 src/game_engine/system/graphical/InitAnimatedSprite.o: src/game_engine/system/graphical/InitAnimatedSprite.cpp.o
 
@@ -237,7 +264,7 @@ src/game_engine/system/graphical/InitAnimatedSprite.o: src/game_engine/system/gr
 
 # target to build an object file
 src/game_engine/system/graphical/InitAnimatedSprite.cpp.o:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.o
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.o
 .PHONY : src/game_engine/system/graphical/InitAnimatedSprite.cpp.o
 
 src/game_engine/system/graphical/InitAnimatedSprite.i: src/game_engine/system/graphical/InitAnimatedSprite.cpp.i
@@ -246,7 +273,7 @@ src/game_engine/system/graphical/InitAnimatedSprite.i: src/game_engine/system/gr
 
 # target to preprocess a source file
 src/game_engine/system/graphical/InitAnimatedSprite.cpp.i:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.i
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.i
 .PHONY : src/game_engine/system/graphical/InitAnimatedSprite.cpp.i
 
 src/game_engine/system/graphical/InitAnimatedSprite.s: src/game_engine/system/graphical/InitAnimatedSprite.cpp.s
@@ -255,7 +282,7 @@ src/game_engine/system/graphical/InitAnimatedSprite.s: src/game_engine/system/gr
 
 # target to generate assembly for a file
 src/game_engine/system/graphical/InitAnimatedSprite.cpp.s:
-	$(MAKE) -f CMakeFiles/CPP_rtype_2018.dir/build.make CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.s
+	$(MAKE) -f CMakeFiles/rtype.dir/build.make CMakeFiles/rtype.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.s
 .PHONY : src/game_engine/system/graphical/InitAnimatedSprite.cpp.s
 
 # Help Target
@@ -264,9 +291,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... CPP_rtype_2018"
+	@echo "... rebuild_cache"
+	@echo "... rtype"
+	@echo "... src/Main.o"
+	@echo "... src/Main.i"
+	@echo "... src/Main.s"
 	@echo "... src/game_engine/core/Time.o"
 	@echo "... src/game_engine/core/Time.i"
 	@echo "... src/game_engine/core/Time.s"
@@ -276,9 +306,9 @@ help:
 	@echo "... src/game_engine/sfml/Graphic.o"
 	@echo "... src/game_engine/sfml/Graphic.i"
 	@echo "... src/game_engine/sfml/Graphic.s"
-	@echo "... src/game_engine/system/controll/Controls.o"
-	@echo "... src/game_engine/system/controll/Controls.i"
-	@echo "... src/game_engine/system/controll/Controls.s"
+	@echo "... src/game_engine/system/control/Controls.o"
+	@echo "... src/game_engine/system/control/Controls.i"
+	@echo "... src/game_engine/system/control/Controls.s"
 	@echo "... src/game_engine/system/graphical/InitAnimatedSprite.o"
 	@echo "... src/game_engine/system/graphical/InitAnimatedSprite.i"
 	@echo "... src/game_engine/system/graphical/InitAnimatedSprite.s"

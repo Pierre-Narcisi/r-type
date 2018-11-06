@@ -5,77 +5,121 @@
 ** Created by seb,
 */
 
-#include "Controls.hpp"
+#include <cmath>
 #include "component/control/Controller.hpp"
+#include "Controls.hpp"
+#include "ecs/Ecs.hpp"
 
 namespace ecs {namespace system {
 
-	void Controls::UpdateControllers(sf::event &event) {
-		auto &controllers = secs::Ecs::getConponentList<component::Controller>();
+	void Controls::UpdateControllers(sf::Event &event) {
+		auto &controllers = ecs::Ecs::getConponentList<component::Controller>().getComponentList();
 		const float DEAD_ZONE = 0.2f;
 
 		for (auto &controller : controllers) {
 
+			/// Buttons handle
+
+			controller.buttonA = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 0);
+			controller.buttonX = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 2);
+			controller.buttonY = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 3);
+			controller.buttonB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 1);
+
+			controller.select = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 6);
+			controller.start = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 7);
+			controller.menu = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 8);
+
+			controller.rightB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 5);
+			controller.leftB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 4);
+
+			controller.leftJoyB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 9);
+			controller.leftJoyB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 10);
+
 			/// LEFT ROTATION
 			float rotHorizontal =
-				event->controllers._controllers[in[id].controllerId].axeLX;
+				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::X) / 100.f;
 			if(fabs(rotHorizontal) < DEAD_ZONE)
 				rotHorizontal = 0.f;
 			float rotVertical =
-				event->controllers._controllers[in[id].controllerId].axeLY;
+				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::Y) / -100.f;
 			if(fabs(rotVertical) < DEAD_ZONE)
 				rotVertical = 0.f;
 
 			if (rotHorizontal == 0 && rotVertical == 0) {
-				in[id].moving = false;
-				in[id].deplacement = 90.f;
+				controller.joystickLeftState = false;
+				controller.joystickLeft = 90.f;
 			}
 			else {
-				in[id].moving = true;
+				controller.joystickLeftState = true;
 				float rot = static_cast<float>(atan(rotVertical/rotHorizontal) / M_PI * 180.0);
 				if (rotHorizontal > 0) {
 					if (rotVertical > 0)
-						in[id].deplacement = 360.f - rot;
+						controller.joystickLeft = 360.f - rot;
 					else
-						in[id].deplacement = -rot;
+						controller.joystickLeft = -rot;
 				} else {
-					in[id].deplacement = 180 - rot;
+					controller.joystickLeft = 180 - rot;
 				}
 				if (rotVertical == 1)
-					in[id].deplacement = 270;
+					controller.joystickLeft = 270;
 				else if (rotVertical == -1)
-					in[id].deplacement = 90;
+					controller.joystickLeft = 90;
 			}
 
 			/// RIGHT ROTATION
 			rotHorizontal =
-				event->controllers._controllers[in[id].controllerId].axeRX;
+				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::U) / 100.f;
 			if(fabs(rotHorizontal) < DEAD_ZONE)
 				rotHorizontal = 0.f;
 			rotVertical =
-				event->controllers._controllers[in[id].controllerId].axeRY;
+				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::V) / -100.f;
 			if(fabs(rotVertical) < DEAD_ZONE)
 				rotVertical = 0.f;
 
 			if (rotHorizontal == 0.f && rotVertical == 0.f) {
-				in[id].moving = false;
-				in[id].attack = 90.f;
+				controller.joystickRightState = false;
+				controller.joystickRight = 90.f;
 			} else {
-				in[id].moving = true;
+				controller.joystickRightState = true;
 				float rot = static_cast<float>(atan(rotVertical/rotHorizontal) / M_PI * 180.0);
 				if (rotHorizontal > 0) {
 					if (rotVertical > 0)
-						in[id].attack = 360.f - rot;
+						controller.joystickRight = 360.f - rot;
 					else
-						in[id].attack = -rot;
+						controller.joystickRight = -rot;
 				} else {
-					in[id].attack = 180 - rot;
+					controller.joystickRight = 180 - rot;
 				}
 				if (rotVertical == 1)
-					in[id].attack = 270;
+					controller.joystickRight = 270;
 				else if (rotVertical == -1)
-					in[id].attack = 90;
+					controller.joystickRight = 90;
 			}
 		}
 	}
+
+	void Controls::UpdateKeyboards(sf::Event &event) {
+		auto &keyboards = ecs::Ecs::getConponentList<component::Keyboard>().getComponentList();
+
+		for (auto &keyboard : keyboards) {
+			for (auto it = keyboard.keyMap.begin(); it != keyboard.keyMap.end(); it++) {
+				keyboard.keyMap[it->first] = sf::Keyboard::isKeyPressed(Controls::getKeyBoard()[it->first]);
+			}
+		}
+	}
+
+	void Controls::UpdateMouses(sf::Event &event) {
+		auto &mouses = ecs::Ecs::getConponentList<component::Mouse>().getComponentList();
+
+		for (auto &mouse : mouses) {
+			for (auto it = mouse.mouseMap.begin(); it != mouse.mouseMap.end(); it++) {
+				mouse.mouseMap[it->first] = sf::Mouse::isButtonPressed(Controls::getMouse()[it->first]);
+			}
+			if (event.type == sf::Event::EventType::MouseMoved) {
+				mouse.position.x = event.mouseMove.x;
+				mouse.position.y = event.mouseMove.y;
+			}
+		}
+	}
+
 }}

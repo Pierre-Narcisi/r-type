@@ -7,14 +7,13 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/seb/CPP_rtype_2018/src/game_engine/core/Time.cpp" "/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles/CPP_rtype_2018.dir/src/game_engine/core/Time.cpp.o"
   "/home/seb/CPP_rtype_2018/src/game_engine/ecs/Entity.cpp" "/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles/CPP_rtype_2018.dir/src/game_engine/ecs/Entity.cpp.o"
   "/home/seb/CPP_rtype_2018/src/game_engine/sfml/Graphic.cpp" "/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles/CPP_rtype_2018.dir/src/game_engine/sfml/Graphic.cpp.o"
-  "/home/seb/CPP_rtype_2018/src/game_engine/system/controll/Controls.cpp" "/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/controll/Controls.cpp.o"
+  "/home/seb/CPP_rtype_2018/src/game_engine/system/control/Controls.cpp" "/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/control/Controls.cpp.o"
   "/home/seb/CPP_rtype_2018/src/game_engine/system/graphical/InitAnimatedSprite.cpp" "/home/seb/CPP_rtype_2018/cmake-build-debug/CMakeFiles/CPP_rtype_2018.dir/src/game_engine/system/graphical/InitAnimatedSprite.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../src"
   "../src/game_engine"
   )
 

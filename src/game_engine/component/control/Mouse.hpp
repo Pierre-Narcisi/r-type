@@ -8,6 +8,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <core/CoreVector.hpp>
 
 enum class KeyMouse {
 	LCLICK,
@@ -17,6 +18,7 @@ enum class KeyMouse {
 
 namespace ecs {namespace component {
 	struct Mouse {
-		std::unordered_map<KeyMouse, bool> mouseMap;
+		std::unordered_map<KeyMouse, bool>	mouseMap;
+		core::Vector2<int>			position;
 	};
 }}
