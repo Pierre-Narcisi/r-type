@@ -29,32 +29,32 @@ namespace ecs{
         }
 
         template<typename T, typename ...Args>
-        void addComponent(ID id, Args... args){
-            _deleteIds[id][std::string(typeid(T).name())] = hidden::ListComponent<T>::get().addComponent(id, args...);
+        static void addComponent(ID id, Args... args){
+            get()._deleteIds[id][std::string(typeid(T).name())] = hidden::ListComponent<T>::get().addComponent(id, args...);
         }
 
         template <typename T>
-        std::vector<T> &getComponentMap(){
+        static std::vector<T> &getComponentMap(){
             return hidden::ListComponent<T>::get().getComponentList();
         }
 
-        void deleteId(ID id) {
-            for (auto mapdel = _deleteIds[id].begin(); mapdel != _deleteIds[id].end(); mapdel++) {
+        static void deleteId(ID id) {
+            for (auto mapdel = get()._deleteIds[id].begin(); mapdel != get()._deleteIds[id].end(); mapdel++) {
             	mapdel->second();
             }
-            _deleteIds[id].clear();
+            get()._deleteIds[id].clear();
         }
 
         template <typename T>
-        void deleteComponentforId(ID id) {
-		_deleteIds[id][std::string(typeid(T).name())]();
-		_deleteIds[id].erase(std::string(typeid(T).name()));
+        static void deleteComponentforId(ID id) {
+		get()._deleteIds[id][std::string(typeid(T).name())]();
+		get()._deleteIds[id].erase(std::string(typeid(T).name()));
         }
 
         template <typename ...Args>
-        std::vector<ID> filter() {
+        static std::vector<ID> filter() {
         	std::vector<ID> valableId;
-		for (auto it = _deleteIds.begin(); it != _deleteIds.end(); ++it)
+		for (auto it = get()._deleteIds.begin(); it != get()._deleteIds.end(); ++it)
 		{
         		if (idHasComponents<Args...>(it->first))
 				valableId.emplace_back(it->first);
@@ -63,7 +63,7 @@ namespace ecs{
         }
 
 	template <typename ...Args>
-	bool idHasComponents(ID id) {
+	static bool idHasComponents(ID id) {
 	    isIn<Args...> isin;
 	    return (isin(id));
 	}

@@ -38,11 +38,11 @@ namespace ecs {namespace system {
 			/// LEFT ROTATION
 			float rotHorizontal =
 				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::X) / 100.f;
-			if(fabs(rotHorizontal) < DEAD_ZONE)
+			if((rotHorizontal < 0 ? -rotHorizontal : rotHorizontal) < DEAD_ZONE)
 				rotHorizontal = 0.f;
 			float rotVertical =
 				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::Y) / -100.f;
-			if(fabs(rotVertical) < DEAD_ZONE)
+			if((rotVertical < 0 ? -rotVertical : rotVertical) < DEAD_ZONE)
 				rotVertical = 0.f;
 
 			if (rotHorizontal == 0 && rotVertical == 0) {
@@ -69,11 +69,11 @@ namespace ecs {namespace system {
 			/// RIGHT ROTATION
 			rotHorizontal =
 				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::U) / 100.f;
-			if(fabs(rotHorizontal) < DEAD_ZONE)
+			if((rotHorizontal < 0 ? -rotHorizontal : rotHorizontal) < DEAD_ZONE)
 				rotHorizontal = 0.f;
 			rotVertical =
 				sf::Joystick::getAxisPosition(event.joystickButton.joystickId, sf::Joystick::Axis::V) / -100.f;
-			if(fabs(rotVertical) < DEAD_ZONE)
+			if((rotVertical < 0 ? -rotVertical : rotVertical) < DEAD_ZONE)
 				rotVertical = 0.f;
 
 			if (rotHorizontal == 0.f && rotVertical == 0.f) {
@@ -103,7 +103,8 @@ namespace ecs {namespace system {
 
 		for (auto &keyboard : keyboards) {
 			for (auto it = keyboard.keyMap.begin(); it != keyboard.keyMap.end(); it++) {
-				keyboard.keyMap[it->first] = sf::Keyboard::isKeyPressed(Controls::getKeyBoard()[it->first]);
+				if (sf::Keyboard::isKeyPressed(Controls::getKeyBoard()[it->first]))
+					keyboard.keyMap[it->first]();
 			}
 		}
 	}
@@ -113,7 +114,9 @@ namespace ecs {namespace system {
 
 		for (auto &mouse : mouses) {
 			for (auto it = mouse.mouseMap.begin(); it != mouse.mouseMap.end(); it++) {
-				mouse.mouseMap[it->first] = sf::Mouse::isButtonPressed(Controls::getMouse()[it->first]);
+				if (sf::Mouse::isButtonPressed(
+					Controls::getMouse()[it->first]))
+					mouse.mouseMap[it->first]();
 			}
 			if (event.type == sf::Event::EventType::MouseMoved) {
 				mouse.position.x = event.mouseMove.x;

@@ -11,6 +11,7 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 #include "core/CoreVector.hpp"
+#include "system/control/Controls.hpp"
 
 namespace ecs {namespace graphical {
 		class Graphic {
@@ -65,6 +66,7 @@ namespace ecs {namespace graphical {
 
 			static Graphic &get();
 			void update();
+			bool isOpen();
 
 			unsigned long createSprite(std::string path);
 
@@ -72,14 +74,15 @@ namespace ecs {namespace graphical {
 			core::Vector2<unsigned int> getTextureSize(std::string path);
 
 		private:
-			sf::Window *_window;
+			sf::RenderWindow	*_window;
+			sf::Event		_event;
 			std::vector<unsigned int> _controllers;
 
 			unsigned long _lastId;
-			std::unordered_map<unsigned long, Sprite> _spriteMap;
-			std::unordered_map<unsigned long, Text> _TextMap;
-			std::unordered_map<unsigned long, Music> _musicMap;
-			std::unordered_map<unsigned long, Sound> _soundMap;
+			std::unordered_map<unsigned long, Sprite>	_spriteMap;
+			std::unordered_map<unsigned long, Text>		_TextMap;
+			std::unordered_map<unsigned long, Music>	_musicMap;
+			std::unordered_map<unsigned long, Sound>	_soundMap;
 
 			std::unordered_map<unsigned int, std::vector<unsigned long>> _layers;
 			std::vector<unsigned long> _collidables;

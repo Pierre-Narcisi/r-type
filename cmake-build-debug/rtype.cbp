@@ -104,6 +104,9 @@
 		<Unit filename="/home/seb/CPP_rtype_2018/src/game_engine/component/graphical/AnimatedSpriteMap.hpp">
 			<Option target="rtype"/>
 		</Unit>
+		<Unit filename="/home/seb/CPP_rtype_2018/src/game_engine/component/graphical/Sprite.hpp">
+			<Option target="rtype"/>
+		</Unit>
 		<Unit filename="/home/seb/CPP_rtype_2018/src/game_engine/core/CoreVector.hpp">
 			<Option target="rtype"/>
 		</Unit>

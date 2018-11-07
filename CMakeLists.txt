@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 project(rtype)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -23,7 +23,7 @@ add_executable(rtype
 	src/game_engine/component/control/Mouse.hpp
 	src/game_engine/component/control/Controller.hpp
 	src/game_engine/system/control/Controls.hpp
-	src/game_engine/system/control/Controls.cpp src/Main.cpp)
+	src/game_engine/system/control/Controls.cpp src/Main.cpp src/game_engine/component/graphical/Sprite.hpp)
 
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-window.so)
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-graphics.so)

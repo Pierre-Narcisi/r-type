@@ -8,6 +8,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <functional>
 
 enum class KeyKeyboard {
 	KEY_A,
@@ -73,6 +74,6 @@ enum class KeyKeyboard {
 
 namespace ecs {namespace component {
 	struct Keyboard {
-		std::unordered_map<KeyKeyboard, bool> keyMap;
+		std::unordered_map<KeyKeyboard, std::function<void()>> keyMap;
 	};
 }}

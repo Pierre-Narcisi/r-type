@@ -10,7 +10,7 @@
 namespace ecs {namespace core {
 	template <typename T>
 	struct Vector2 {
-		Vector2();
+		Vector2() {}
 		Vector2(T x, T y) {
 			this->x = x;
 			this->y = y;
@@ -21,7 +21,7 @@ namespace ecs {namespace core {
 
 	template <typename T>
 	struct Vector3 {
-		Vector3();
+		Vector3() {}
 		Vector3(T x, T y, T z) {
 			this->x = x;
 			this->y = y;
@@ -34,7 +34,7 @@ namespace ecs {namespace core {
 
 	template <typename T>
 	struct Vector4 {
-		Vector4();
+		Vector4() {}
 		Vector4(T xa, T ya, T xb, T yb) {
 			this->xa = xa;
 			this->ya = ya;

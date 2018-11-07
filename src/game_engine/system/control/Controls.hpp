@@ -14,7 +14,7 @@
 
 namespace ecs {namespace system {
 	class Controls {
-
+	public:
 		Controls() {
 			this->mapMouseKeys = {
 				{KeyMouse::LCLICK, sf::Mouse::Left},
