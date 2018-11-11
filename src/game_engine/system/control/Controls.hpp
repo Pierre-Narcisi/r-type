@@ -102,6 +102,7 @@ namespace ecs {namespace system {
 		static void UpdateControllers(sf::Event &event);
 		static void UpdateKeyboards(sf::Event &event);
 		static void UpdateMouses(sf::Event &event);
+		static void UpdateDeplacement();
 
 	private:
 		std::unordered_map<KeyKeyboard, sf::Keyboard::Key>	mapKeyboardKeys;

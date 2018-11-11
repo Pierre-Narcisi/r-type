@@ -17,6 +17,12 @@ namespace ecs {namespace core {
 		}
 		T x;
 		T y;
+
+		Vector2<T> &operator=(Vector2<T> const &equal) {
+			this->x = equal.x;
+			this->y = equal.y;
+			return *this;
+		}
 	};
 
 	template <typename T>
@@ -30,6 +36,13 @@ namespace ecs {namespace core {
 		T x;
 		T y;
 		T z;
+
+		Vector3<T> &operator=(Vector3<T> const &equal) {
+			this->x = equal.x;
+			this->y = equal.y;
+			this->z = equal.z;
+			return *this;
+		}
 	};
 
 	template <typename T>
@@ -45,5 +58,13 @@ namespace ecs {namespace core {
 		T ya;
 		T xb;
 		T yb;
+
+		Vector4<T> &operator=(Vector4<T> const &equal) {
+			this->xa = equal.xa;
+			this->ya = equal.ya;
+			this->xb = equal.xb;
+			this->yb = equal.yb;
+			return *this;
+		}
 	};
 }}

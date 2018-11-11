@@ -35,6 +35,17 @@ namespace hidden {
             });
         }
 
+        std::vector<ID> getIdForComponent(std::function<bool(T&)> function) {
+        	std::vector<ID> ids;
+		auto id = _ids.begin();
+
+        	for (auto component = _component.begin(); component != _component.end(); component++, id++) {
+        		if (function(*component))
+        			ids.push_back(*id);
+        	}
+		return ids;
+        }
+
         std::vector<T> &getComponentList() {
             return _component;
         }

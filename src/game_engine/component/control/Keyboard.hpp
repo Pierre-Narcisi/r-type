@@ -9,6 +9,7 @@
 
 #include <unordered_map>
 #include <functional>
+#include "ecs/Entity.hpp"
 
 enum class KeyKeyboard {
 	KEY_A,
@@ -74,6 +75,6 @@ enum class KeyKeyboard {
 
 namespace ecs {namespace component {
 	struct Keyboard {
-		std::unordered_map<KeyKeyboard, std::function<void()>> keyMap;
+		std::unordered_map<KeyKeyboard, std::pair<bool, std::function<void(ID)>>> keyMap;
 	};
 }}

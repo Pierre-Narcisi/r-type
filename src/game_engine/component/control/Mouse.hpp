@@ -19,7 +19,7 @@ enum class KeyMouse {
 
 namespace ecs {namespace component {
 	struct Mouse {
-		std::unordered_map<KeyMouse, std::function<void()>>	mouseMap;
+		std::unordered_map<KeyMouse, std::pair<bool, std::function<void()>>>	mouseMap;
 		core::Vector2<int>			position;
 	};
 }}

@@ -67,14 +67,22 @@ namespace ecs {namespace graphical {
 			static Graphic &get();
 			void update();
 			bool isOpen();
-
-			unsigned long createSprite(std::string path);
+			static sf::RenderWindow *getWindow() {
+				return (get()._window);
+			}
 
 			/// Tools
-			core::Vector2<unsigned int> getTextureSize(std::string path);
+			static core::Vector2<unsigned int> getTextureSize(std::string path) {
+				sf::Texture tmp;
 
-		private:
+				if (!tmp.loadFromFile(path))
+					return core::Vector2<unsigned int>();
+				auto size = tmp.getSize();
+				return core::Vector2<unsigned int>(size.x, size.y);
+			}
+
 			sf::RenderWindow	*_window;
+		private:
 			sf::Event		_event;
 			std::vector<unsigned int> _controllers;
 
@@ -84,7 +92,7 @@ namespace ecs {namespace graphical {
 			std::unordered_map<unsigned long, Music>	_musicMap;
 			std::unordered_map<unsigned long, Sound>	_soundMap;
 
-			std::unordered_map<unsigned int, std::vector<unsigned long>> _layers;
+			static std::unordered_map<unsigned int, std::vector<unsigned long>> _layers;
 			std::vector<unsigned long> _collidables;
 		};
 }}

@@ -5,6 +5,7 @@
 ** Created by seb,
 */
 
+#include <system/graphical/Sprites.hpp>
 #include "Graphic.hpp"
 
 namespace ecs {namespace graphical {
@@ -33,11 +34,7 @@ namespace ecs {namespace graphical {
 			}
 		}
 
-		for (auto it = _spriteMap.begin(); it != _spriteMap.end(); it++) {
-			if (it->second.visible) {
-				_window->draw(*it->second.sprite);
-			}
-		}
+		ecs::system::Sprites::UpdateSprites();
 
 		_window->display();
 		_window->clear(sf::Color::Black);
@@ -45,33 +42,5 @@ namespace ecs {namespace graphical {
 
 	bool Graphic::isOpen() {
 		return _window->isOpen();
-	}
-
-	unsigned long Graphic::createSprite(std::string path) {
-		unsigned long id = _lastId;
-		_spriteMap[id].texture = new sf::Texture();
-
-		if (!_spriteMap[id].texture->loadFromFile(path)) {
-			_spriteMap.erase(id);
-			return 0;
-		}
-		_lastId++;
-		_spriteMap[id].sprite = new sf::Sprite(*_spriteMap[id].texture);
-		_spriteMap[id].size = getTextureSize(path);
-		_spriteMap[id].sprite->setOrigin(_spriteMap[id].size.x / 2, _spriteMap[id].size.y / 2);
-		_spriteMap[id].sprite->setPosition(_spriteMap[id].size.x / 2, _spriteMap[id].size.y / 2);
-		_spriteMap[id].pos = core::Vector2<float>(0,0);
-		_spriteMap[id].visible = true;
-		_layers[1].push_back(id);
-		return (id);
-	}
-
-	core::Vector2<unsigned int> Graphic::getTextureSize(std::string path) {
-		sf::Texture tmp;
-
-		if (!tmp.loadFromFile(path))
-			return core::Vector2<unsigned int>();
-		auto size = tmp.getSize();
-		return core::Vector2<unsigned int>(size.x, size.y);
 	}
 }}

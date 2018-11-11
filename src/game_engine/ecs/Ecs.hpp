@@ -24,7 +24,7 @@ namespace ecs{
         }
 
         template <typename T>
-        static hidden::ListComponent<T> &getConponentList() {
+        static hidden::ListComponent<T> &getConponentMap() {
 		return hidden::ListComponent<T>::get();
         }
 
@@ -34,7 +34,7 @@ namespace ecs{
         }
 
         template <typename T>
-        static std::vector<T> &getComponentMap(){
+        static std::vector<T> &getComponentList(){
             return hidden::ListComponent<T>::get().getComponentList();
         }
 
