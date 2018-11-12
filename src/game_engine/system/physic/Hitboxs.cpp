@@ -19,16 +19,20 @@ namespace ecs {namespace system {
 		for (auto id : ids) {
 			auto &pos1 = poss[id];
 			auto &box1 = hitboxs[id];
-			for (auto od: ids) {
-				auto &pos2 = poss[od];
-				auto &box2 = hitboxs[od];
+			if (box1.func) {
+				for (auto od: ids) {
+					if (od != id) {
+						auto &pos2 = poss[od];
+						auto &box2 = hitboxs[od];
 
-				if (((pos2.x - box2.width/2 > pos1.x - box1.width/2 && pos2.x - box2.width/2 < pos1.x + box1.width/2) ||
-					(pos2.x + box2.width/2 > pos1.x - box1.width/2 && pos2.x + box2.width/2 < pos1.x + box1.width/2)) &&
-						((pos2.y - box2.height/2 > pos1.y - box1.height/2 && pos2.y - box2.height/2 < pos1.y + box1.height/2) ||
-						 	(pos2.y + box2.height/2 > pos1.y - box1.height/2 && pos2.y + box2.height/2 < pos1.y + box1.height/2)))
-					if (box1.func)
-						box1.func(id, od);
+						if (box1.func && !((pos2.x >= pos1.x + box1.width / 2)
+						      || (pos2.x + box2.width <= pos1.x)
+						      || (pos2.y >= pos1.y + box1.height / 2)
+						      || (pos2.y + box2.height / 2 <= pos1.y)))
+							box1.func(id, od);
+					}
+
+				}
 			}
 		}
 	}

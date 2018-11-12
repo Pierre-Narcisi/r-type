@@ -17,6 +17,13 @@ namespace ecs {namespace component {
 			layer = 0;
 			visible = false;
 		}
+		Sprite(sf::Sprite *sprite, std::string path) {
+			this->sprite = sprite;
+			this->size = graphical::Graphic::getTextureSize(path);
+			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
+			this->layer = 1;
+			this->visible = true;
+		}
 		Sprite(std::string path) {
 			this->texture = new sf::Texture();
 
@@ -24,13 +31,13 @@ namespace ecs {namespace component {
 				std::cout << "src/game_engine/component/grapicalSprite: Could not load texture " << path << std::endl;
 				exit(84);
 			}
-			this->sprite =  sf::Sprite(*this->texture);
+			this->sprite = new sf::Sprite(*this->texture);
 			this->size = graphical::Graphic::getTextureSize(path);
-			this->sprite.setOrigin(this->size.x / 2, this->size.y / 2);
+			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
 			this->layer = 1;
 			this->visible = true;
 		}
-		sf::Sprite				sprite;
+		sf::Sprite				*sprite;
 		sf::Texture				*texture;
 		ecs::core::Vector2<unsigned int>	size;
 		unsigned int				layer;

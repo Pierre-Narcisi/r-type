@@ -28,8 +28,8 @@ namespace ecs {namespace system {
 				Ecs::getConponentMap<component::Sprite>()[two].layer); });
 
 		for (auto id : ids) {
-			sprites[id].sprite.setPosition(positions[id].x, positions[id].y);
-			window->draw(sprites[id].sprite);
+			sprites[id].sprite->setPosition(positions[id].x, positions[id].y);
+			window->draw(*sprites[id].sprite);
 		}
 	}
 }}

@@ -28,7 +28,7 @@ add_executable(rtype
 	src/game_engine/component/control/Controller.hpp
 	src/game_engine/system/control/Controls.hpp
 	src/game_engine/system/control/Controls.cpp src/Main.cpp
-	src/game_engine/component/graphical/Sprite.hpp src/game_engine/system/graphical/Sprites.cpp src/game_engine/system/graphical/Sprites.hpp src/game_engine/component/physic/Position.hpp src/game_engine/component/control/DeplacementKeyBoard.hpp src/game_engine/component/physic/Speed.hpp src/game_engine/component/physic/Acceleration.hpp src/game_engine/system/physic/Speeds.cpp src/game_engine/system/physic/Speeds.hpp src/game_engine/system/physic/Acceleration.cpp src/game_engine/system/physic/Acceleration.hpp src/game_engine/component/physic/Hitbox.hpp src/game_engine/system/physic/Hitboxs.cpp src/game_engine/system/physic/Hitboxs.hpp src/game_engine/component/graphical/PrechargedSprite.hpp)
+	src/game_engine/component/graphical/Sprite.hpp src/game_engine/system/graphical/Sprites.cpp src/game_engine/system/graphical/Sprites.hpp src/game_engine/component/physic/Position.hpp src/game_engine/component/control/DeplacementKeyBoard.hpp src/game_engine/component/physic/Speed.hpp src/game_engine/component/physic/Acceleration.hpp src/game_engine/system/physic/Speeds.cpp src/game_engine/system/physic/Speeds.hpp src/game_engine/system/physic/Acceleration.cpp src/game_engine/system/physic/Acceleration.hpp src/game_engine/component/physic/Hitbox.hpp src/game_engine/system/physic/Hitboxs.cpp src/game_engine/system/physic/Hitboxs.hpp)
 
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-window.so)
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-graphics.so)
