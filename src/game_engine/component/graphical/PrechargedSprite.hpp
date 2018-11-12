@@ -9,6 +9,6 @@
 
 namespace ecs {namespace component {
 	struct PrechargedSprite() {
-		
+
 	}
 }}
