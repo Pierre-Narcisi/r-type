@@ -38,7 +38,7 @@ int main() {
 		ecs::Ecs::addComponent<ecs::component::Position>(id,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
-		ecs::Ecs::addComponent<ecs::component::Speed>(id, 1.f, 1.f);
+		ecs::Ecs::addComponent<ecs::component::Speed>(id, 10.f, 10.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, [](ID self, ID other){
 			ecs::Ecs::deleteId(other);
 			(void) self;
