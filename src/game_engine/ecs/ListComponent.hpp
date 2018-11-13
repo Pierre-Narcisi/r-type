@@ -22,8 +22,8 @@ namespace hidden {
 
         template <typename ...Args>
         std::function<void()> addComponent(ID id, Args... args) {
-            _ids.emplace_back(id);
-            _component.push_back(T(args...));
+            _ids.push_back(id);
+            _component.emplace_back(args...);
             return ([id, this](){
                 auto ids = this->_ids.begin();
                 auto cpnts = this->_component.begin();

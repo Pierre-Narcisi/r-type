@@ -16,7 +16,6 @@
 #include <component/physic/Speed.hpp>
 #include <system/physic/Speeds.hpp>
 #include <component/physic/Hitbox.hpp>
-#include <system/physic/Hitboxs.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
@@ -26,9 +25,11 @@ int main() {
 
 	ID id = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 0.f, 0.f);
+	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
 	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
-	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id);
+	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id, 300.f);
 	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::LEFT_ARROW]
 	= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
 		ID id = ecs::entity::Entity::getId();
@@ -39,7 +40,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, -10.f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, [](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
 			ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -55,7 +56,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, -10.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, [](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
 			ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -71,7 +72,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 10.f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, [](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
 			ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -87,7 +88,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 10.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, [](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
 			ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -97,7 +98,7 @@ int main() {
 	id = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 500.f, 500.f);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
 
 
 	while (rtype.isOpen()) {
@@ -106,11 +107,6 @@ int main() {
 
 		ecs::system::Controls::UpdateDeplacement();
 		ecs::system::Speeds::UpdateSpeeds();
-		ecs::system::Hitboxs::UpdateHitboxs();
-
-		std::cout << "nb sprites " << hidden::ListComponent<ecs::component::Sprite>::get().getIdsList().size() << std::endl;
-
-		std::cout << "loop " << (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) * 100 / 16666 << "%\t" << ecs::core::Time::get(TimeUnit::MicroSeconds) - time << std::endl;
 
 		usleep(static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0));
 	}

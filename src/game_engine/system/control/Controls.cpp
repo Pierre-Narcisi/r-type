@@ -8,6 +8,7 @@
 #include <cmath>
 #include <component/control/DeplacementKeyBoard.hpp>
 #include <component/physic/Position.hpp>
+#include <component/physic/Speed.hpp>
 #include "component/control/Controller.hpp"
 #include "Controls.hpp"
 #include "ecs/Ecs.hpp"
@@ -137,7 +138,7 @@ namespace ecs {namespace system {
 	}
 
 	void Controls::UpdateDeplacement() {
-		auto deplacements = ecs::Ecs::filter<component::Keyboard, component::DeplacementKeyBoard, component::Position>();
+		auto deplacements = ecs::Ecs::filter<component::Keyboard, component::DeplacementKeyBoard, component::Speed>();
 		float time;
 
 		for (auto tomove : deplacements) {
@@ -167,12 +168,12 @@ namespace ecs {namespace system {
 				deplacement.x = -(dep.speed * 0.7071);
 			}
 			if (keyB.keyMap[dep.backward].first && keyB.keyMap[dep.right].first) {
-				deplacement.y = 70.71;
-				deplacement.x = 70.71;
+				deplacement.y = (dep.speed * 0.7071);
+				deplacement.x = (dep.speed * 0.7071);
 			}
 			time = static_cast<float>(ecs::core::Time::get(TimeUnit::MicroSeconds) - dep.lastMove);
-			ecs::Ecs::getConponentMap<component::Position>()[tomove].x += time / 1000000.f * deplacement.x;
-			ecs::Ecs::getConponentMap<component::Position>()[tomove].y += time / 1000000.f * deplacement.y;
+			ecs::Ecs::getConponentMap<component::Speed>()[tomove].x = time / 1000000.f * deplacement.x;
+			ecs::Ecs::getConponentMap<component::Speed>()[tomove].y = time / 1000000.f * deplacement.y;
 			dep.lastMove = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		}
 	}

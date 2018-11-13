@@ -21,5 +21,10 @@ namespace ecs {namespace component {
 		}
 		float x;
 		float y;
+		Position &operator=(Position const &equal) {
+			this->x = equal.x;
+			this->y = equal.y;
+			return *this;
+		}
 	};
 }}
