@@ -10,12 +10,13 @@
 #include <ecs/Entity.hpp>
 #include <ecs/Ecs.hpp>
 #include <component/graphical/Sprite.hpp>
-#include <system/graphical/Sprites.hpp>
+#include <system/graphical/Graphicals.hpp>
 #include <component/physic/Position.hpp>
 #include <component/control/DeplacementKeyBoard.hpp>
 #include <component/physic/Speed.hpp>
 #include <system/physic/Speeds.hpp>
 #include <component/physic/Hitbox.hpp>
+#include <component/graphical/AnimatedSprite.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
@@ -96,9 +97,10 @@ int main() {
 	});
 
 	id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
+	//ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 500.f, 500.f);
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
+	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(id, "./assets", 4);
 
 
 	while (rtype.isOpen()) {

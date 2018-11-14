@@ -5,7 +5,7 @@
 ** Created by seb,
 */
 
-#include <system/graphical/Sprites.hpp>
+#include <system/graphical/Graphicals.hpp>
 #include "Graphic.hpp"
 
 namespace ecs {namespace graphical {
@@ -34,7 +34,7 @@ namespace ecs {namespace graphical {
 			}
 		}
 
-		ecs::system::Sprites::UpdateSprites();
+		ecs::system::Graphicals::UpdateGraphicals();
 
 		_window->display();
 		_window->clear(sf::Color::Black);

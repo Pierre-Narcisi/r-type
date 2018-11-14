@@ -42,6 +42,7 @@ namespace ecs {namespace component {
 			this->texture = new sf::Texture();
 
 			if (!this->texture->loadFromFile(path)) {
+				std::cout << "src/game_engine/component/graphical/Sprite: Couldn't load texture " << path << std::endl;
 				exit(84);
 			}
 			this->sprite = new sf::Sprite(*this->texture);
@@ -49,6 +50,20 @@ namespace ecs {namespace component {
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
 			this->layer = 1;
 			this->visible = true;
+			this->shared = false;
+		}
+		Sprite(std::string path, bool visible) {
+			this->texture = new sf::Texture();
+
+			if (!this->texture->loadFromFile(path)) {
+				std::cout << "src/game_engine/component/graphical/Sprite: Couldn't load texture " << path << std::endl;
+				exit(84);
+			}
+			this->sprite = new sf::Sprite(*this->texture);
+			this->size = graphical::Graphic::getTextureSize(path);
+			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
+			this->layer = 1;
+			this->visible = visible;
 			this->shared = false;
 		}
 		~Sprite() {
