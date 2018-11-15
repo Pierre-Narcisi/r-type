@@ -17,6 +17,7 @@
 #include <system/physic/Speeds.hpp>
 #include <component/physic/Hitbox.hpp>
 #include <component/graphical/AnimatedSprite.hpp>
+#include <component/graphical/Drawable.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
@@ -24,7 +25,21 @@
 int main() {
 	auto &rtype = ecs::graphical::Graphic::get();
 
+	ID banane = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(banane, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Position>(banane, 0.f, 0.f);
+	ecs::Ecs::addComponent<ecs::component::Speed>(banane, 0, 12);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(banane, "./assets/Isaac.png");
+
+	ID loick = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(loick, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Position>(loick, 0.f, 0.f);
+	ecs::Ecs::addComponent<ecs::component::Speed>(loick, 12, 0);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(loick, "./assets/Bullet.png", true, 2);
+
+
 	ID id = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
 	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 0.f, 0.f);
@@ -97,7 +112,8 @@ int main() {
 	});
 
 	id = ecs::entity::Entity::getId();
-	//ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Bullet.png");
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 500.f, 500.f);
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
 	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(id, "./assets", 4);

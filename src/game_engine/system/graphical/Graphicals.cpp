@@ -5,6 +5,8 @@
 ** Created by seb,
 */
 
+#include <component/graphical/AnimatedSpriteMap.hpp>
+#include <component/graphical/Drawable.hpp>
 #include "component/graphical/Sprite.hpp"
 #include "component/physic/Position.hpp"
 #include "ecs/Ecs.hpp"
@@ -13,62 +15,41 @@
 
 namespace ecs {namespace system {
 	void Graphicals::UpdateGraphicals() {
-		auto ids = Ecs::filter<component::Position, component::Sprite>();
-		auto animatedIds = Ecs::filter<component::AnimatedSprite, component::Position>();
+		auto drawableIds = Ecs::filter<ecs::component::Drawable, ecs::component::Position>();
 
+		auto &drawables = Ecs::getConponentMap<component::Drawable>();
 		auto &sprites = Ecs::getConponentMap<component::Sprite>();
 		auto &positions = Ecs::getConponentMap<component::Position>();
 		auto &animateds = Ecs::getConponentMap<component::AnimatedSprite>();
+		auto &animatedmaps = Ecs::getConponentMap<component::AnimatedSpriteMap>();
 
 		auto window = graphical::Graphic::getWindow();
 
-		for (auto id = ids.begin(); id != ids.end(); id++) {
-			if (!sprites[*id].visible) {
-				ids.erase(id);
-				if (id != ids.begin())
+		for (auto id = drawableIds.begin(); id != drawableIds.end(); id++) {
+			if (!drawables[*id].visible) {
+				drawableIds.erase(id);
+				if (id != drawableIds.begin())
 					id--;
 			}
 		}
-		for (auto id = animatedIds.begin(); id != animatedIds.end(); id++) {
-			if (!animateds[*id].visible) {
-				ids.erase(id);
-				if (id != ids.begin())
-					id--;
+		std::sort (drawableIds.begin(), drawableIds.end(), [](ID one, ID two){ return (
+			Ecs::getConponentMap<component::Drawable>()[one].layer <
+				Ecs::getConponentMap<component::Drawable>()[two].layer); });
+
+		for (auto id : drawableIds) {
+			if (Ecs::idHasComponents<component::Sprite>(id)) {
+				sprites[id].sprite->setPosition(positions[id].x, positions[id].y);
+				window->draw(*sprites[id].sprite);
 			}
-		}
-
-		std::sort (ids.begin(), ids.end(), [](ID one, ID two){ return (
-			Ecs::getConponentMap<component::Sprite>()[one].layer <
-				Ecs::getConponentMap<component::Sprite>()[two].layer); });
-
-		std::sort (ids.begin(), ids.end(), [](ID one, ID two){ return (
-			Ecs::getConponentMap<component::AnimatedSprite>()[one].layer <
-			Ecs::getConponentMap<component::AnimatedSprite>()[two].layer); });
-
-		auto sprite = ids.begin();
-		auto animated = animatedIds.begin();
-		while (sprite != ids.end() || animated != animatedIds.end()) {
-			if (animated != animatedIds.end() && sprite != ids.end() && sprites[*sprite].layer > animateds[*animated].layer) {
-				UpdateAnimatedSprite(animateds[*animated]);
-				animateds[*animated].animation[animateds[*animated].frame].sprite->setPosition(positions[*animated].x, positions[*animated].y);
-				window->draw(*animateds[*animated].animation[animateds[*animated].frame].sprite);
-				animated++;
-			} else if (sprite != ids.end() && animated != animatedIds.end() && animateds[*animated].layer > sprites[*sprite].layer) {
-				sprites[*sprite].sprite->setPosition(positions[*sprite].x, positions[*sprite].y);
-				window->draw(*sprites[*sprite].sprite);
-				sprite++;
-			} else {
-				if (animated != animatedIds.end()) {
-					UpdateAnimatedSprite(animateds[*animated]);
-					animateds[*animated].animation[animateds[*animated].frame].sprite->setPosition(positions[*animated].x, positions[*animated].y);
-					window->draw(*animateds[*animated].animation[animateds[*animated].frame].sprite);
-					animated++;
-				}
-				if (sprite != ids.end()) {
-					sprites[*sprite].sprite->setPosition(positions[*sprite].x, positions[*sprite].y);
-					window->draw(*sprites[*sprite].sprite);
-					sprite++;
-				}
+			if (Ecs::idHasComponents<component::AnimatedSprite>(id)) {
+				UpdateAnimatedSprite(animateds[id]);
+				animateds[id].animation[animateds[id].frame].sprite->setPosition(positions[id].x, positions[id].y);
+				window->draw(*animateds[id].animation[animateds[id].frame].sprite);
+			}
+			if (Ecs::idHasComponents<component::AnimatedSpriteMap>(id)) {
+				UpdateAnimatedSprite(animatedmaps[id].animatedSprites[animatedmaps[id].pos]);
+				animatedmaps[id].animatedSprites[animatedmaps[id].pos].animation[animatedmaps[id].animatedSprites[animatedmaps[id].pos].frame].sprite->setPosition(positions[id].x, positions[id].y);
+				window->draw(*animatedmaps[id].animatedSprites[animatedmaps[id].pos].animation[animatedmaps[id].animatedSprites[animatedmaps[id].pos].frame].sprite);
 			}
 		}
 	}

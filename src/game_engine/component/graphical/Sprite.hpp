@@ -14,8 +14,6 @@
 namespace ecs {namespace component {
 	struct Sprite {
 		Sprite() {
-			layer = 0;
-			visible = false;
 			shared = false;
 		}
 
@@ -23,8 +21,6 @@ namespace ecs {namespace component {
 			sprite(other.sprite),
 			texture(other.texture),
 			size(other.size),
-			layer(other.layer),
-			visible(other.visible),
 			shared(other.shared)
 		{
 			other.sprite = nullptr;
@@ -34,8 +30,6 @@ namespace ecs {namespace component {
 			this->sprite = sprite;
 			this->size = graphical::Graphic::getTextureSize(path);
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
-			this->layer = 1;
-			this->visible = true;
 			this->shared = true;
 		}
 		Sprite(std::string path) {
@@ -48,8 +42,6 @@ namespace ecs {namespace component {
 			this->sprite = new sf::Sprite(*this->texture);
 			this->size = graphical::Graphic::getTextureSize(path);
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
-			this->layer = 1;
-			this->visible = true;
 			this->shared = false;
 		}
 		Sprite(std::string path, bool visible) {
@@ -62,15 +54,24 @@ namespace ecs {namespace component {
 			this->sprite = new sf::Sprite(*this->texture);
 			this->size = graphical::Graphic::getTextureSize(path);
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
-			this->layer = 1;
-			this->visible = visible;
+			this->shared = false;
+		}
+		Sprite(std::string path, bool visible, unsigned int layer) {
+			this->texture = new sf::Texture();
+
+			if (!this->texture->loadFromFile(path)) {
+				std::cout << "src/game_engine/component/graphical/Sprite: Couldn't load texture " << path << std::endl;
+				exit(84);
+			}
+			this->sprite = new sf::Sprite(*this->texture);
+			this->size = graphical::Graphic::getTextureSize(path);
+			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
 			this->shared = false;
 		}
 		~Sprite() {
-			if (!shared && sprite != nullptr && texture != nullptr) {
+			if (!shared) {
 				delete sprite;
 				delete texture;
-				this->visible = false;
 			}
 		}
 
@@ -78,8 +79,6 @@ namespace ecs {namespace component {
 			this->sprite = other.sprite;
 			this->texture = other.texture;
 			this->size = other.size;
-			this->layer = other.layer;
-			this->visible = other.visible;
 			this->shared = other.shared;
 			other.sprite = nullptr;
 			other.texture = nullptr;
@@ -89,8 +88,6 @@ namespace ecs {namespace component {
 		sf::Sprite				*sprite;
 		sf::Texture				*texture;
 		ecs::core::Vector2<unsigned int>	size;
-		unsigned int				layer;
-		bool					visible;
 		bool 					shared;
 	};
 }}

@@ -42,10 +42,8 @@ namespace ecs {namespace component {
 				std::cout << "src/game_engine/component/graphical/AnimatedSprite: Directory must at least have 1 sprite" << std::endl;
 				exit(84);
 			}
-			layer = 0;
 			interFrame = 1000000 / animation.size();
 			oldTime = core::Time::get(TimeUnit::MicroSeconds);
-			visible = true;
 			frame = 0;
 		}
 		AnimatedSprite(std::string path, int framesPerSecond) {
@@ -70,17 +68,13 @@ namespace ecs {namespace component {
 				std::cout << "src/game_engine/component/graphical/AnimatedSprite: Directory must at least have 1 sprite" << std::endl;
 				exit(84);
 			}
-			layer = 0;
 			interFrame = 1000000 / framesPerSecond;
 			oldTime = core::Time::get(TimeUnit::MicroSeconds);
-			visible = true;
 			frame = 0;
 		}
 		std::vector<Sprite>		animation;
-		unsigned int			layer;
 		long				interFrame;
 		long 				oldTime;
-		bool 				visible;
 		int				frame;
 	};
 }}
