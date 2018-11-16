@@ -18,12 +18,19 @@
 #include <component/physic/Hitbox.hpp>
 #include <component/graphical/AnimatedSprite.hpp>
 #include <component/graphical/Drawable.hpp>
+#include <ecs/DataBank.hpp>
+#include <component/audio/Sound.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
 
 int main() {
 	auto &rtype = ecs::graphical::Graphic::get();
+	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
+		sf::SoundBuffer buffer;
+		buffer.loadFromFile(path);
+		return buffer;
+	};
 
 	ID banane = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Drawable>(banane, 1, true);
@@ -46,18 +53,25 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
 	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
 	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id, 300.f);
+	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::ESCAPE]
+	= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
+		(void) parent;
+		ecs::graphical::Graphic::get()._window->close();
+	});
 	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::LEFT_ARROW]
 	= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
 		ID id = ecs::entity::Entity::getId();
 		TimedEventAdmin m;
 
+		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
 		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
 		ecs::Ecs::addComponent<ecs::component::Position>(id,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, -10.f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
-			ecs::Ecs::deleteId(other);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
+			if (other != parent)
+				ecs::Ecs::deleteId(other);
 			(void) self;
 		});
 		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
@@ -67,13 +81,15 @@ int main() {
 		ID id = ecs::entity::Entity::getId();
 		TimedEventAdmin m;
 
+		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
 		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
 		ecs::Ecs::addComponent<ecs::component::Position>(id,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, -10.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
-			ecs::Ecs::deleteId(other);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
+			if (other != parent)
+				ecs::Ecs::deleteId(other);
 			(void) self;
 		});
 		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
@@ -83,13 +99,16 @@ int main() {
 		ID id = ecs::entity::Entity::getId();
 		TimedEventAdmin m;
 
+		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
 		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
 		ecs::Ecs::addComponent<ecs::component::Position>(id,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 10.f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
-			ecs::Ecs::deleteId(other);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
+			if (other != parent)
+				ecs::Ecs::deleteId(other);
+			ecs::Ecs::getConponentMap<ecs::component::Sound>()[parent].soundMap["attack"].play();
 			(void) self;
 		});
 		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
@@ -99,17 +118,21 @@ int main() {
 		ID id = ecs::entity::Entity::getId();
 		TimedEventAdmin m;
 
+		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
 		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
 		ecs::Ecs::addComponent<ecs::component::Position>(id,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 10.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [](ID self, ID other){
-			ecs::Ecs::deleteId(other);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
+			if (other != parent)
+				ecs::Ecs::deleteId(other);
 			(void) self;
 		});
 		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
 	});
+	ecs::Ecs::addComponent<ecs::component::Sound>(id);
+	ecs::Ecs::getConponentMap<ecs::component::Sound>()[id].soundMap["attack"].setBuffer(ecs::DataBank<std::string, sf::SoundBuffer>::get("./assets/sounds/death.wav"));
 
 	id = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
