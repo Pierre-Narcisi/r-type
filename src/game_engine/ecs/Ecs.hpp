@@ -24,18 +24,13 @@ namespace ecs{
         }
 
         template <typename T>
-        static hidden::ListComponent<T> &getConponentMap() {
-		return hidden::ListComponent<T>::get();
+        static std::unordered_map<ID, T> &getConponentMap() {
+		return hidden::ListComponent<T>::get().getComponentMap();
         }
 
         template<typename T, typename ...Args>
         static void addComponent(ID id, Args... args){
             get()._deleteIds[id][std::string(typeid(T).name())] = hidden::ListComponent<T>::get().addComponent(id, args...);
-        }
-
-        template <typename T>
-        static std::vector<T> &getComponentList(){
-            return hidden::ListComponent<T>::get().getComponentList();
         }
 
         static void deleteId(ID id) {
@@ -79,8 +74,8 @@ namespace ecs{
         template <typename T>
 	struct isIn<T> {
 		bool operator() (ID id) {
-			auto &vec = hidden::ListComponent<T>::get().getIdsList();
-			return ((std::find(vec.begin(), vec.end(), id) != vec.end()));
+			auto &vec = hidden::ListComponent<T>::get().getComponentMap();
+			return (vec.find(id) != vec.end());
 		}
 	};
 
@@ -88,8 +83,8 @@ namespace ecs{
 	struct isIn<T, Args...> {
 		bool operator() (ID id) {
 			isIn<Args...> isin;
-			auto &vec = hidden::ListComponent<T>::get().getIdsList();
-			return ((std::find(vec.begin(), vec.end(), id) != vec.end()) && isin(id));
+			auto &vec = hidden::ListComponent<T>::get().getComponentMap();
+			return ((vec.find(id) != vec.end()) && isin(id));
 		}
 	};
 

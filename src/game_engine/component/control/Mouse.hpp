@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <core/CoreVector.hpp>
 #include <functional>
+#include "ecs/Entity.hpp"
 
 enum class KeyMouse {
 	LCLICK,
@@ -19,7 +20,7 @@ enum class KeyMouse {
 
 namespace ecs {namespace component {
 	struct Mouse {
-		std::unordered_map<KeyMouse, std::pair<bool, std::function<void()>>>	mouseMap;
+		std::unordered_map<KeyMouse, std::pair<bool, std::function<void(ID)>>>	mouseMap;
 		core::Vector2<int>			position;
 	};
 }}

@@ -22,50 +22,32 @@ namespace hidden {
 
         template <typename ...Args>
         std::function<void()> addComponent(ID id, Args... args) {
-            _ids.push_back(id);
-            _component.emplace_back(args...);
+            _map.try_emplace(id, args...);
             return ([id, this](){
-                auto ids = this->_ids.begin();
-                auto cpnts = this->_component.begin();
-                for (ids, cpnts; *ids != id && ids != _ids.end(); ids++, cpnts++);
-                if (ids != _ids.end()) {
-			_ids.erase(ids);
-			_component.erase(cpnts);
-		}
+            	this->_map.erase(id);
             });
         }
 
         std::vector<ID> getIdForComponent(std::function<bool(T&)> function) {
         	std::vector<ID> ids;
-		auto id = _ids.begin();
 
-        	for (auto component = _component.begin(); component != _component.end(); component++, id++) {
-        		if (function(*component))
-        			ids.push_back(*id);
+        	for (auto map : _map) {
+        		if (function(*map.second))
+        			ids.push_back(*map.first);
         	}
 		return ids;
         }
 
-        std::vector<T> &getComponentList() {
-            return _component;
-        }
-
-        std::vector<ID> &getIdsList() {
-            return _ids;
+        std::unordered_map<ID, T> &getComponentMap() {
+            return _map;
         }
 
         T &operator[] (ID id) {
-        	auto strtId = _ids.begin();
-        	auto strsCpnt = _component.begin();
-        	for (; strtId != _ids.end() && *strtId != id; strsCpnt++, strtId++);
-			if (strtId == _ids.end())
-				return *(new T());
-        	return *strsCpnt;
+        	return _map[id];
         }
 
     private:
-        std::vector<ID> _ids;
-        std::vector<T>  _component;
+        std::unordered_map<ID, T> _map;
     };
 }
 
