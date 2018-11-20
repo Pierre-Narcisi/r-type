@@ -20,6 +20,7 @@
 #include <component/graphical/Drawable.hpp>
 #include <ecs/DataBank.hpp>
 #include <component/audio/Sound.hpp>
+#include <component/control/DeplacementMouse.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
@@ -52,7 +53,8 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 0.f, 0.f);
 	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
 	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
-	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id, 300.f);
+	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
+	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
 	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::ESCAPE]
 	= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
 		(void) parent;
@@ -70,7 +72,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, -10.f, 0.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent)
+			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
 				ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -88,7 +90,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, -10.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent)
+			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
 				ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -106,7 +108,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 10.f, 0.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent)
+			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
 				ecs::Ecs::deleteId(other);
 			ecs::Ecs::getConponentMap<ecs::component::Sound>()[parent].soundMap["attack"].play();
 			(void) self;
@@ -125,7 +127,7 @@ int main() {
 								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
 		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 10.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent)
+			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
 				ecs::Ecs::deleteId(other);
 			(void) self;
 		});
@@ -140,7 +142,6 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 500.f, 500.f);
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
 	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(id, "./assets", 4);
-
 
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);

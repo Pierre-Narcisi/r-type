@@ -9,6 +9,7 @@
 #include <component/control/DeplacementKeyBoard.hpp>
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
+#include <component/control/DeplacementMouse.hpp>
 #include "component/control/Controller.hpp"
 #include "Controls.hpp"
 #include "ecs/Ecs.hpp"
@@ -173,6 +174,33 @@ namespace ecs {namespace system {
 			ecs::Ecs::getConponentMap<component::Speed>()[tomove].x = time / 1000000.f * deplacement.x;
 			ecs::Ecs::getConponentMap<component::Speed>()[tomove].y = time / 1000000.f * deplacement.y;
 			dep.lastMove = ecs::core::Time::get(TimeUnit::MicroSeconds);
+		}
+
+		auto mouses = ecs::Ecs::filter<component::Mouse, component::Speed, component::DeplacementMouse, component::Position>();
+		auto &mouseMap = ecs::Ecs::getConponentMap<component::Mouse>();
+		auto &mouseDepMap = ecs::Ecs::getConponentMap<component::DeplacementMouse>();
+		auto &speedMap = ecs::Ecs::getConponentMap<component::Speed>();
+		auto &posMap = ecs::Ecs::getConponentMap<component::Position>();
+		for (auto mouse : mouses) {
+			mouseDepMap[mouse].lastPosition.x = posMap[mouse].x;
+			mouseDepMap[mouse].lastPosition.y = posMap[mouse].y;
+			if (!(mouseMap[mouse].position == mouseDepMap[mouse].lastPosition)) {
+				if (abs(mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) + abs(mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) < mouseDepMap[mouse].speed) {
+					speedMap[mouse].x = mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x;
+					speedMap[mouse].y = mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y;
+				} else {
+					auto total = abs(mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) + abs(mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y);
+					speedMap[mouse].x = mouseDepMap[mouse].speed * (mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) / total;
+					speedMap[mouse].y = mouseDepMap[mouse].speed * (mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) / total;
+				}
+			} else {
+				speedMap[mouse].x = 0.f;
+				speedMap[mouse].y = 0.f;
+			}
+			time = static_cast<float>(ecs::core::Time::get(TimeUnit::MicroSeconds) - mouseDepMap[mouse].lastMove);
+			speedMap[mouse].x = time / 1000000.f * speedMap[mouse].x;
+			speedMap[mouse].y = time / 1000000.f * speedMap[mouse].y;
+			mouseDepMap[mouse] = time;
 		}
 	}
 
