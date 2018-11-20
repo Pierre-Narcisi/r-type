@@ -14,14 +14,27 @@
 namespace nw {
 
 void	TcpSocket::connect(TcpEndpoint const &ep) {
-	if (::connect(ep.fd, reinterpret_cast<const sockaddr*>(&ep.srvAddr), sizeof(ep.srvAddr)) < 0)
+	bool	isFail = true;
+	char	s[256];
+
+	if (ep._fd == -1) {
 		throw std::runtime_error(std::strerror(errno));
-	_endpoint = ep;
+	}
+	this->_endpoint = ep;
+	for (auto &cur: _endpoint._ai) {
+		reinterpret_cast<sockaddr_in*>(cur.get())->sin_port = _endpoint._port;
+		if (::connect(_endpoint._fd, reinterpret_cast<const sockaddr*>(cur.get()), sizeof(*cur)) < 0)
+			continue;
+		isFail = false;
+		break;
+	}
+	if (isFail)
+		throw std::runtime_error(std::strerror(errno));
 	_init = true;
 }
 
 void	TcpSocket::write(char const *buffer, std::size_t len) {
-	auto l = ::write(_endpoint.fd, buffer, len);
+	auto l = ::write(_endpoint._fd, buffer, len);
 	
 	/* if (isNonBloquant) */
 	if (l == 0) {
@@ -31,7 +44,7 @@ void	TcpSocket::write(char const *buffer, std::size_t len) {
 }
 
 ssize_t TcpSocket::read(char *buffer, std::size_t len) {
-	auto l = ::read(_endpoint.fd, buffer, len);
+	auto l = ::read(_endpoint._fd, buffer, len);
 	
 	/*TODO: if (isNonBloquant) */
 	if (l == 0) {
@@ -46,7 +59,7 @@ bool	TcpSocket::isConnected() {
 	socklen_t	__len = sizeof(error);
 	
 	if (!_init) return (false);
-	int retval = getsockopt(_endpoint.fd, SOL_SOCKET, SO_ERROR, &error, &__len);
+	int retval = getsockopt(_endpoint._fd, SOL_SOCKET, SO_ERROR, &error, &__len);
 	if (retval != 0 || error != 0) {
 		this->close();
 		return (false);
@@ -56,7 +69,7 @@ bool	TcpSocket::isConnected() {
 
 void	TcpSocket::close() {
 	if (_init) {
-		::close(_endpoint.fd);
+		::close(_endpoint._fd);
 		_init = false;
 	}
 }

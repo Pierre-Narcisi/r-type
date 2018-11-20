@@ -4,12 +4,18 @@
 #include "TcpSocket.hpp"
 
 int main(int ac, char **av) {
-	if (ac > 1) {
+	if (ac > 2) {
 		try {
 			nw::TcpSocket	tcp;
 			char buffer[256];
 
-			tcp.connect(nw::TcpEndpoint("localhost", std::atoi(av[1])));
+			nw::TcpEndpoint tcp_ep(av[1], std::atoi(av[2]));
+
+			for (auto &ip: tcp_ep.getResolvedIps()) {
+				std::cout << ip << std::endl;
+			}
+
+			tcp.connect(tcp_ep);
 			
 			std::string s;
 			std::cin >> s;

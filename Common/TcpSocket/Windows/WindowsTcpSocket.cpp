@@ -18,32 +18,58 @@ static WSADATA wsaData;
 
 namespace nw {
 
+
+static inline char *getWSAErrorString() {
+	static char s[1024];
+
+	*s = 0;
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr,
+		WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		s,
+		sizeof(s),
+		nullptr);
+	return (s);
+}
+
 void	TcpSocket::connect(TcpEndpoint const &ep) {
-	if (::connect(ep.fd, reinterpret_cast<const sockaddr*>(&ep.srvAddr), sizeof(ep.srvAddr)) == SOCKET_ERROR) {
-		closesocket(ep.fd);
-		throw std::runtime_error(std::strerror(errno));
+	bool	isFail = true;
+	char	s[256];
+
+	if (ep._fd == -1) {
+		throw std::runtime_error(getWSAErrorString());
 	}
-	_endpoint = ep;
+	this->_endpoint = ep;
+	for (auto &cur: _endpoint._ai) {
+		reinterpret_cast<sockaddr_in*>(cur.get())->sin_port = _endpoint._port;
+		if (::connect(_endpoint._fd, reinterpret_cast<const sockaddr*>(cur.get()), sizeof(*cur)) < 0)
+			continue;
+		isFail = false;
+		break;
+	}
+	if (isFail)
+		throw std::runtime_error(getWSAErrorString());
 	_init = true;
 }
 
 void	TcpSocket::write(char const *buffer, std::size_t len) {
-	auto l = send(_endpoint.fd, buffer, len, 0);
+	auto l = send(_endpoint._fd, buffer, len, 0);
 
 	/* if (isNonBloquant) */
 	if (l == 0) {
 		this->close();
-		throw std::runtime_error("Connection closed by peer");
+		throw std::runtime_error(getWSAErrorString());
 	}
 }
 
 ssize_t TcpSocket::read(char *buffer, std::size_t len) {
-	auto l = ::recv(_endpoint.fd, buffer, len, 0);
+	auto l = ::recv(_endpoint._fd, buffer, len, 0);
 
 	/*TODO: if (isNonBloquant) */
 	if (l == 0) {
 		this->close();
-		throw std::runtime_error("Connection closed by peer");
+		throw std::runtime_error(getWSAErrorString());
 	}
 	return l;
 }
@@ -53,7 +79,7 @@ bool	TcpSocket::isConnected() {
 	socklen_t	__len = sizeof(error);
 
 	if (!_init) return (false);
-	int retval = getsockopt(_endpoint.fd, SOL_SOCKET, SO_ERROR, &error, &__len);
+	int retval = getsockopt(_endpoint._fd, SOL_SOCKET, SO_ERROR, &error, &__len);
 	if (retval != 0 || error != 0) {
 		this->close();
 		return (false);
@@ -63,7 +89,7 @@ bool	TcpSocket::isConnected() {
 
 void	TcpSocket::close() {
 	if (_init) {
-		closesocket(_endpoint.fd);
+		closesocket(_endpoint._fd);
 		_init = false;
 	}
 }
