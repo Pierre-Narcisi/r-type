@@ -13,11 +13,12 @@
 #include <stdexcept>
 #include <io.h> 
 #include "TcpSocket.hpp"
+#include "ctor.h"
+#pragma comment(lib, "ws2_32.lib")
 
 static WSADATA wsaData;
 
 namespace nw {
-
 
 static inline char *getWSAErrorString() {
 	static char s[1024];
@@ -33,58 +34,8 @@ static inline char *getWSAErrorString() {
 	return (s);
 }
 
-void	TcpSocket::connect(TcpEndpoint const &ep) {
-	bool	isFail = true;
-	char	s[256];
-
-	if (ep._fd == -1) {
-		throw std::runtime_error(getWSAErrorString());
-	}
-	this->_endpoint = ep;
-	for (auto &cur: _endpoint._ai) {
-		reinterpret_cast<sockaddr_in*>(cur.get())->sin_port = _endpoint._port;
-		if (::connect(_endpoint._fd, reinterpret_cast<const sockaddr*>(cur.get()), sizeof(*cur)) < 0)
-			continue;
-		isFail = false;
-		break;
-	}
-	if (isFail)
-		throw std::runtime_error(getWSAErrorString());
-	_init = true;
-}
-
-void	TcpSocket::write(char const *buffer, std::size_t len) {
-	auto l = send(_endpoint._fd, buffer, len, 0);
-
-	/* if (isNonBloquant) */
-	if (l == 0) {
-		this->close();
-		throw std::runtime_error(getWSAErrorString());
-	}
-}
-
-ssize_t TcpSocket::read(char *buffer, std::size_t len) {
-	auto l = ::recv(_endpoint._fd, buffer, len, 0);
-
-	/*TODO: if (isNonBloquant) */
-	if (l == 0) {
-		this->close();
-		throw std::runtime_error(getWSAErrorString());
-	}
-	return l;
-}
-
-bool	TcpSocket::isConnected() {
-	char		error = 0;
-	socklen_t	__len = sizeof(error);
-
-	if (!_init) return (false);
-	int retval = getsockopt(_endpoint._fd, SOL_SOCKET, SO_ERROR, &error, &__len);
-	if (retval != 0 || error != 0) {
-		this->close();
-		return (false);
-	}
-	return (true);
+const char	*TcpSocket::getLastNetError() {
+	return (getWSAErrorString());
 }
 
 void	TcpSocket::close() {

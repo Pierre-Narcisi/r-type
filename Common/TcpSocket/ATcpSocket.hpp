@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2018
 ** r-type
 ** File description:
-** ITcpSocket.hpp
+** ATcpSocket.hpp
 */
 
-#if !defined(_ITCP_SOCKET_HPP)
-#define _ITCP_SOCKET_HPP
+#if !defined(_ATCP_SOCKET_HPP)
+#define _ATCP_SOCKET_HPP
 
 #if defined _MSC_VER
 #include <io.h>
@@ -46,14 +46,15 @@ private:
 
 	friend TcpSocket;
 };
-class ITcpSocket {
+
+class ATcpSocket {
 public:
 	enum class Platform {
 		WINDOWS,
 		UNIX
 	};
 
-	ITcpSocket(Platform p): _platform(p) {} 
+	ATcpSocket(Platform p): _platform(p) {} 
 
 	virtual void	connect(const TcpEndpoint &ep) = 0;
 	virtual void	write(char const *buffer, std::size_t len) = 0;
@@ -104,4 +105,4 @@ auto	TcpEndpoint::getResolvedIps() const {
 
 }
 
-#endif // _ITCP_SOCKET_HPP
+#endif // _ATCP_SOCKET_HPP

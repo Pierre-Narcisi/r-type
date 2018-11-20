@@ -8,8 +8,9 @@ include_directories(.)
 
 add_executable(testTcpSocket
 	TestTcpSocket.cpp
-	ITcpSocket.hpp
+	ATcpSocket.hpp
 	TcpSocket.hpp
+	CommonTcpSocket.cpp
 	Unix/UnixTcpSocket.cpp
 	Unix/UnixTcpSocket.hpp
 	Windows/WindowsTcpSocket.cpp

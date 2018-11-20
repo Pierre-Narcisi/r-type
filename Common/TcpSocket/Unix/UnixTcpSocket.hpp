@@ -19,13 +19,13 @@
 #include <arpa/inet.h> 
 #include <stdexcept>
 #include <errno.h>
-#include "../ITcpSocket.hpp"
+#include "../ATcpSocket.hpp"
 
 namespace nw {
 
-class TcpSocket : public ITcpSocket {
+class TcpSocket : public ATcpSocket {
 public:
-	TcpSocket(): ITcpSocket(Platform::UNIX) {}
+	TcpSocket(): ATcpSocket(Platform::UNIX) {}
 	~TcpSocket() { this->close(); }
 
 	virtual void	connect(const TcpEndpoint &ep) final;
@@ -33,6 +33,8 @@ public:
 	virtual ssize_t	read(char *buffer, std::size_t len) final;
 	virtual bool	isConnected() final;
 	virtual void	close() final;
+
+	static const char	*getLastNetError();
 };
 
 }

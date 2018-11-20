@@ -15,15 +15,13 @@
 #include <ws2tcpip.h>
 #include <stdio.h>
 #include <windows.h>
-#include "../ITcpSocket.hpp"
-#include "ctor.h"
-#pragma comment(lib, "ws2_32.lib")
+#include "../ATcpSocket.hpp"
 
 namespace nw {
 
-class TcpSocket : public ITcpSocket {
+class TcpSocket : public ATcpSocket {
 public:
-	TcpSocket() : ITcpSocket(Platform::UNIX) {}
+	TcpSocket() : ATcpSocket(Platform::UNIX) {}
 	~TcpSocket() { this->close(); }
 
 	virtual void	connect(const TcpEndpoint &ep) final;
@@ -31,6 +29,8 @@ public:
 	virtual ssize_t	read(char *buffer, std::size_t len) final;
 	virtual bool	isConnected() final;
 	virtual void	close() final;
+
+	static const char	*getLastNetError();
 };
 
 }
