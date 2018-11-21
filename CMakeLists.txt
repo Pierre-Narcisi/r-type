@@ -3,6 +3,9 @@ project(rtype)
 
 set(CMAKE_CXX_STANDARD 17)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 include_directories(src/game_engine)
 
 add_executable(rtype
@@ -45,9 +48,8 @@ add_executable(rtype
 	src/game_engine/component/audio/Sound.hpp
 	src/game_engine/component/control/DeplacementMouse.hpp)
 
-target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-window.so)
-target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-graphics.so)
-target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-system.so)
-target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-audio.so)
-target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libpthread.so)
+find_package (Threads)
+target_link_libraries(rtype ${CONAN_LIBS})
+target_link_libraries(rtype ${CMAKE_THREAD_LIBS_INIT})
+
 

@@ -138,6 +138,36 @@ int main() {
 
 	id = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
+	ecs::Ecs::addComponent<ecs::component::Position>(id, 100.f, 100.f);
+	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
+	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
+	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
+
+	id = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
+	ecs::Ecs::addComponent<ecs::component::Position>(id, 200.f, 200.f);
+	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
+	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
+	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
+
+	id = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
+	ecs::Ecs::addComponent<ecs::component::Position>(id, 300.f, 300.f);
+	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
+	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
+	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
+
+	id = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
 	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Bullet.png");
 	ecs::Ecs::addComponent<ecs::component::Position>(id, 500.f, 500.f);
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);

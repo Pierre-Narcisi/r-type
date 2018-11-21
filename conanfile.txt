@@ -1,8 +1,13 @@
 [requires]
-fmt/5.2.1@bincrafters/stable
+sfml/2.5.1@bincrafters/stable
 
 [options]
-fmt:shared=False
+libalsa:shared=False
+sfml:shared=True
+
+sfml:graphics=True
+sfml:audio=True
+sfml:window=True
 
 [generators]
 cmake

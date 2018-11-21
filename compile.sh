@@ -12,6 +12,9 @@ if [ ! -d $BuildDir ]; then
 fi
 (
 	cd $BuildDir
+	conan remote add bincrafter https://api.bintray.com/conan/bincrafters/public-conan
+
+	conan install .. --build=missing --profile ../conanPlatformSettings/linux.txt
 	if [ ! -z $1 ]; then
 		cmake .. -DCMAKE_BUILD_TYPE=$@
 		cmake --build . --config $@
