@@ -15,4 +15,5 @@ add_executable(testTcpSocket
 	Unix/UnixTcpSocket.hpp
 	Windows/WindowsTcpSocket.cpp
 	Windows/WindowsTcpSocket.hpp
+	../WindowsCtor.cpp
 )

@@ -11,7 +11,7 @@
 
 namespace constant {
     /* Server Program -- default args */
-	constexpr std::uint16_t		defPort = 4242;
+	constexpr std::uint16_t		defPort = 1337;
 
     /* Client Program -- default args */
 #if !defined(NDEBUG)

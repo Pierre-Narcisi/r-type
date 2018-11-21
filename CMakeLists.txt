@@ -30,3 +30,43 @@ target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-graphics.so)
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-system.so)
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-audio.so)
 
+
+project(Server)
+
+set(CMAKE_CXX_STANDARD 17)
+
+include_directories(.)
+include_directories(Server)
+include_directories(Server/includes)
+include_directories(Common)
+
+add_executable(Server
+	Common/WindowsCtor.cpp
+
+	Common/TcpSocket/ATcpSocket.hpp
+	Common/TcpSocket/TcpSocket.hpp
+	Common/TcpSocket/CommonTcpSocket.cpp
+	Common/TcpSocket/Unix/UnixTcpSocket.cpp
+	Common/TcpSocket/Unix/UnixTcpSocket.hpp
+	Common/TcpSocket/Windows/WindowsTcpSocket.cpp
+	Common/TcpSocket/Windows/WindowsTcpSocket.hpp
+
+	Common/Opts/Opts.cpp
+	Common/Opts/Opts.hpp
+
+	Common/Json/includes/Entity.hpp
+	Common/Json/includes/Parser.hpp
+	Common/Json/src/Entity.cpp
+	Common/Json/src/Parser.cpp
+
+	Server/src/Main.cpp
+
+	Server/includes/Server.hpp
+	Server/src/Server.cpp
+
+	Server/includes/ClientConnection.hpp
+	Server/src/ClientConnection.cpp
+
+	Server/includes/TcpListener.hpp
+	Server/src/TcpListener.cpp
+)

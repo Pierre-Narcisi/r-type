@@ -11,7 +11,6 @@ namespace nw {
 
 void	TcpSocket::connect(TcpEndpoint const &ep) {
 	bool	isFail = true;
-	char	s[256];
 
 	if (ep._fd == -1) {
 		throw std::runtime_error(TcpSocket::getLastNetError());
@@ -55,7 +54,7 @@ bool	TcpSocket::isConnected() {
 	socklen_t	__len = sizeof(error);
 	
 	if (!_init) return (false);
-	int retval = getsockopt(_endpoint._fd, SOL_SOCKET, SO_ERROR, &error, &__len);
+	int retval = getsockopt(_endpoint._fd, SOL_SOCKET, SO_ERROR, (char*) &error, &__len);
 	if (retval != 0 || error != 0) {
 		this->close();
 		return (false);

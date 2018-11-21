@@ -12,11 +12,6 @@ namespace common {
 
 Opts::Opts(int ac, char **av): _ac(ac), _av(av) {}
 
-void	Opts::Opts::setArgs(int ac, char **av) {
-	_ac = ac;
-	_av = av;
-}
-
 void	Opts::parse(void) {
 	IValue		*val = nullptr;
 	static auto	parseShort = [this] (const char curArg) -> IValue* {

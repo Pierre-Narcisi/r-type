@@ -30,8 +30,7 @@ int	Server::init(int ac, char **av) {
 
 	std::cout <<
 		"port : " << opts["port"]->as<common::Opts::Int>() << std::endl <<
-		"test : " << opts["test"]->as<common::Opts::String>() << std::endl <<
-		"f : " << opts['f']->as<common::Opts::Float>() << std::endl;
+		"host : " << opts["host"]->as<common::Opts::String>() << std::endl;
 }
 
 void	Server::start() {

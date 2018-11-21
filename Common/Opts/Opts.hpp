@@ -35,7 +35,10 @@ public:
     static inline std::shared_ptr<IValue>	makeString(void);
     static inline std::shared_ptr<IValue>	noArg();
 
-    inline void setArgs(int ac, char **av);
+    inline void setArgs(int ac, char **av) {
+        _ac = ac;
+        _av = av;
+    }
 
     inline void	setOptions(std::initializer_list<OptionsCont> &&in);
 
