@@ -62,4 +62,11 @@ bool	TcpSocket::isConnected() {
 	return (true);
 }
 
+void	TcpSocket::close() {
+	if (_init) {
+		SOCKETCLOSE(_endpoint._fd);
+		_init = false;
+	}
+}
+
 }

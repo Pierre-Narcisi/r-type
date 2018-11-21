@@ -14,12 +14,15 @@ int main(int ac, char **av) {
 	if (s.init(ac, av)) {
 		return (0);
 	}
+#ifdef NDEBUG
 	try {
+#endif
 		s.start();
-	} catch (std::exception s) {
+#ifdef NDEBUG
+	} catch (std::exception &s) {
 		std::cout << s.what() << std::endl;
 		return (84);
 	}
-
+#endif
 	return (0);
 }

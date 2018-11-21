@@ -17,6 +17,8 @@
 #include <windows.h>
 #include "../ATcpSocket.hpp"
 
+#define SOCKETCLOSE(fd) closesocket((fd))
+
 namespace nw {
 
 class TcpSocket : public ATcpSocket {

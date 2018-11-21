@@ -19,7 +19,10 @@
 #include <arpa/inet.h> 
 #include <stdexcept>
 #include <errno.h>
+#include <unistd.h>
 #include "../ATcpSocket.hpp"
+
+#define SOCKETCLOSE(fd) ::close((fd))
 
 namespace nw {
 

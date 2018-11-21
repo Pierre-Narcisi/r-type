@@ -33,13 +33,6 @@ const char	*TcpSocket::getLastNetError() {
 	return (getWSAErrorString());
 }
 
-void	TcpSocket::close() {
-	if (_init) {
-		closesocket(_endpoint._fd);
-		_init = false;
-	}
-}
-
 }
 
 #endif

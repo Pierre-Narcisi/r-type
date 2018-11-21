@@ -9,8 +9,6 @@
 
 #if defined(_INTERN_TCP_SOCKET_HPP)
 
-#include <unistd.h>
-
 namespace nw {
 
 const char	*TcpSocket::getLastNetError() {
@@ -18,13 +16,6 @@ const char	*TcpSocket::getLastNetError() {
 
 	errno = 0;
 	return (std::strerror(err));
-}
-
-void	TcpSocket::close() {
-	if (_init) {
-		::close(_endpoint._fd);
-		_init = false;
-	}
 }
 
 }
