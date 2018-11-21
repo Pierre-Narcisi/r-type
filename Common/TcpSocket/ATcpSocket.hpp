@@ -27,6 +27,7 @@ class TcpEndpoint {
 public:
 	TcpEndpoint() = default;
 	inline TcpEndpoint(std::string const ip, std::uint16_t port);
+	inline TcpEndpoint(int fd, struct sockaddr_in addr);
 	~TcpEndpoint() { }
 	TcpEndpoint(TcpEndpoint const &) = default;
 	TcpEndpoint(TcpEndpoint &&) = default;
@@ -54,7 +55,9 @@ public:
 		UNIX
 	};
 
-	ATcpSocket(Platform p): _platform(p) {} 
+	ATcpSocket(Platform p): _platform(p), _init(false) {}
+	ATcpSocket(Platform p, TcpEndpoint const &ep):
+		_platform(p), _endpoint(ep), _init(true) {}  
 
 	virtual void	connect(const TcpEndpoint &ep) = 0;
 	virtual void	write(char const *buffer, std::size_t len) = 0;
@@ -66,7 +69,7 @@ public:
 protected:
 	Platform	_platform;
 	TcpEndpoint	_endpoint;
-	bool		_init = false;
+	bool		_init;
 };
 
 TcpEndpoint::TcpEndpoint(std::string const ip, std::uint16_t port) {
@@ -91,6 +94,15 @@ TcpEndpoint::TcpEndpoint(std::string const ip, std::uint16_t port) {
 	this->_fd = socket(_family, _socktype, _protocol);
 	this->_port = htons(port);
 };
+
+TcpEndpoint::TcpEndpoint(int fd, struct sockaddr_in addr):
+		_fd(fd) {
+	auto &sPtr = _ai.emplace_back(
+		reinterpret_cast<sockaddr*>(::operator new(sizeof(addr)))
+	);
+
+	std::memmove(sPtr.get(), &addr, sizeof(addr));
+}
 
 auto	TcpEndpoint::getResolvedIps() const {
 	std::list<std::string>	res;

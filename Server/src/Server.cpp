@@ -9,6 +9,7 @@
 #include "Constant.hpp"
 #include "Server.hpp"
 #include "TcpListener.hpp"
+#include "ClientConnection.hpp"
 
 namespace rtype {
 
@@ -36,14 +37,10 @@ int	Server::init(int ac, char **av) {
 }
 
 void	Server::start() {
-	nw::TcpListener<nw::TcpListenerSalve>	listener(opts["port"]->as<common::Opts::Int>());
+	nw::TcpListener<ClientConnection>	listener(opts["port"]->as<common::Opts::Int>());
 
-	listener.onNewConnection = [this] (nw::TcpListenerSalve &slave) {
+	listener.onNewConnection = [this] (ClientConnection &slave) {
 		std::cout << "New connection!" << std::endl;
-	};
-
-	listener.onDataAvailable = [this] (nw::TcpListenerSalve &slave) {
-		std::cout << "New data at: " << slave.getNativeSocket() << "!" << std::endl;
 	};
 
 	listener.init();

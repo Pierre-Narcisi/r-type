@@ -29,6 +29,7 @@ namespace nw {
 class TcpSocket : public ATcpSocket {
 public:
 	TcpSocket(): ATcpSocket(Platform::UNIX) {}
+	TcpSocket(TcpEndpoint const &ep): ATcpSocket(Platform::UNIX, ep) {}
 	~TcpSocket() { this->close(); }
 
 	virtual void	connect(const TcpEndpoint &ep) final;
