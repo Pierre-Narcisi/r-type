@@ -33,11 +33,15 @@ std::list<json::Entity>	JsonBuider::_extractJsonObjects(std::size_t available) {
 			_buffer.clear();
 			return (res);
 		}
-		auto	start = &_buffer.front() + lastPos;
-		auto	len = &_buffer.back() - start;
+		auto	start = (std::uintptr_t) &_buffer.front() + lastPos;
+		auto	len = (std::uintptr_t) &_buffer.back() - start;
 
-		std::memmove(&_buffer.front(), start, len);
-		_buffer.resize(len);
+		if (len > 0) {
+			std::memmove(&_buffer.front(), (void*) start, len);
+			_buffer.resize(len);
+		} else {
+			_buffer.clear();
+		}
 	}
 	return (res);
 }
