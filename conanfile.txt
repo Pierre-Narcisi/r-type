@@ -3,7 +3,7 @@ sfml/2.5.1@bincrafters/stable
 
 [options]
 libalsa:shared=False
-sfml:shared=True
+sfml:shared=False
 
 sfml:graphics=True
 sfml:audio=True

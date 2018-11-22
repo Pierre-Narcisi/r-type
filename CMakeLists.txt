@@ -53,8 +53,7 @@ target_link_libraries(rtype ${CONAN_LIBS})
 target_link_libraries(rtype ${CMAKE_THREAD_LIBS_INIT})
 
 
-
-project(Server)
+project(server)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -63,7 +62,7 @@ include_directories(Server)
 include_directories(Server/includes)
 include_directories(Common)
 
-add_executable(Server
+add_executable(server
 	Common/WindowsCtor.cpp
 
 	Common/TcpSocket/ATcpSocket.hpp
