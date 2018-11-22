@@ -43,7 +43,8 @@ add_executable(rtype
 	src/game_engine/component/graphical/Drawable.hpp
 	src/game_engine/ecs/DataBank.hpp
 	src/game_engine/component/audio/Sound.hpp
-	src/game_engine/component/control/DeplacementMouse.hpp)
+	src/game_engine/component/control/DeplacementMouse.hpp
+	src/game/system/Parallaxs.cpp)
 
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-window.so)
 target_link_libraries(rtype /usr/lib/x86_64-linux-gnu/libsfml-graphics.so)
