@@ -6,20 +6,26 @@
 */
 
 #include <iostream>
+#include <sstream>
 #include "ClientConnection.hpp"
 
 namespace rtype {
 
 ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr):
-		TcpListenerSlave(socketFd, addr) {}
+		TcpListenerSlave(socketFd, addr),
+		JsonBuider(_sock) {
+	_onIllegalJson = [] (json::Parser::ParserException const &e) {
+		std::cout << e.what() << std::endl;
+	};
+}
 
 void	ClientConnection::onDataAvailable(std::size_t available) {
-	auto data = (char*) ::operator new(available + 1);
-	_sock.read(data, available);
-	data[available] = 0;
-	std::cout << available << ": " << data << std::endl;
+	auto commands = _extractJsonObjects(available);
 
-	delete data;
+	for (auto &cmd: commands) {
+		// TODO: interpret command
+		std::cout << cmd << std::endl;
+	}
 }
 
 }

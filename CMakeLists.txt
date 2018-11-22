@@ -59,6 +59,9 @@ add_executable(Server
 	Common/Json/src/Entity.cpp
 	Common/Json/src/Parser.cpp
 
+	Common/JsonBuilder/JsonBuilder.hpp
+	Common/JsonBuilder/JsonBuilder.cpp
+
 	Server/src/Main.cpp
 
 	Server/includes/Server.hpp
@@ -69,5 +72,5 @@ add_executable(Server
 
 	Server/includes/TcpListener.hpp
 	Server/includes/TcpListenerSlave.hpp
-	Server/src/TcpListener.cpp
+	Server/includes/TcpListener.tpp
 )

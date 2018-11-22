@@ -29,7 +29,6 @@ public:
 	template <typename T>
 	void	setIterator(T const &it) {
 		_iterator = std::shared_ptr<T>(new T(it));
-		std::cout << it->getNativeSocket() << std::endl;
 	}
 
 	template <typename T>
