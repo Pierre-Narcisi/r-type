@@ -69,4 +69,11 @@ void	TcpSocket::close() {
 	}
 }
 
+int	TcpSocket::available() {
+	int	count = 0;
+
+	SOCKETIOCTL(_endpoint._fd, FIONREAD, &count);
+	return (count);
+}
+
 }

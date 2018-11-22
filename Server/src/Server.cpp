@@ -5,6 +5,7 @@
 ** Server.cpp
 */
 
+#include <signal.h>  
 #include <iostream>
 #include "Constant.hpp"
 #include "Server.hpp"
@@ -13,7 +14,20 @@
 
 namespace rtype {
 
+void	Server::_initSignalCatch() {
+	static auto handler = [] (int sig) {
+		auto &s = Server::instance();
+
+		s.stop();
+	};
+	void (*handlerPtr)(int) = handler;
+
+	signal(SIGINT, handler);
+}
+
 int	Server::init(int ac, char **av) {
+	_initSignalCatch();
+
 	opts.setArgs(ac, av);
 
 	opts.setUsage("Usage", std::string(av[0]) + " [-p port]");
@@ -37,15 +51,24 @@ int	Server::init(int ac, char **av) {
 }
 
 void	Server::start() {
-	nw::TcpListener<ClientConnection>	listener(opts["port"]->as<common::Opts::Int>());
+	nw::TcpListener<ClientConnection>	listener(
+		static_cast<std::uint32_t>(opts["port"]->as<common::Opts::Int>())
+	);
+
+	_stop = [&listener] { listener.stop(); };
 
 	listener.onNewConnection = [this] (ClientConnection &slave) {
-		std::cout << "New connection!" << std::endl;
+		auto &addr = reinterpret_cast<const sockaddr&>(slave.getNativeAddr());
+
+		std::cout << "New connection form " << nw::TcpEndpoint::getIp(addr) << std::endl;
 	};
 
 	listener.init();
-	std::cout << "Hummmm ??" << std::endl;
 	listener.run();
+}
+
+void	Server::stop() {
+	if (_stop) _stop();
 }
 
 }

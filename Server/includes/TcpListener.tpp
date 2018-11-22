@@ -9,15 +9,20 @@
 #if !defined(_TCPLISTENER_TPP)
 #define _TCPLISTENER_TPP
 
+#include <time.h>
 #include "TcpListener.hpp"
 
 namespace nw {
 
 template<typename T>
 TcpListener<T>::~TcpListener() {
-	// for (auto &salve: _slaves) {
-	// 	salve.endConnection();
-	// }
+	for (auto it = _slaves.begin(); it != _slaves.end();) {
+		auto next = it;
+
+		next++;
+		_slaves.erase(it);
+		it = next;
+	}
 
 	SOCKETCLOSE(_socketFd);
 }
@@ -45,10 +50,10 @@ void	TcpListener<T>::init() {
 
 template<typename T>
 void	TcpListener<T>::_accept() {
-	int								err = 0;
-	int								clientFd = -1;
-	TcpListenerSalve::NativeAddr	clientAddr;
-	socklen_t						clientAddrLen = sizeof(clientAddr);
+	int					err = 0;
+	int					clientFd = -1;
+	struct sockaddr_in	clientAddr;
+	socklen_t			clientAddrLen = sizeof(clientAddr);
 
 	err = (clientFd = accept(
 		_socketFd, (struct sockaddr*) &clientAddr, &clientAddrLen));
@@ -57,29 +62,44 @@ void	TcpListener<T>::_accept() {
 	}
 
 	auto &slaveRef = _slaves.emplace_back(clientFd, clientAddr);
-	slaveRef.setIterator(_slaves.end()--);
+	slaveRef.setIterator(--_slaves.end());
 	if (onNewConnection) onNewConnection(slaveRef);
 }
 
 template<typename T>
 void	TcpListener<T>::run() {
-	fd_set	rfds;
+	fd_set			rfds;
 
+	_continue = true;
 	while (_continue) {
+		struct timeval	tv = {0, 100000};
+
 		FD_ZERO(&rfds);
 		FD_SET(_socketFd, &rfds);
-
 		for (auto &slave: _slaves)
 			FD_SET(slave.getNativeSocket(), &rfds);
-		if (select(FD_SETSIZE, &rfds, NULL, NULL, NULL) < 0)
-			std::runtime_error(TcpSocket::getLastNetError());
+		if (int rc; (rc = select(FD_SETSIZE, &rfds, NULL, NULL, &tv)) > 0) {
+		} else if (rc == 0 || TcpSocket::getErrno() == EINTR) {
+			continue;
+		} else {
+			throw std::runtime_error(TcpSocket::getLastNetError());
+		}
 		if (FD_ISSET(_socketFd, &rfds)) {
 			this->_accept();
 		}
-		for (auto &slave: _slaves) {
+		for (auto next = _slaves.begin(); next != _slaves.end();) {
+			auto it = next++;
+			auto &slave = *(it);
+
 			if (FD_ISSET(slave.getNativeSocket(), &rfds)) {
-				if (onDataAvailable) onDataAvailable(slave);
-				slave.onDataAvailable();
+				auto len = slave.getSocket().available();
+
+				if (len != 0) {
+					if (onDataAvailable) onDataAvailable(slave, len);
+					slave.onDataAvailable(len);
+				} else {
+					_slaves.erase(slave.template getIterator<typename decltype(_slaves)::iterator>());
+				}
 			}
 		}
 	}

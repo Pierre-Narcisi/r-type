@@ -68,5 +68,6 @@ add_executable(Server
 	Server/src/ClientConnection.cpp
 
 	Server/includes/TcpListener.hpp
+	Server/includes/TcpListenerSlave.hpp
 	Server/src/TcpListener.cpp
 )

@@ -5,19 +5,18 @@
 ** ClientConnection.hpp
 */
 
-
 #if !defined(_CLIENTCONNECTION_HPP)
 #define _CLIENTCONNECTION_HPP
 
-#include "TcpListener.hpp"
+#include "TcpListenerSlave.hpp"
 
 namespace rtype {
 
-class ClientConnection: public nw::TcpListenerSalve {
+class ClientConnection: public nw::TcpListenerSlave {
 public:
-	ClientConnection(int socketFd, nw::TcpListenerSalve::NativeAddr const &addr);
+	ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr);
 
-	virtual void	onDataAvailable() final;
+	virtual void	onDataAvailable(std::size_t available) final;
 private:
 };
 

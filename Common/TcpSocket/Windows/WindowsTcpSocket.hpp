@@ -18,6 +18,7 @@
 #include "../ATcpSocket.hpp"
 
 #define SOCKETCLOSE(fd) closesocket((fd))
+#define SOCKETIOCTL(fd, opts, ptr) ioctlsocket((fd), (opts), ((u_long*) ptr))
 
 namespace nw {
 
@@ -33,7 +34,10 @@ public:
 	virtual bool	isConnected() final;
 	virtual void	close() final;
 
+	int				available();
+
 	static const char	*getLastNetError();
+	static int			getErrno() { return WSAGetLastError(); }
 };
 
 }

@@ -18,6 +18,7 @@ using ssize_t = int;
 #include <memory>
 #include <cstring>
 #include <vector>
+#include <mutex>
 
 namespace nw {
 
@@ -34,6 +35,8 @@ public:
 	TcpEndpoint &operator=(TcpEndpoint const &) = default;
 
 	inline auto	getResolvedIps() const;
+
+	static inline auto getIp(sockaddr const &addr);
 
 	std::uint16_t	getPort() const { return ntohs(this->_port); }
 private:
@@ -104,13 +107,20 @@ TcpEndpoint::TcpEndpoint(int fd, struct sockaddr_in addr):
 	std::memmove(sPtr.get(), &addr, sizeof(addr));
 }
 
+static std::mutex	getIpLock;
+auto	TcpEndpoint::getIp(sockaddr const &addr) {
+	static char is[256];
+	std::lock_guard<std::mutex> guard(getIpLock);
+
+	getnameinfo(&addr, sizeof(addr), is, sizeof(is), NULL, 0, NI_NUMERICHOST);
+	return (std::string(is));
+}
+
 auto	TcpEndpoint::getResolvedIps() const {
 	std::list<std::string>	res;
-	char					is[256];
-
+	
 	for (const auto &cur: _ai) {
-		getnameinfo(cur.get(), sizeof(*cur), is, sizeof(is), NULL, 0, NI_NUMERICHOST);
-		res.push_back(is);
+		res.push_back(TcpEndpoint::getIp(*cur));
 	}
 	return res;
 }

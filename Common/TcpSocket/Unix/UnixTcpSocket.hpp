@@ -20,9 +20,11 @@
 #include <stdexcept>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 #include "../ATcpSocket.hpp"
 
 #define SOCKETCLOSE(fd) ::close((fd))
+#define SOCKETIOCTL(args...) ::ioctl(args)
 
 namespace nw {
 
@@ -38,7 +40,10 @@ public:
 	virtual bool	isConnected() final;
 	virtual void	close() final;
 
+	int				available();
+
 	static const char	*getLastNetError();
+	static int			getErrno() { return errno; }
 };
 
 }
