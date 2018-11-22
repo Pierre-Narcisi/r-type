@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Common"
+                "${workspaceFolder}/Common",
+                "${workspaceFolder}/.cache/data/boost/1.68.0/conan/stable/package/5e8eff81f2db7ac8c8c3d41364df2f92d8c53fdb/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

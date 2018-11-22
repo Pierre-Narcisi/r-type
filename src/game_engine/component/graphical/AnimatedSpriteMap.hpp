@@ -14,17 +14,18 @@ namespace ecs {namespace component {
 	struct AnimatedSpriteMap {
 		AnimatedSpriteMap() {}
 		AnimatedSpriteMap(std::string path) {
-			DIR *dir;
-			struct dirent *ent;
 			std::set<std::string> sorted;
-			if ((dir = opendir(path.c_str())) != NULL) {
-				while ((ent = readdir(dir)) != NULL) {
-					if (ent->d_type == DT_DIR)
-						sorted.insert(ent->d_name);
+			if (boost::filesystem::exists(path)) {
+				boost::filesystem::directory_iterator	endItr;
+				for (boost::filesystem::directory_iterator itr(path)
+				;itr != endItr
+				;++itr) {
+					if (boost::filesystem::is_directory(itr->status())) {
+						sorted.insert(itr->path().filename().c_str());
+					}
 				}
-				closedir(dir);
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {
-					animatedSprites[*it] = AnimatedSprite(path + "/" + ent->d_name);
+					animatedSprites[*it] = AnimatedSprite(path + "/" + *it);
 				}
 			} else {
 				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Missing directory \"" << path << "\"" << std::endl;

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <list>
-#include <dirent.h>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <set>
 #include "ecs/Entity.hpp"
@@ -21,15 +21,16 @@ namespace ecs {namespace component {
 		AnimatedSprite() {
 		}
 		AnimatedSprite(std::string path) {
-			DIR *dir;
-			struct dirent *ent;
 			std::set<std::string> sorted;
-			if ((dir = opendir(path.c_str())) != NULL) {
-				while ((ent = readdir(dir)) != NULL) {
-					if (ent->d_type == DT_REG)
-						sorted.insert(path + "/" + ent->d_name);
+			if (boost::filesystem::exists(path)) {
+				boost::filesystem::directory_iterator	endItr;
+				for (boost::filesystem::directory_iterator itr(path)
+				;itr != endItr
+				;++itr) {
+					if (boost::filesystem::is_regular(itr->status())) {
+						sorted.insert(itr->path().c_str());
+					}
 				}
-				closedir(dir);
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {
 					animation.emplace_back(*it);
 				}
@@ -47,15 +48,17 @@ namespace ecs {namespace component {
 			frame = 0;
 		}
 		AnimatedSprite(std::string path, int framesPerSecond) {
-			DIR *dir;
 			struct dirent *ent;
 			std::set<std::string> sorted;
-			if ((dir = opendir(path.c_str())) != NULL) {
-				while ((ent = readdir(dir)) != NULL) {
-					if (ent->d_type == DT_REG)
-						sorted.insert(path + "/" + ent->d_name);
+			if (boost::filesystem::exists(path)) {
+				boost::filesystem::directory_iterator	endItr;
+				for (boost::filesystem::directory_iterator itr(path)
+				;itr != endItr
+				;++itr) {
+					if (boost::filesystem::is_regular(itr->status())) {
+						sorted.insert(itr->path().c_str());
+					}
 				}
-				closedir(dir);
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {
 					animation.emplace_back(*it);
 				}
