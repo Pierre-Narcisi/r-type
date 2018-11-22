@@ -8,6 +8,8 @@
 #include <cmath>
 #include <component/control/DeplacementKeyBoard.hpp>
 #include <component/physic/Position.hpp>
+#include <component/physic/Speed.hpp>
+#include <component/control/DeplacementMouse.hpp>
 #include "component/control/Controller.hpp"
 #include "Controls.hpp"
 #include "ecs/Ecs.hpp"
@@ -15,27 +17,27 @@
 namespace ecs {namespace system {
 
 	void Controls::UpdateControllers(sf::Event &event) {
-		auto &controllers = ecs::Ecs::getConponentMap<component::Controller>().getComponentList();
+		auto &controllers = ecs::Ecs::getConponentMap<component::Controller>();
 		const float DEAD_ZONE = 0.2f;
 
 		for (auto &controller : controllers) {
 
 			/// Buttons handle
 
-			controller.buttonA = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 0);
-			controller.buttonX = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 2);
-			controller.buttonY = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 3);
-			controller.buttonB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 1);
+			controller.second.buttonA = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 0);
+			controller.second.buttonX = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 2);
+			controller.second.buttonY = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 3);
+			controller.second.buttonB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 1);
 
-			controller.select = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 6);
-			controller.start = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 7);
-			controller.menu = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 8);
+			controller.second.select = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 6);
+			controller.second.start = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 7);
+			controller.second.menu = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 8);
 
-			controller.rightB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 5);
-			controller.leftB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 4);
+			controller.second.rightB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 5);
+			controller.second.leftB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 4);
 
-			controller.leftJoyB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 9);
-			controller.leftJoyB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 10);
+			controller.second.leftJoyB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 9);
+			controller.second.leftJoyB = sf::Joystick::isButtonPressed(event.joystickButton.joystickId, 10);
 
 			/// LEFT ROTATION
 			float rotHorizontal =
@@ -48,24 +50,24 @@ namespace ecs {namespace system {
 				rotVertical = 0.f;
 
 			if (rotHorizontal == 0 && rotVertical == 0) {
-				controller.joystickLeftState = false;
-				controller.joystickLeft = 90.f;
+				controller.second.joystickLeftState = false;
+				controller.second.joystickLeft = 90.f;
 			}
 			else {
-				controller.joystickLeftState = true;
+				controller.second.joystickLeftState = true;
 				float rot = static_cast<float>(atan(rotVertical/rotHorizontal) / M_PI * 180.0);
 				if (rotHorizontal > 0) {
 					if (rotVertical > 0)
-						controller.joystickLeft = 360.f - rot;
+						controller.second.joystickLeft = 360.f - rot;
 					else
-						controller.joystickLeft = -rot;
+						controller.second.joystickLeft = -rot;
 				} else {
-					controller.joystickLeft = 180 - rot;
+					controller.second.joystickLeft = 180 - rot;
 				}
 				if (rotVertical == 1)
-					controller.joystickLeft = 270;
+					controller.second.joystickLeft = 270;
 				else if (rotVertical == -1)
-					controller.joystickLeft = 90;
+					controller.second.joystickLeft = 90;
 			}
 
 			/// RIGHT ROTATION
@@ -79,65 +81,63 @@ namespace ecs {namespace system {
 				rotVertical = 0.f;
 
 			if (rotHorizontal == 0.f && rotVertical == 0.f) {
-				controller.joystickRightState = false;
-				controller.joystickRight = 90.f;
+				controller.second.joystickRightState = false;
+				controller.second.joystickRight = 90.f;
 			} else {
-				controller.joystickRightState = true;
+				controller.second.joystickRightState = true;
 				float rot = static_cast<float>(atan(rotVertical/rotHorizontal) / M_PI * 180.0);
 				if (rotHorizontal > 0) {
 					if (rotVertical > 0)
-						controller.joystickRight = 360.f - rot;
+						controller.second.joystickRight = 360.f - rot;
 					else
-						controller.joystickRight = -rot;
+						controller.second.joystickRight = -rot;
 				} else {
-					controller.joystickRight = 180 - rot;
+					controller.second.joystickRight = 180 - rot;
 				}
 				if (rotVertical == 1)
-					controller.joystickRight = 270;
+					controller.second.joystickRight = 270;
 				else if (rotVertical == -1)
-					controller.joystickRight = 90;
+					controller.second.joystickRight = 90;
 			}
 		}
 	}
 
 	void Controls::UpdateKeyboards(sf::Event &event) {
-		auto &keyboards = ecs::Ecs::getConponentMap<component::Keyboard>().getComponentList();
-		auto id = ecs::Ecs::getConponentMap<component::Keyboard>().getIdsList().begin();
+		auto &keyboards = ecs::Ecs::getConponentMap<component::Keyboard>();
 
 		for (auto &keyboard : keyboards) {
-			for (auto it = keyboard.keyMap.begin(); it != keyboard.keyMap.end(); it++) {
+			for (auto it = keyboard.second.keyMap.begin(); it != keyboard.second.keyMap.end(); it++) {
 				if (sf::Keyboard::isKeyPressed(Controls::getKeyBoard()[it->first])) {
-					keyboard.keyMap[it->first].first = true;
-					if (keyboard.keyMap[it->first].second)
-						keyboard.keyMap[it->first].second(*id);
+					keyboard.second.keyMap[it->first].first = true;
+					if (keyboard.second.keyMap[it->first].second)
+						keyboard.second.keyMap[it->first].second(keyboard.first);
 				} else
-					keyboard.keyMap[it->first].first = false;
+					keyboard.second.keyMap[it->first].first = false;
 			}
-			id++;
 		}
 	}
 
 	void Controls::UpdateMouses(sf::Event &event) {
-		auto &mouses = ecs::Ecs::getConponentMap<component::Mouse>().getComponentList();
+		auto &mouses = ecs::Ecs::getConponentMap<component::Mouse>();
 
 		for (auto &mouse : mouses) {
-			for (auto it = mouse.mouseMap.begin(); it != mouse.mouseMap.end(); it++) {
+			for (auto it = mouse.second.mouseMap.begin(); it != mouse.second.mouseMap.end(); it++) {
 				if (sf::Mouse::isButtonPressed(Controls::getMouse()[it->first])) {
-					mouse.mouseMap[it->first].first = true;
-					if (mouse.mouseMap[it->first].second)
-						mouse.mouseMap[it->first].second();
+					mouse.second.mouseMap[it->first].first = true;
+					if (mouse.second.mouseMap[it->first].second)
+						mouse.second.mouseMap[it->first].second(mouse.first);
 				} else
-					mouse.mouseMap[it->first].first = false;
+					mouse.second.mouseMap[it->first].first = false;
 			}
 			if (event.type == sf::Event::EventType::MouseMoved) {
-				mouse.position.x = event.mouseMove.x;
-				mouse.position.y = event.mouseMove.y;
+				mouse.second.position.x = event.mouseMove.x;
+				mouse.second.position.y = event.mouseMove.y;
 			}
 		}
 	}
 
 	void Controls::UpdateDeplacement() {
-		auto deplacements = ecs::Ecs::filter<component::Keyboard, component::DeplacementKeyBoard, component::Position>();
+		auto deplacements = ecs::Ecs::filter<component::Keyboard, component::DeplacementKeyBoard, component::Speed>();
 		float time;
 
 		for (auto tomove : deplacements) {
@@ -167,13 +167,40 @@ namespace ecs {namespace system {
 				deplacement.x = -(dep.speed * 0.7071);
 			}
 			if (keyB.keyMap[dep.backward].first && keyB.keyMap[dep.right].first) {
-				deplacement.y = 70.71;
-				deplacement.x = 70.71;
+				deplacement.y = (dep.speed * 0.7071);
+				deplacement.x = (dep.speed * 0.7071);
 			}
 			time = static_cast<float>(ecs::core::Time::get(TimeUnit::MicroSeconds) - dep.lastMove);
-			ecs::Ecs::getConponentMap<component::Position>()[tomove].x += time / 1000000.f * deplacement.x;
-			ecs::Ecs::getConponentMap<component::Position>()[tomove].y += time / 1000000.f * deplacement.y;
+			ecs::Ecs::getConponentMap<component::Speed>()[tomove].x = time / 1000000.f * deplacement.x;
+			ecs::Ecs::getConponentMap<component::Speed>()[tomove].y = time / 1000000.f * deplacement.y;
 			dep.lastMove = ecs::core::Time::get(TimeUnit::MicroSeconds);
+		}
+
+		auto mouses = ecs::Ecs::filter<component::Mouse, component::Speed, component::DeplacementMouse, component::Position>();
+		auto &mouseMap = ecs::Ecs::getConponentMap<component::Mouse>();
+		auto &mouseDepMap = ecs::Ecs::getConponentMap<component::DeplacementMouse>();
+		auto &speedMap = ecs::Ecs::getConponentMap<component::Speed>();
+		auto &posMap = ecs::Ecs::getConponentMap<component::Position>();
+		for (auto mouse : mouses) {
+			mouseDepMap[mouse].lastPosition.x = posMap[mouse].x;
+			mouseDepMap[mouse].lastPosition.y = posMap[mouse].y;
+			if (!(mouseMap[mouse].position == mouseDepMap[mouse].lastPosition)) {
+				if (abs(mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) + abs(mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) < mouseDepMap[mouse].speed) {
+					speedMap[mouse].x = mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x;
+					speedMap[mouse].y = mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y;
+				} else {
+					auto total = abs(mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) + abs(mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y);
+					speedMap[mouse].x = mouseDepMap[mouse].speed * (mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) / total;
+					speedMap[mouse].y = mouseDepMap[mouse].speed * (mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) / total;
+				}
+			} else {
+				speedMap[mouse].x = 0.f;
+				speedMap[mouse].y = 0.f;
+			}
+			time = static_cast<float>(ecs::core::Time::get(TimeUnit::MicroSeconds) - mouseDepMap[mouse].lastMove);
+			speedMap[mouse].x = time / 1000000.f * speedMap[mouse].x;
+			speedMap[mouse].y = time / 1000000.f * speedMap[mouse].y;
+			mouseDepMap[mouse] = time;
 		}
 	}
 

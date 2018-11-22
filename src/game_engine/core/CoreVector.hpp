@@ -23,6 +23,10 @@ namespace ecs {namespace core {
 			this->y = equal.y;
 			return *this;
 		}
+
+		bool operator==(Vector2<T> const& other) {
+			return (this->x == other.x && this->y == other.y);
+		}
 	};
 
 	template <typename T>
@@ -42,6 +46,9 @@ namespace ecs {namespace core {
 			this->y = equal.y;
 			this->z = equal.z;
 			return *this;
+		}
+		bool operator==(Vector3<T> const& other) {
+			return (this->x == other.x && this->y == other.y && this->z == other.z);
 		}
 	};
 
@@ -65,6 +72,9 @@ namespace ecs {namespace core {
 			this->xb = equal.xb;
 			this->yb = equal.yb;
 			return *this;
+		}
+		bool operator==(Vector4<T> const& other) {
+			return (this->xa == other.xa && this->ya == other.ya && this->xb == other.xb && this->yb == other.yb);
 		}
 	};
 }}

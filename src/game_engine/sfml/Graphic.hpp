@@ -10,23 +10,20 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <unordered_map>
+#include <iostream>
 #include "core/CoreVector.hpp"
 #include "system/control/Controls.hpp"
 
 namespace ecs {namespace graphical {
 		class Graphic {
 		private:
-			struct Sprite {
-				Sprite() {
-					size = ecs::core::Vector2<unsigned int>(0, 0);
-					pos = ecs::core::Vector2<float>(0, 0);
-					visible = true;
-				};
+			struct BundleSprite {
+				BundleSprite() {
+					sprite = nullptr;
+					texture = nullptr;
+				}
 				sf::Sprite *sprite;
 				sf::Texture *texture;
-				ecs::core::Vector2<unsigned int> size;
-				ecs::core::Vector2<float> pos;
-				bool			visible;
 			};
 
 			struct Text {
@@ -62,13 +59,30 @@ namespace ecs {namespace graphical {
 				mode.height = 720;
 				mode.bitsPerPixel = 32;
 				_window = new sf::RenderWindow(mode, "Game", sf::Style::Resize | sf::Style::Close);
+				_window->setFramerateLimit(120);
 			}
 
 			static Graphic &get();
 			void update();
 			bool isOpen();
+
 			static sf::RenderWindow *getWindow() {
 				return (get()._window);
+			}
+
+			static sf::Sprite *loadedSprite(std::string path) {
+				auto &bundle = get()._chargedSprites[path];
+				if (bundle.sprite != nullptr)
+					return (bundle.sprite);
+				std::cout << "loaded sprite once" << std::endl;
+				bundle.texture = new sf::Texture();
+
+				if (!bundle.texture->loadFromFile(path)) {
+					std::cout << "src/game_engine/sfml/Graphic: Could not load texture " << path << std::endl;
+					bundle.texture = nullptr;
+				}
+				bundle.sprite = new sf::Sprite(*bundle.texture);
+				return (bundle.sprite);
 			}
 
 			/// Tools
@@ -81,19 +95,13 @@ namespace ecs {namespace graphical {
 				return core::Vector2<unsigned int>(size.x, size.y);
 			}
 
-			sf::RenderWindow	*_window;
+			sf::RenderWindow				*_window;
+			std::unordered_map<std::string, BundleSprite>	_chargedSprites;
 		private:
-			sf::Event		_event;
-			std::vector<unsigned int> _controllers;
+			sf::Event					_event;
+			std::vector<unsigned int>			_controllers;
 
-			unsigned long _lastId;
-			std::unordered_map<unsigned long, Sprite>	_spriteMap;
-			std::unordered_map<unsigned long, Text>		_TextMap;
-			std::unordered_map<unsigned long, Music>	_musicMap;
-			std::unordered_map<unsigned long, Sound>	_soundMap;
-
-			static std::unordered_map<unsigned int, std::vector<unsigned long>> _layers;
-			std::vector<unsigned long> _collidables;
+			unsigned long					_lastId;
 		};
 }}
 
