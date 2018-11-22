@@ -15,8 +15,10 @@ fi
 
 if [ "$(uname)" = "Linux" ]; then
 	ConanConfigFile="linux.txt";
+	CMakeType="Unix Makefiles"
 else
 	ConanConfigFile="windows.txt";
+	CMakeType="Visual Studio 15 Win64"
 fi
 
 if [ ! -d $BuildDir ]; then
@@ -28,10 +30,10 @@ fi
 
 	conan install .. --build=missing --profile ../ConanPlatformSettings/$ConanConfigFile
 	if [ ! -z $1 ]; then
-		cmake .. -DCMAKE_BUILD_TYPE=$@
+		cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=$@
 		cmake --build . --config $@
 	else
-		cmake .. -DCMAKE_BUILD_TYPE=Debug
+		cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=Debug
 		cmake --build . --config Debug
 	fi
 ) && echo "OK" || echo "KO";

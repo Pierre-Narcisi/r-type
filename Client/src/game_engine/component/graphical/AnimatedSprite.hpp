@@ -28,7 +28,7 @@ namespace ecs {namespace component {
 				;itr != endItr
 				;++itr) {
 					if (boost::filesystem::is_regular(itr->status())) {
-						sorted.insert(itr->path().c_str());
+						sorted.insert(itr->path().string());
 					}
 				}
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {
@@ -48,7 +48,6 @@ namespace ecs {namespace component {
 			frame = 0;
 		}
 		AnimatedSprite(std::string path, int framesPerSecond) {
-			struct dirent *ent;
 			std::set<std::string> sorted;
 			if (boost::filesystem::exists(path)) {
 				boost::filesystem::directory_iterator	endItr;
@@ -56,7 +55,7 @@ namespace ecs {namespace component {
 				;itr != endItr
 				;++itr) {
 					if (boost::filesystem::is_regular(itr->status())) {
-						sorted.insert(itr->path().c_str());
+						sorted.insert(itr->path().string());
 					}
 				}
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {

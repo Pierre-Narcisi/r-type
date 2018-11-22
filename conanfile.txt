@@ -1,13 +1,23 @@
 [requires]
 sfml/2.5.1@bincrafters/stable
+openal/1.19.0@bincrafters/stable
+boost/1.68.0@conan/stable
 
 [options]
 libalsa:shared=False
+openal:shared=True
 sfml:shared=False
+boost:shared=False
 
 sfml:graphics=True
 sfml:audio=True
 sfml:window=True
+boost:without_filesystem=False
 
 [generators]
 cmake
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
+lib, *.so* -> ./bin

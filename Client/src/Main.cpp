@@ -6,6 +6,8 @@
 */
 
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <zconf.h>
 #include <ecs/Entity.hpp>
 #include <ecs/Ecs.hpp>
@@ -180,7 +182,8 @@ int main() {
 		ecs::system::Controls::UpdateDeplacement();
 		ecs::system::Speeds::UpdateSpeeds();
 
-		usleep(static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0));
+		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
+		std::this_thread::sleep_for(std::chrono::nanoseconds(x));
 	}
 
 }

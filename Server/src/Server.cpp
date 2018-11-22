@@ -20,7 +20,6 @@ void	Server::_initSignalCatch() {
 
 		s.stop();
 	};
-	void (*handlerPtr)(int) = handler;
 
 	signal(SIGINT, handler);
 #if !defined(_MSC_VER)

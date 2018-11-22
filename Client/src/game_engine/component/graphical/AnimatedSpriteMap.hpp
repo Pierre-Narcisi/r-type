@@ -21,7 +21,7 @@ namespace ecs {namespace component {
 				;itr != endItr
 				;++itr) {
 					if (boost::filesystem::is_directory(itr->status())) {
-						sorted.insert(itr->path().filename().c_str());
+						sorted.insert(itr->path().filename().string());
 					}
 				}
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {

@@ -5,6 +5,7 @@
 ** Created by seb,
 */
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <component/control/DeplacementKeyBoard.hpp>
 #include <component/physic/Position.hpp>
