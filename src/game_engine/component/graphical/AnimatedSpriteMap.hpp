@@ -19,12 +19,17 @@ namespace ecs {namespace component {
 			std::set<std::string> sorted;
 			if ((dir = opendir(path.c_str())) != NULL) {
 				while ((ent = readdir(dir)) != NULL) {
-					if (ent->d_type == DT_DIR)
+					if (ent->d_type == DT_DIR && ent->d_name != std::string(".") && ent->d_name != std::string("..")) {
 						sorted.insert(ent->d_name);
+					}
 				}
 				closedir(dir);
-				for (auto it = sorted.begin(); it != sorted.end(); it++) {
-					animatedSprites[*it] = AnimatedSprite(path + "/" + ent->d_name);
+				if (sorted.size() == 0) {
+					std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: No folders found in \"" << path << "\"" << std::endl;
+					exit(84);
+				}
+				for (auto name : sorted) {
+					animatedSprites[name] = AnimatedSprite(path + "/" + name);
 				}
 			} else {
 				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Missing directory \"" << path << "\"" << std::endl;
