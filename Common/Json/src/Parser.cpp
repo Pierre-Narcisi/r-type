@@ -20,7 +20,7 @@ namespace json
 	inline char Parser::__peek() const {
 		char	c;
 
-		while ((c = _stm.peek()) && c && 
+		while ((c = _stm.peek()) && c &&
 			(c == '\n' || c == ' ' || c == '\t')) {
 			const_cast<Counter&>(_count).offset++;
 			if (c == '\n') {

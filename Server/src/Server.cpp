@@ -23,9 +23,11 @@ void	Server::_initSignalCatch() {
 	void (*handlerPtr)(int) = handler;
 
 	signal(SIGINT, handler);
+#if !defined(_MSC_VER)
 	signal(SIGUSR1, handler);
 	signal(SIGUSR2, handler);
 	signal(SIGQUIT, handler);
+#endif
 }
 
 int	Server::init(int ac, char **av) {
