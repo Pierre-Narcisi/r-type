@@ -10,7 +10,7 @@
 #define _TCPLISTENERSLAVE_HPP
 
 #include <memory>
-#include "TcpSocket/TcpSocket.hpp"
+#include "Network/TcpSocket/TcpSocket.hpp"
 
 namespace nw {
 
@@ -20,7 +20,7 @@ public:
 	using NativeSocket = int;
 
 	explicit TcpListenerSlave(int socketFd, NativeAddr const &addr):
-		_nativeSock(socketFd), _addr(addr), _sock(TcpEndpoint(socketFd, addr)) {}
+		_nativeSock(socketFd), _addr(addr), _sock(socketFd, TcpEndpoint(addr)) {}
 
 	~TcpListenerSlave() {
 		_sock.close();

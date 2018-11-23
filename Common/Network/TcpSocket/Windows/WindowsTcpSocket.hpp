@@ -10,22 +10,15 @@
 #if !defined(_INTERN_TCP_SOCKET_HPP)
 #define _INTERN_TCP_SOCKET_HPP
 
-#include <string>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <stdio.h>
-#include <windows.h>
+#include "Network/_Network.hpp"
 #include "../ATcpSocket.hpp"
-
-#define SOCKETCLOSE(fd) closesocket((fd))
-#define SOCKETIOCTL(fd, opts, ptr) ioctlsocket((fd), (opts), ((u_long*) ptr))
 
 namespace nw {
 
 class TcpSocket : public ATcpSocket {
 public:
 	TcpSocket() : ATcpSocket(Platform::WINDOWS) {}
-	TcpSocket(TcpEndpoint const &ep): ATcpSocket(Platform::WINDOWS, ep) {}
+	TcpSocket(Socket sock, TcpEndpoint const &ep): ATcpSocket(Platform::WINDOWS, sock, ep) {}
 	~TcpSocket() { this->close(); }
 
 	virtual void	connect(const TcpEndpoint &ep) final;

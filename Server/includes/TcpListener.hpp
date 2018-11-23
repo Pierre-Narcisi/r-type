@@ -12,7 +12,7 @@
 #include <functional>
 #include <exception>
 #include <list>
-#include "TcpSocket/TcpSocket.hpp"
+#include "Network/TcpSocket/TcpSocket.hpp"
 
 namespace nw {
 
