@@ -5,6 +5,9 @@
 ** Created by seb,
 */
 
+
+#include "component/ai.hpp"
+#include "enemy/enemy1/enemy1.hpp"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -35,18 +38,8 @@ int main() {
 		return buffer;
 	};
 
-	ID banane = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(banane, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(banane, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Speed>(banane, 0, 12);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(banane, "./assets/Isaac.png");
-
-	ID loick = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(loick, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(loick, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Speed>(loick, 12, 0);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(loick, "./assets/Bullet.png", true, 2);
-
+	ID enemytest = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<game::component::ai>(enemytest, enemytest, new enemy1);
 
 	ID id = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
@@ -137,43 +130,6 @@ int main() {
 	});
 	ecs::Ecs::addComponent<ecs::component::Sound>(id);
 	ecs::Ecs::getConponentMap<ecs::component::Sound>()[id].soundMap["attack"].setBuffer(ecs::DataBank<std::string, sf::SoundBuffer>::get("./assets/sounds/death.wav"));
-
-	id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(id, 100.f, 100.f);
-	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
-	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
-	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
-
-	id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(id, 200.f, 200.f);
-	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
-	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
-	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
-
-	id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(id, 300.f, 300.f);
-	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
-	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
-	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
-
-	id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Bullet.png");
-	ecs::Ecs::addComponent<ecs::component::Position>(id, 500.f, 500.f);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
-	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(id, "./assets", 4);
 
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);

@@ -13,6 +13,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 include_directories(Client/src/game_engine)
+include_directories(Client/src/game)
 
 set(COMMONS_SRCS
 	Common/WindowsCtor.cpp
@@ -44,6 +45,11 @@ add_executable(rtype
 	Client/lib/TimedEvent/TimedEvent.hpp
 	Client/lib/TimedEvent/TimedEventAdmin.cpp
 	Client/lib/TimedEvent/TimedEventAdmin.hpp
+
+	Client/src/game/component/ai.hpp
+	Client/src/game/enemy/enemy1/enemy1.hpp
+	Client/src/game/enemy/enemy1/enemy1.cpp
+	Client/src/game/enemy/enemy.hpp
 
 	Client/src/game_engine/ecs/Ecs.hpp
 	Client/src/game_engine/ecs/Entity.cpp
