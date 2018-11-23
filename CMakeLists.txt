@@ -82,6 +82,11 @@ add_executable(rtype
 	Client/src/game_engine/ecs/DataBank.hpp
 	Client/src/game_engine/component/audio/Sound.hpp
 	Client/src/game_engine/component/control/DeplacementMouse.hpp
+
+	Client/src/game/component/Parallax.hpp
+	Client/src/game/system/Parallaxs.hpp
+	Client/src/game/system/Parallaxs.cpp
+
 )
 
 find_package (Threads)

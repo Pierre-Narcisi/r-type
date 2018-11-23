@@ -24,6 +24,10 @@ namespace ecs {namespace component {
 						sorted.insert(itr->path().filename().string());
 					}
 				}
+				if (sorted.size() == 0) {
+					std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: No folders found in \"" << path << "\"" << std::endl;
+					exit(84);
+				}
 				for (auto it = sorted.begin(); it != sorted.end(); it++) {
 					animatedSprites[*it] = AnimatedSprite(path + "/" + *it);
 				}

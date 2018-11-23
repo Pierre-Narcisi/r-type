@@ -45,26 +45,6 @@
 		"condition_variable": "cpp",
 		"mutex": "cpp",
 		"ratio": "cpp",
-		"thread": "cpp",
-		"*.ipp": "cpp",
-		"atomic": "cpp",
-		"strstream": "cpp",
-		"bitset": "cpp",
-		"codecvt": "cpp",
-		"csetjmp": "cpp",
-		"csignal": "cpp",
-		"deque": "cpp",
-		"forward_list": "cpp",
-		"unordered_set": "cpp",
-		"rope": "cpp",
-		"slist": "cpp",
-		"future": "cpp",
-		"numeric": "cpp",
-		"scoped_allocator": "cpp",
-		"cinttypes": "cpp",
-		"typeindex": "cpp",
-		"valarray": "cpp",
-		"variant": "cpp",
-		"algorithm": "cpp"
+		"thread": "cpp"
 	}
 }
