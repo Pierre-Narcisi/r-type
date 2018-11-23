@@ -28,11 +28,12 @@ fi
 	cd $BuildDir
 	conan remote add bincrafter https://api.bintray.com/conan/bincrafters/public-conan
 
-	conan install .. --build=missing --profile ../ConanPlatformSettings/$ConanConfigFile
 	if [ ! -z $1 ]; then
-		cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=$@
-		cmake --build . --config $@
+		conan install .. --build=missing --settings build_type=$1 --profile ../ConanPlatformSettings/$ConanConfigFile
+		cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=$1
+		cmake --build . --config $1
 	else
+		conan install .. --build=missing --settings build_type=Debug --profile ../ConanPlatformSettings/$ConanConfigFile
 		cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=Debug
 		cmake --build . --config Debug
 	fi
