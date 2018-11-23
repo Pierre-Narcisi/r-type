@@ -3,7 +3,7 @@ project(testTcpSocket)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(..)
+include_directories(../..)
 include_directories(.)
 
 add_executable(testTcpSocket
@@ -15,5 +15,6 @@ add_executable(testTcpSocket
 	Unix/UnixTcpSocket.hpp
 	Windows/WindowsTcpSocket.cpp
 	Windows/WindowsTcpSocket.hpp
-	../WindowsCtor.cpp
+	../EndpointBase.hpp
+	../../WindowsCtor.cpp
 )

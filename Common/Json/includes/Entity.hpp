@@ -197,9 +197,9 @@ namespace json
 		clone(Entity::CloneOption attr) const final;
 		virtual	void
 		print(std::ostream &stm, Entity::StringifyAttr attr, int depth) const final;
-		const std::string
-				&get(void) const;
-		void		set(std::string const &str);
+		const std::string	&get(void) const;
+		std::string			get(void);
+		void				set(std::string const &str);
 
 		virtual	std::string	toString(void) const final;
 		virtual double		toNumber(void) const final;
@@ -239,7 +239,8 @@ namespace json
 		clone(Entity::CloneOption attr) const final;
 		virtual	void
 		print(std::ostream &stm, Entity::StringifyAttr attr, int depth) const final;
-		std::unordered_map<std::string, Entity>	&get(void);
+		std::unordered_map<std::string, Entity>			&get(void);
+		const std::unordered_map<std::string, Entity>	&get(void) const;
 
 		virtual	std::string	toString(void) const final;
 	};
@@ -256,7 +257,8 @@ namespace json
 		clone(Entity::CloneOption attr) const final;
 		virtual	void
 		print(std::ostream &stm, Entity::StringifyAttr attr, int depth) const final;
-		std::vector<Entity>		&get(void);
+		std::vector<Entity>			&get(void);
+		const std::vector<Entity>	&get(void) const;
 
 		virtual	std::string	toString(void) const final;
 	};

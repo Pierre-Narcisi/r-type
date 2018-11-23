@@ -17,13 +17,18 @@ include_directories(Client/src/game_engine)
 set(COMMONS_SRCS
 	Common/WindowsCtor.cpp
 
-	Common/TcpSocket/ATcpSocket.hpp
-	Common/TcpSocket/TcpSocket.hpp
-	Common/TcpSocket/CommonTcpSocket.cpp
-	Common/TcpSocket/Unix/UnixTcpSocket.cpp
-	Common/TcpSocket/Unix/UnixTcpSocket.hpp
-	Common/TcpSocket/Windows/WindowsTcpSocket.cpp
-	Common/TcpSocket/Windows/WindowsTcpSocket.hpp
+	Common/Network/EndpointBase.hpp
+
+	Common/Network/TcpSocket/ATcpSocket.hpp
+	Common/Network/TcpSocket/TcpSocket.hpp
+	Common/Network/TcpSocket/CommonTcpSocket.cpp
+	Common/Network/TcpSocket/Unix/UnixTcpSocket.cpp
+	Common/Network/TcpSocket/Unix/UnixTcpSocket.hpp
+	Common/Network/TcpSocket/Windows/WindowsTcpSocket.cpp
+	Common/Network/TcpSocket/Windows/WindowsTcpSocket.hpp
+
+	Common/Network/UdpSocket/UdpSocket.hpp
+	Common/Network/UdpSocket/UdpSocket.cpp
 
 	Common/Opts/Opts.cpp
 	Common/Opts/Opts.hpp

@@ -10,28 +10,15 @@
 #if !defined(_INTERN_TCP_SOCKET_HPP)
 #define _INTERN_TCP_SOCKET_HPP
 
-#include <string>
-#include <cstring>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h> 
-#include <stdexcept>
-#include <errno.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
+#include "Network/_Network.hpp"
 #include "../ATcpSocket.hpp"
-
-#define SOCKETCLOSE(fd) ::close((fd))
-#define SOCKETIOCTL(args...) ::ioctl(args)
 
 namespace nw {
 
 class TcpSocket : public ATcpSocket {
 public:
 	TcpSocket(): ATcpSocket(Platform::UNIX) {}
-	TcpSocket(TcpEndpoint const &ep): ATcpSocket(Platform::UNIX, ep) {}
+	TcpSocket(Socket sock, TcpEndpoint const &ep): ATcpSocket(Platform::UNIX, sock, ep) {}
 	~TcpSocket() { this->close(); }
 
 	virtual void	connect(const TcpEndpoint &ep) final;
