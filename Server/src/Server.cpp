@@ -12,6 +12,8 @@
 #include "TcpListener.hpp"
 #include "ClientConnection.hpp"
 
+
+#include "Network/UdpSocket/UdpSocket.hpp"
 namespace rtype {
 
 void	Server::_initSignalCatch() {

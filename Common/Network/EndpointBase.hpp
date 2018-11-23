@@ -33,10 +33,6 @@ public:
 
 	static inline auto getIp(sockaddr const &addr);
 
-	auto createSocket() const {
-		return socket(_family, _socktype, _protocol);
-	}
-
 	std::uint16_t	getPort() const { return ntohs(this->_port); }
 protected:
 	inline void	_fromIpPort(std::string const ip, std::uint16_t port);
@@ -74,8 +70,7 @@ void	EndpointBase::_fromIpPort(std::string const ip, std::uint16_t port) {
 
 void	EndpointBase::_fromAddr(struct sockaddr_in addr) {
 	auto &sPtr = _ai.emplace_back(
-		reinterpret_cast<sockaddr*>(::operator new(sizeof(addr)))
-	);
+		reinterpret_cast<sockaddr*>(::operator new(sizeof(addr))));
 
 	std::memmove(sPtr.get(), &addr, sizeof(addr));
 }

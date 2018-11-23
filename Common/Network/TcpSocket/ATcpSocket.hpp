@@ -37,6 +37,10 @@ public:
 	TcpEndpoint(TcpEndpoint const &) = default;
 	TcpEndpoint(TcpEndpoint &&) = default;
 	TcpEndpoint &operator=(TcpEndpoint const &) = default;
+
+	static auto createSocket() {
+		return socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	}
 private:
 	friend TcpSocket;
 };

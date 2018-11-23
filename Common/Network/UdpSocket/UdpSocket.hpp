@@ -26,17 +26,34 @@ public:
 	UdpEndpoint(UdpEndpoint const &) = default;
 	UdpEndpoint(UdpEndpoint &&) = default;
 	UdpEndpoint &operator=(UdpEndpoint const &) = default;
+
+	static auto createSocket() {
+		return socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	}
 private:
 	friend UdpSocket;
 };
 
+struct UdpBuffer {
+	UdpBuffer(std::string &&str):
+		buf(const_cast<char*>(str.c_str())), len(str.size() + 1) {}
+	UdpBuffer(char *buffer, std::size_t size):
+		buf(buffer), len(size) {}
+
+	char		*buf;
+	std::size_t	len;
+};
+
 class UdpSocket {
 public:
-	UdpSocket();
+	UdpSocket() = default;
 
-	void		send(char *buffer, std::size_t len);
-	UdpEndpoint	sendTo(char *buffer, std::size_t len);
+	UdpEndpoint	sendTo(UdpBuffer const &buffer, UdpEndpoint const &ep);
+	void		recvFrom(UdpBuffer &buffer, UdpEndpoint const &ep);
+
+	int			setNonBlocking(bool isNonBlocking = true);
 private:
+	Socket	_sock = UdpEndpoint::createSocket();
 };
 
 }
