@@ -417,6 +417,11 @@ namespace json
 		return *this;
 	}
 
+	std::string	String::get(void)
+	{
+		return *this;
+	}
+
 	void		String::set(std::string const &str)
 	{
 		dynamic_cast<std::string&>(*this) = str;
@@ -563,6 +568,11 @@ namespace json
 		return *this;
 	}
 
+	const std::unordered_map<std::string, Entity>	&Object::get(void) const
+	{
+		return *this;
+	}
+
 	std::string	Object::toString(void) const
 	{
 		std::ostringstream	stm;
@@ -629,6 +639,11 @@ namespace json
 	}
 
 	std::vector<Entity>	&Array::get(void)
+	{
+		return *this;
+	}
+
+	const std::vector<Entity>	&Array::get(void) const
 	{
 		return *this;
 	}
