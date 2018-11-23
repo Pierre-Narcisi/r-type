@@ -28,7 +28,7 @@ std::list<json::Entity>	JsonBuider::_extractJsonObjects(std::size_t available) {
 			res.push_back(entity);
 		}
 	} catch (json::Parser::ParserException &e) {
-		if (sstm.peek() != EOF) {
+		if (sstm.peek() != -1) {
 			if (_onIllegalJson) _onIllegalJson(e);
 			_buffer.clear();
 			return (res);
@@ -36,12 +36,8 @@ std::list<json::Entity>	JsonBuider::_extractJsonObjects(std::size_t available) {
 		auto	start = (std::uintptr_t) &_buffer.front() + lastPos;
 		auto	len = (std::uintptr_t) &_buffer.back() - start;
 
-		if (len > 0) {
-			std::memmove(&_buffer.front(), (void*) start, len);
-			_buffer.resize(len);
-		} else {
-			_buffer.clear();
-		}
+		std::memmove(&_buffer.front(), (void*) start, len);
+		_buffer.resize(len);
 	}
 	return (res);
 }

@@ -260,10 +260,9 @@ namespace json
 		std::ostringstream	_sstm;
 		unsigned char		c =  stm.peek();
 	
-		_pos = {
-			count.line,
-			count.offset - count.lineOffset
-		};
+        _pos.line = count.line;
+        _pos.col = count.offset - count.lineOffset;
+
 		_sstm << "Parser: Error: "
 			<< "(Ln " << _pos.line << ": Col "
 			<< _pos.col << "): "
