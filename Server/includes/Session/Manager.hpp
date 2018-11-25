@@ -20,7 +20,7 @@ public:
 	Manager(std::uint32_t ticks = 60); //ms
 	~Manager();
 
-	void	create(std::string const &name);
+	void	create(std::string const &name, int playerMax = 4);
 private:
 	void	_entryPoint();
 

@@ -41,7 +41,15 @@ set(COMMONS_SRCS
 
 	Common/JsonBuilder/JsonBuilder.hpp
 	Common/JsonBuilder/JsonBuilder.cpp
-)
+
+	Common/Event/Event.hpp
+	Common/Event/Event.tpp
+	Common/Event/Manager.hpp
+	Common/Event/Manager.tpp
+	Common/Event/HdlCollector.hpp
+	Common/Event/src/Event.cpp
+	Common/Event/src/HdlCollector.cpp
+	)
 
 add_executable(rtype
 	${COMMONS_SRCS}
