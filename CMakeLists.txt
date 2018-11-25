@@ -121,4 +121,9 @@ add_executable(server
 
 	Server/includes/Router.hpp
 	Server/src/Router.cpp
+
+	Server/includes/Session/Manager.hpp
+	Server/src/Session/Manager.cpp
 )
+
+target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})

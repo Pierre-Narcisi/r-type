@@ -23,7 +23,7 @@ void	Router::resolve(std::istream &path, json::Entity &req, json::Entity &resp) 
 	next = [&] () {
 		if (fct == _middlewares.end()) return;
 
-		decltype(next)	ovNext = [&] () {
+		std::function<void()>	ovNext = [&] () {
 			fct++;
 			next();
 		};
