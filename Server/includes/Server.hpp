@@ -10,6 +10,8 @@
 
 #include <functional>
 #include "Opts/Opts.hpp"
+#include "TcpListener.hpp"
+#include "ClientConnection.hpp"
 
 namespace rtype {
 
@@ -29,12 +31,15 @@ public:
 	
 	void	start();
 	void	stop();
+	bool	isConnected(std::string const username);
 private:
 	Server() = default;
 	void	_initSignalCatch();
 
+	std::unique_ptr<nw::TcpListener<ClientConnection>>
+							_listener;
 	std::function<void()>	_stop;
-	common::Opts			opts;
+	common::Opts			_opts;
 };
 
 }

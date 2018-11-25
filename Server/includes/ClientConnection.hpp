@@ -14,6 +14,8 @@
 
 namespace rtype {
 
+class Server;
+
 class ClientConnection: public nw::TcpListenerSlave, public common::JsonBuider {
 public:
 	ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr);
@@ -25,7 +27,14 @@ private:
 
 	void	_login(json::Entity &req, json::Entity &res);
 
+	struct {
+		bool		logged = false;
+		std::string	username;
+	}		_status;
+
 	Router	_router;
+
+	friend Server;
 };
 
 }

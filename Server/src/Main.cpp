@@ -23,7 +23,7 @@ int main(int ac, char **av) {
 		s.start();
 #ifdef NDEBUG
 	} catch (std::exception &s) {
-		std::cout << s.what() << std::endl;
+		std::cerr << s.what() << std::endl;
 		rtype::Server::cleanUpInstance();
 		return (84);
 	}

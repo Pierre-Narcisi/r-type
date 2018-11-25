@@ -32,4 +32,4 @@ fi
 	cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=$1
 
 	cmake --build . --config $@
-) && echo "OK" || echo "KO";
+) && ( echo "OK"; exit 0 ) || ( echo "KO"; exit 1 );

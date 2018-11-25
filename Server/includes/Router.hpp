@@ -13,13 +13,12 @@
 #include <memory>
 #include <unordered_map>
 #include "Json/includes/Entity.hpp"
-#include <cstring>
 
 namespace rtype {
 
 class Router {
 public:
-	using MiddlewareFct = std::function<void(json::Entity &req, json::Entity &res, std::function<void()> next)>;
+	using MiddlewareFct = std::function<void(json::Entity &req, json::Entity &res, std::function<void()> &next)>;
 	using RouteEndFct = std::function<void(json::Entity &req, json::Entity &res)>;
 private:
 	struct SubEntity {
@@ -40,7 +39,7 @@ public:
 	void	use(std::string &&path, std::shared_ptr<Router> &router) { _sub.insert(std::make_pair(path, router)); }
 	void	use(std::string &&path, RouteEndFct &&endr) { _sub.insert(std::make_pair(path, endr)); }
 
-	void	resolve(std::istringstream &path, json::Entity &req, json::Entity &res);
+	void	resolve(std::istream &path, json::Entity &req, json::Entity &res);
 
 	static bool	pathIsValid(std::string const &path);
 private:

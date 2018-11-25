@@ -9,8 +9,6 @@
 #include <iostream>
 #include "Constant.hpp"
 #include "Server.hpp"
-#include "TcpListener.hpp"
-#include "ClientConnection.hpp"
 
 
 #include "Network/UdpSocket/UdpSocket.hpp"
@@ -34,43 +32,55 @@ void	Server::_initSignalCatch() {
 int	Server::init(int ac, char **av) {
 	_initSignalCatch();
 
-	opts.setArgs(ac, av);
+	_opts.setArgs(ac, av);
 
-	opts.setUsage("Usage", std::string(av[0]) + " [-p port]");
-	opts.setArgsTitle("Available Arguments");
-	opts.setOptions({
+	_opts.setUsage("Usage", std::string(av[0]) + " [-p port]");
+	_opts.setArgsTitle("Available Arguments");
+	_opts.setOptions({
 		{"help", 'h', common::Opts::noArg(), "Show this help"},
 		{"host", 'i', common::Opts::makeString(constant::defHost), "Server host address"},
 		{"port", 'p', common::Opts::makeInt(constant::defPort), "Server listening port"}
 	});
 
-	opts.parse();
-	if (opts["help"]->count()) {
-		std::cout << opts << std::endl;
+	_opts.parse();
+	if (_opts["help"]->count()) {
+		std::cout << _opts << std::endl;
 		return -1;
 	}
 
 	std::cout <<
-		"port : " << opts["port"]->as<common::Opts::Int>() << std::endl <<
-		"host : " << opts["host"]->as<common::Opts::String>() << std::endl;
+		"port : " << _opts["port"]->as<common::Opts::Int>() << std::endl <<
+		"host : " << _opts["host"]->as<common::Opts::String>() << std::endl;
 	return (0);
 }
 
 void	Server::start() {
-	nw::TcpListener<ClientConnection>	listener(
-		static_cast<std::uint32_t>(opts["port"]->as<common::Opts::Int>())
-	);
+	_listener = std::unique_ptr<nw::TcpListener<ClientConnection>>(new nw::TcpListener<ClientConnection>(
+		static_cast<std::uint32_t>(_opts["port"]->as<common::Opts::Int>())
+	));
 
-	_stop = [&listener] { listener.stop(); };
+	_stop = [this] { _listener->stop(); };
 
-	listener.onNewConnection = [this] (ClientConnection &slave) {
+	_listener->onNewConnection = [this] (ClientConnection &slave) {
 		auto &addr = reinterpret_cast<const sockaddr&>(slave.getNativeAddr());
 
 		std::cout << "New connection form " << nw::TcpEndpoint::getIp(addr) << std::endl;
 	};
 
-	listener.init();
-	listener.run();
+	_listener->init();
+	_listener->run();
+}
+
+bool	Server::isConnected(std::string const username) {
+	if (_listener == nullptr) return false;
+
+	auto &list = _listener->getSlaves();
+	for (auto &slave: list) {
+		if (slave._status.logged && slave._status.username == username) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void	Server::stop() {

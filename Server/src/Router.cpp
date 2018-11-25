@@ -8,9 +8,11 @@
 #include <ctype.h>
 #include "Router.hpp"
 
+#include <iostream>
+
 namespace rtype {
 
-void	Router::resolve(std::istringstream &path, json::Entity &req, json::Entity &rep) {
+void	Router::resolve(std::istream &path, json::Entity &req, json::Entity &resp) {
 	std::function<void()> next;
 	
 	/*
@@ -20,24 +22,35 @@ void	Router::resolve(std::istringstream &path, json::Entity &req, json::Entity &
 	auto fct = _middlewares.begin();
 	next = [&] () {
 		if (fct == _middlewares.end()) return;
-		(*fct)(req, rep, next);
-		fct++;
+
+		decltype(next)	ovNext = [&] () {
+			fct++;
+			next();
+		};
+		(*fct)(req, resp, ovNext);
 	};
 	next();
 
-	std::string p;
-	getline(path, p, '/');
+	if (fct != _middlewares.end())
+		return;
 
+	std::string p("");
+	auto &stm = getline(path, p, ':');
+
+	for (auto &tmp: _sub) {
+		std::cout << '"' << tmp.first << '"'
+			<< " ? == ? " << '"' << p << '"' << std::endl;
+	}
 	auto job = _sub.find(p);
 	if (job == _sub.end()) {
-		rep["error"] = json::makeObject {
+		resp["error"] = json::makeObject {
 			{"message", "Route unknown"}
 		};
 	} else {
 		if (job->second.type == SubEntity::ENDROUTE) {
-			job->second.endRoute(req, rep); // execute target command
+			job->second.endRoute(req, resp); // execute target command
 		} else {
-			job->second.subRouter->resolve(path, req, rep); // pass to the sub router
+			job->second.subRouter->resolve(stm, req, resp); // pass to the sub router
 		}
 	}
 }
