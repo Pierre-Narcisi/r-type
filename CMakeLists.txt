@@ -34,8 +34,8 @@ set(COMMONS_SRCS
 	Common/Opts/Opts.cpp
 	Common/Opts/Opts.hpp
 
-	Common/Json/includes/Entity.hpp
-	Common/Json/includes/Parser.hpp
+	Common/Json/Entity.hpp
+	Common/Json/Parser.hpp
 	Common/Json/src/Entity.cpp
 	Common/Json/src/Parser.cpp
 

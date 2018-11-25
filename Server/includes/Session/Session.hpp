@@ -1,3 +1,4 @@
+
 /*
 ** EPITECH PROJECT, 2018
 ** r-type
@@ -10,6 +11,10 @@
 #define _SESSIONSESSION_HPP
 
 #include <string>
+#include <deque>
+#include <mutex>
+#include <thread>
+#include "Event/HdlCollector.hpp"
 #include "ClientConnection.hpp"
 
 namespace rtype { namespace session {
@@ -18,17 +23,30 @@ class Manager;
 
 class Session {
 public:
-	Session(Manager *parent, std::string const &name, int playerMax);
+	explicit Session(Manager *parent, std::uint32_t id, std::string const &name, int playerMax);
+	~Session();
 
-	void	addPlayer(ClientConnection const &player);
+	void	addPlayer(ClientConnection &player);
+
+	void	addTask(std::function<void()> const &task);
 private:
-	Manager		*_parent;
-	std::string _id;
-	std::string	_name;
-	int			_playerMax;
+	void			_entryPoint();
 
-	std::list<ClientConnection&>	_players;
-}
+	Manager			*_parent;
+	std::uint32_t	_id;
+	std::string		_name;
+	int				_playerMax;
+
+	bool								_continue = true;
+	std::thread							_thread;
+	std::deque<std::function<void()>>	_pool;
+	std::mutex							_poolLock;
+	std::mutex							_pickLock;
+
+	evt::HdlCollector				_collector;
+	std::list<ClientConnection*>	_players;
+	std::mutex						_addPlayerMutex;
+};
 
 }}
 

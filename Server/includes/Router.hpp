@@ -12,7 +12,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-#include "Json/includes/Entity.hpp"
+#include "Json/Entity.hpp"
 
 namespace rtype {
 

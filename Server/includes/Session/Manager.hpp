@@ -12,6 +12,8 @@
 #include <cstddef>
 #include <string>
 #include <thread>
+#include <unordered_map>
+#include "Session/Session.hpp"
 
 namespace rtype { namespace session {
 
@@ -22,11 +24,13 @@ public:
 
 	void	create(std::string const &name, int playerMax = 4);
 private:
-	void	_entryPoint();
+	void			_entryPoint();
+	std::uint32_t	_generateId();
 
-	bool			_continue = true;
-	std::uint32_t	_sleepTime;
-	std::thread		_thread;
+	bool				_continue = true;
+	std::uint32_t		_sleepTime;
+	std::thread			_thread;
+	std::list<Session>	_sessions;
 	//UdpListener; // UdpServer
 };
 

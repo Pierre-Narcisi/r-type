@@ -7,7 +7,7 @@
 
 #include <sstream>
 #include "JsonBuilder.hpp"
-#include "Json/includes/Parser.hpp"
+#include "Json/Parser.hpp"
 
 namespace common {
 

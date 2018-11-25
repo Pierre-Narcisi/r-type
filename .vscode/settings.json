@@ -60,6 +60,11 @@
 		"typeindex": "cpp",
 		"valarray": "cpp",
 		"variant": "cpp",
-		"algorithm": "cpp"
+		"algorithm": "cpp",
+		"*.ipp": "cpp",
+		"csetjmp": "cpp",
+		"forward_list": "cpp",
+		"unordered_set": "cpp",
+		"scoped_allocator": "cpp"
 	}
 }

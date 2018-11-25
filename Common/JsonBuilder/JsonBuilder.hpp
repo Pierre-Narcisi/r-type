@@ -10,7 +10,7 @@
 #define _JSONBUILDER_HPP
 
 #include <list>
-#include "Json/includes/Parser.hpp"
+#include "Json/Parser.hpp"
 #include "Network/TcpSocket/TcpSocket.hpp"
 
 namespace common {

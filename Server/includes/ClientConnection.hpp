@@ -21,10 +21,12 @@ class ClientConnection: public nw::TcpListenerSlave, public common::JsonBuider {
 public:
 	ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr);
 	~ClientConnection() {
-		_onDestroy.fire();
+		onDestroy.fire();
 	}
 
 	virtual void	onDataAvailable(std::size_t available) final;
+	
+	evt::Event		onDestroy;
 private:
 	void	_sendJson(json::Entity const &rep);
 	void	_routerInit();
@@ -37,7 +39,6 @@ private:
 	}		_status;
 
 	Router		_router;
-	evt::Event	_onDestroy;
 
 	friend Server;
 };
