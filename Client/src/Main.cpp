@@ -6,7 +6,6 @@
 */
 
 #include <iostream>
-#include <unistd.h>
 #include <chrono>
 #include <thread>
 #include <zconf.h>
@@ -31,8 +30,11 @@
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
 #include "game/component/Parallax.hpp"
 #include "game/system/Parallaxs.hpp"
+#include "WindowsCtor.hpp"
 
 int main() {
+	initWSA(); //Need by Windows
+
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
 		sf::SoundBuffer buffer;
@@ -87,4 +89,5 @@ int main() {
 		std::this_thread::sleep_for(std::chrono::nanoseconds(x));
 	}
 
+	closeWSA();
 }

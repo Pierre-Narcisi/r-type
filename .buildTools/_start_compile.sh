@@ -31,6 +31,5 @@ fi
 	conan install .. --build=missing --settings build_type=$1 --profile ../ConanPlatformSettings/$ConanConfigFile
 	cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=$1
 
-	shift;
-	cmake --build . $@
+	cmake --build . --config $@
 ) && echo "OK" || echo "KO";

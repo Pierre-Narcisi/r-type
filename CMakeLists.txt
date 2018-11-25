@@ -16,6 +16,7 @@ include_directories(Client/src/game_engine)
 
 set(COMMONS_SRCS
 	Common/WindowsCtor.cpp
+	Common/WindowsCtor.hpp
 
 	Common/Network/EndpointBase.hpp
 
