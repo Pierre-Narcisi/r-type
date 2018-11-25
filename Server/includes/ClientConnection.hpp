@@ -8,6 +8,7 @@
 #if !defined(_CLIENTCONNECTION_HPP)
 #define _CLIENTCONNECTION_HPP
 
+#include "Event/Event.hpp"
 #include "JsonBuilder/JsonBuilder.hpp"
 #include "TcpListenerSlave.hpp"
 #include "Router.hpp"
@@ -19,6 +20,9 @@ class Server;
 class ClientConnection: public nw::TcpListenerSlave, public common::JsonBuider {
 public:
 	ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr);
+	~ClientConnection() {
+		_onDestroy.fire();
+	}
 
 	virtual void	onDataAvailable(std::size_t available) final;
 private:
@@ -32,7 +36,8 @@ private:
 		std::string	username;
 	}		_status;
 
-	Router	_router;
+	Router		_router;
+	evt::Event	_onDestroy;
 
 	friend Server;
 };

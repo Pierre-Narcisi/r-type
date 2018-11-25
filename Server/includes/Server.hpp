@@ -12,6 +12,7 @@
 #include "Opts/Opts.hpp"
 #include "TcpListener.hpp"
 #include "ClientConnection.hpp"
+#include "Session/Manager.hpp"
 
 namespace rtype {
 
@@ -32,6 +33,8 @@ public:
 	void	start();
 	void	stop();
 	bool	isConnected(std::string const username);
+
+	auto	&getSessionManager() { return _sessionManager; }
 private:
 	Server() = default;
 	void	_initSignalCatch();
@@ -40,6 +43,7 @@ private:
 							_listener;
 	std::function<void()>	_stop;
 	common::Opts			_opts;
+	session::Manager		_sessionManager;
 };
 
 }
