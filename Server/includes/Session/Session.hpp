@@ -20,8 +20,9 @@ class Session {
 public:
 	Session(Manager *parent, std::string const &name, int playerMax);
 
-	void	addPlayer
+	void	addPlayer(ClientConnection const &player);
 private:
+	Manager		*_parent;
 	std::string _id;
 	std::string	_name;
 	int			_playerMax;
