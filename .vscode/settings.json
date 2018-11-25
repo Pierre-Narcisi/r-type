@@ -45,6 +45,21 @@
 		"condition_variable": "cpp",
 		"mutex": "cpp",
 		"ratio": "cpp",
-		"thread": "cpp"
+		"thread": "cpp",
+		"csignal": "cpp",
+		"atomic": "cpp",
+		"strstream": "cpp",
+		"bitset": "cpp",
+		"codecvt": "cpp",
+		"deque": "cpp",
+		"rope": "cpp",
+		"slist": "cpp",
+		"future": "cpp",
+		"numeric": "cpp",
+		"cinttypes": "cpp",
+		"typeindex": "cpp",
+		"valarray": "cpp",
+		"variant": "cpp",
+		"algorithm": "cpp"
 	}
 }

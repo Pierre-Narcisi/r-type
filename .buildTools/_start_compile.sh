@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 RootPath="$(
 	cd "$(dirname "$0")"
@@ -30,5 +30,7 @@ fi
 
 	conan install .. --build=missing --settings build_type=$1 --profile ../ConanPlatformSettings/$ConanConfigFile
 	cmake .. -G "$CMakeType" -DCMAKE_BUILD_TYPE=$1
-	cmake --build . ${@:2}
+
+	shift;
+	cmake --build . $@
 ) && echo "OK" || echo "KO";

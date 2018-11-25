@@ -255,13 +255,11 @@ namespace json
 		_msg("Parser: Error: " + custom)
 	{}
 
-	Parser::ParserException::ParserException(Parser::Counter const &count, std::istream &stm)
+	Parser::ParserException::ParserException(Parser::Counter const &count, std::istream &stm):
+		_pos({count.line, count.offset - count.lineOffset})
 	{
 		std::ostringstream	_sstm;
 		unsigned char		c =  stm.peek();
-	
-        _pos.line = count.line;
-        _pos.col = count.offset - count.lineOffset;
 
 		_sstm << "Parser: Error: "
 			<< "(Ln " << _pos.line << ": Col "
@@ -274,7 +272,7 @@ namespace json
 		} else {
 			_sstm << "0x" << std::hex << +c;
 		}
-		_sstm << '\'' << std::endl;
+		_sstm << '\'';
 		_msg = _sstm.str();
 	}
 

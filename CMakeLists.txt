@@ -117,4 +117,7 @@ add_executable(server
 	Server/includes/TcpListener.hpp
 	Server/includes/TcpListenerSlave.hpp
 	Server/includes/TcpListener.tpp
+
+	Server/includes/Router.hpp
+	Server/src/Router.cpp
 )

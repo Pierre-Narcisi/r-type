@@ -10,6 +10,7 @@
 
 #include "JsonBuilder/JsonBuilder.hpp"
 #include "TcpListenerSlave.hpp"
+#include "Router.hpp"
 
 namespace rtype {
 
@@ -19,7 +20,12 @@ public:
 
 	virtual void	onDataAvailable(std::size_t available) final;
 private:
-	
+	void	_sendJson(json::Entity const &rep);
+	void	_routerInit();
+
+	void	_login(json::Entity &req, json::Entity &res);
+
+	Router	_router;
 };
 
 }
