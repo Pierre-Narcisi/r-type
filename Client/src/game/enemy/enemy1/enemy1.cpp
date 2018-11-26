@@ -16,8 +16,8 @@ namespace game {
 	}
 
 	void enemy1::update(ID _id) {
-		auto &pos = ecs::Ecs::getConponentMap<ecs::component::Position>();
-		auto &speed = ecs::Ecs::getConponentMap<ecs::component::Speed>();
+		auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+		auto &speed = ecs::Ecs::getComponentMap<ecs::component::Speed>();
 		speed[_id].x = -1;
 		speed[_id].y = sin(pos[_id].x / 50);
 		if (_time + 10 < ecs::core::Time::get(TimeUnit::Seconds)) {
