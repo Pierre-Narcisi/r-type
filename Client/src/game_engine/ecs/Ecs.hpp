@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <map>
 #include "ListComponent.hpp"
 
 namespace ecs{
@@ -24,7 +25,7 @@ namespace ecs{
         }
 
         template <typename T>
-        static std::unordered_map<ID, T> &getConponentMap() {
+        static std::unordered_map<ID, T> &getComponentMap() {
 		return hidden::ListComponent<T>::get().getComponentMap();
         }
 
@@ -63,8 +64,19 @@ namespace ecs{
 	    return (isin(id));
 	}
 
+	void addUpdate(int priority, std::function<void()> function) {
+        	updates.emplace(priority, function);
+        }
+
+        void update () {
+        	for (auto &func : updates) {
+        		func.second();
+        	}
+        }
+
     private:
         std::unordered_map<ID, std::unordered_map<std::string, std::function<void()>>>  _deleteIds;
+        std::multimap<int, std::function<void()>>					updates;
 
         template <typename ...Ts>
         struct isIn {

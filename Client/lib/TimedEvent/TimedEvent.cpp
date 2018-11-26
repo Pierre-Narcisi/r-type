@@ -21,13 +21,14 @@ TimedEvent::TimedEvent(): _threadAlive(true),
 					if (func->time > _initialTime && func->time < time) {
 						func->func();
 						_timedFunctions.erase(func);
-						break;
+						func--;
 					}
 					func++;
 				}
 			}
 			_mutexFunctions.unlock();
 			_mutexAlive.lock();
+			std::this_thread::sleep_for(std::chrono::microseconds(16666/2));
 		}
 		_mutexAlive.unlock();
 	})

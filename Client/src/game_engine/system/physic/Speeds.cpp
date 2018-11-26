@@ -14,11 +14,11 @@ namespace ecs {namespace system {
 	void Speeds::UpdateSpeeds() {
 		auto ids = ecs::Ecs::filter<component::Position, component::Speed>();
 		auto hitboxIds = ecs::Ecs::filter<component::Hitbox, component::Position>();
-		auto &speed = ecs::Ecs::getConponentMap<component::Speed>();
-		auto &position = ecs::Ecs::getConponentMap<component::Position>();
+		auto &speed = ecs::Ecs::getComponentMap<component::Speed>();
+		auto &position = ecs::Ecs::getComponentMap<component::Position>();
 
-		auto &positionss = Ecs::getConponentMap<component::Position>();
-		auto &hitboxs = Ecs::getConponentMap<component::Hitbox>();
+		auto &positionss = Ecs::getComponentMap<component::Position>();
+		auto &hitboxs = Ecs::getComponentMap<component::Hitbox>();
 		component::Position tmpPos;
 		bool comeY = false;
 		bool comeX = false;

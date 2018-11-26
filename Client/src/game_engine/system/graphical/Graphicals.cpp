@@ -17,11 +17,11 @@ namespace ecs {namespace system {
 	void Graphicals::UpdateGraphicals() {
 		auto drawableIds = Ecs::filter<ecs::component::Drawable, ecs::component::Position>();
 
-		auto &drawables = Ecs::getConponentMap<component::Drawable>();
-		auto &sprites = Ecs::getConponentMap<component::Sprite>();
-		auto &positions = Ecs::getConponentMap<component::Position>();
-		auto &animateds = Ecs::getConponentMap<component::AnimatedSprite>();
-		auto &animatedmaps = Ecs::getConponentMap<component::AnimatedSpriteMap>();
+		auto &drawables = Ecs::getComponentMap<component::Drawable>();
+		auto &sprites = Ecs::getComponentMap<component::Sprite>();
+		auto &positions = Ecs::getComponentMap<component::Position>();
+		auto &animateds = Ecs::getComponentMap<component::AnimatedSprite>();
+		auto &animatedmaps = Ecs::getComponentMap<component::AnimatedSpriteMap>();
 
 		auto window = graphical::Graphic::getWindow();
 
@@ -33,8 +33,8 @@ namespace ecs {namespace system {
 			}
 		}
 		std::sort (drawableIds.begin(), drawableIds.end(), [](ID one, ID two){ return (
-			Ecs::getConponentMap<component::Drawable>()[one].layer <
-				Ecs::getConponentMap<component::Drawable>()[two].layer); });
+			Ecs::getComponentMap<component::Drawable>()[one].layer <
+				Ecs::getComponentMap<component::Drawable>()[two].layer); });
 
 		for (auto id : drawableIds) {
 			if (Ecs::idHasComponents<component::Sprite>(id)) {

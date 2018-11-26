@@ -13,8 +13,8 @@
 namespace ecs {namespace system {
 	void Acceleration::UpdateAccelerations() {
 		auto ids = ecs::Ecs::filter<component::Acceleration, component::Speed>();
-		auto &acceleratiojn = ecs::Ecs::getConponentMap<component::Acceleration>();
-		auto &speed = ecs::Ecs::getConponentMap<component::Speed>();
+		auto &acceleratiojn = ecs::Ecs::getComponentMap<component::Acceleration>();
+		auto &speed = ecs::Ecs::getComponentMap<component::Speed>();
 
 		for (auto id : ids) {
 			speed[id].x += acceleratiojn[id].x;
