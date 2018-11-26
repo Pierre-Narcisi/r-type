@@ -3,53 +3,39 @@
 //
 
 #include "TimedEvent.hpp"
+#include "ecs/Ecs.hpp"
+#include "core/Time.hpp"
 #include <thread>
 #include <iostream>
 
-TimedEvent::TimedEvent(): _threadAlive(true),
-	_thread([this](){
+TimedEvent::TimedEvent()
+{
+	ecs::Ecs::get().addUpdate(10, [this](){
 		long time;
 		std::vector<TimedFuntion, std::allocator<TimedFuntion>>::iterator func;
-		this->_mutexAlive.lock();
-		while (_threadAlive) {
-			this->_mutexAlive.unlock();
-			time = getTime();
-			this->_mutexFunctions.lock();
-			func = this->_timedFunctions.begin();
-			if (this->_timedFunctions.empty() != 1) {
-				while (func != this->_timedFunctions.end()) {
-					if (func->time > this->_initialTime && func->time < time) {
-						func->func();
-						_timedFunctions.erase(func);
-						func--;
-					}
-					func++;
+		time = ecs::core::Time::get(TimeUnit::NanoSeconds);
+		func = this->_timedFunctions.begin();
+		if (this->_timedFunctions.empty() != 1) {
+			while (func != this->_timedFunctions.end()) {
+				if (func->time > this->_initialTime && func->time < time) {
+					func->func();
+					_timedFunctions.erase(func);
+					func--;
 				}
+				func++;
 			}
-			_mutexFunctions.unlock();
-			_mutexAlive.lock();
-			std::this_thread::sleep_for(std::chrono::microseconds(16666/2));
 		}
-		this->_mutexAlive.unlock();
-	})
-{
-	_initialTime = getTime();
+	});
+	_initialTime = ecs::core::Time::get(TimeUnit::NanoSeconds);
 }
 
 TimedEvent::~TimedEvent() {
-	_threadAlive = false;
-	_thread.join();
 }
 
 TimedEvent& TimedEvent::get() {
 	static TimedEvent event;
 
 	return event;
-}
-
-long TimedEvent::getTime() {
-	return (std::chrono::duration_cast<std::chrono::nanoseconds>(
-		_clock.now().time_since_epoch()).count());
 }
 
 void TimedEvent::addEvent(long time, Time unit, std::function<void()> function) {
@@ -68,8 +54,6 @@ void TimedEvent::addEvent(long time, Time unit, std::function<void()> function) 
 	else
 		_time = time;
 
-	_mutexFunctions.lock();
-	_timedFunctions.emplace_back(TimedFuntion(getTime() + _time, function));
-	_mutexFunctions.unlock();
+	_timedFunctions.emplace_back(TimedFuntion(ecs::core::Time::get(TimeUnit::NanoSeconds) + _time, function));
 
 }

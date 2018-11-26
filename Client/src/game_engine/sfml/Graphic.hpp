@@ -15,17 +15,18 @@
 #include "system/control/Controls.hpp"
 
 namespace ecs {namespace graphical {
-		class Graphic {
-		private:
-			struct BundleSprite {
+
+		struct BundleSprite {
 				BundleSprite() {
 					sprite = nullptr;
 					texture = nullptr;
 				}
 				sf::Sprite *sprite;
 				sf::Texture *texture;
-			};
+		};
 
+		class Graphic {
+		private:
 			struct Text {
 				Text() {
 					pos = ecs::core::Vector2<int>(0, 0);
@@ -53,6 +54,7 @@ namespace ecs {namespace graphical {
 			};
 
 		public:
+
 			Graphic() : _lastId(0) {
 				sf::VideoMode mode;
 				mode.width = 1280;

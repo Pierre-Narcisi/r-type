@@ -35,47 +35,47 @@ namespace ecs{
         }
 
         static void deleteId(ID id) {
-            for (auto mapdel = get()._deleteIds[id].begin(); mapdel != get()._deleteIds[id].end(); mapdel++) {
-            	mapdel->second();
+            for (auto &del : get()._deleteIds[id]) {
+            	del.second();
             }
             get()._deleteIds[id].clear();
         }
 
         template <typename T>
         static void deleteComponentforId(ID id) {
-		get()._deleteIds[id][std::string(typeid(T).name())]();
-		get()._deleteIds[id].erase(std::string(typeid(T).name()));
+			get()._deleteIds[id][std::string(typeid(T).name())]();
+			get()._deleteIds[id].erase(std::string(typeid(T).name()));
         }
 
         template <typename ...Args>
         static std::vector<ID> filter() {
         	std::vector<ID> valableId;
-		for (auto it = get()._deleteIds.begin(); it != get()._deleteIds.end(); ++it)
-		{
+			for (auto it = get()._deleteIds.begin(); it != get()._deleteIds.end(); ++it)
+			{
         		if (idHasComponents<Args...>(it->first))
-				valableId.emplace_back(it->first);
-		}
+					valableId.emplace_back(it->first);
+			}
 		return (valableId);
         }
 
-	template <typename ...Args>
-	static bool idHasComponents(ID id) {
-	    isIn<Args...> isin;
-	    return (isin(id));
-	}
+		template <typename ...Args>
+		static bool idHasComponents(ID id) {
+		    isIn<Args...> isin;
+		    return (isin(id));
+		}
 
-	void addUpdate(int priority, std::function<void()> function) {
-        	updates.emplace(priority, function);
-        }
+		void addUpdate(int priority, std::function<void()> function) {
+    	    updates.emplace(priority, function);
+    	}
 
-        void update () {
-        	for (auto &func : updates) {
-        		func.second();
+	    void update () {
+   	    	for (auto &func : updates) {
+   		     	func.second();
         	}
-        }
+    	}
 
-    private:
         std::unordered_map<ID, std::unordered_map<std::string, std::function<void()>>>  _deleteIds;
+    private:
         std::multimap<int, std::function<void()>>					updates;
 
         template <typename ...Ts>
