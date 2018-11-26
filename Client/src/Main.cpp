@@ -5,9 +5,14 @@
 ** Created by seb,
 */
 
+
+#include "component/ai.hpp"
+#include "system/gen.hpp"
+#include "enemy/enemy1/enemy1.hpp"
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include "system/ai.hpp"
 #include <zconf.h>
 #include <ecs/Entity.hpp>
 #include <ecs/Ecs.hpp>
@@ -35,12 +40,15 @@
 int main() {
 	initWSA(); //Need by Windows
 
+	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
 		sf::SoundBuffer buffer;
 		buffer.loadFromFile(path);
 		return buffer;
 	};
+
+	game::system::gen Gen;
 
 	ID background = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
@@ -80,10 +88,12 @@ int main() {
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		rtype.update();
+		Gen.updateGen();
+		game::system::ai::updateAi();
 		game::Parallaxs::UpdateParallaxs();
-
 		ecs::system::Controls::UpdateDeplacement();
 		ecs::system::Speeds::UpdateSpeeds();
+
 
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::nanoseconds(x));

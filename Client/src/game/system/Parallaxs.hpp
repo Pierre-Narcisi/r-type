@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "../../game_engine/ecs/Ecs.hpp"
 #include "../../game_engine/sfml/Graphic.hpp"
 
