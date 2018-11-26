@@ -14,11 +14,13 @@
 #include "component/control/Controller.hpp"
 #include "Controls.hpp"
 #include "ecs/Ecs.hpp"
+#include "../../component/control/Controller.hpp"
+#include "../../ecs/Ecs.hpp"
 
 namespace ecs {namespace system {
 
 	void Controls::UpdateControllers(sf::Event &event) {
-		auto &controllers = ecs::Ecs::getConponentMap<component::Controller>();
+		auto &controllers = ecs::Ecs::getComponentMap<component::Controller>();
 		const float DEAD_ZONE = 0.2f;
 
 		for (auto &controller : controllers) {
@@ -104,7 +106,7 @@ namespace ecs {namespace system {
 	}
 
 	void Controls::UpdateKeyboards(sf::Event &event) {
-		auto &keyboards = ecs::Ecs::getConponentMap<component::Keyboard>();
+		auto &keyboards = ecs::Ecs::getComponentMap<component::Keyboard>();
 
 		for (auto &keyboard : keyboards) {
 			for (auto it = keyboard.second.keyMap.begin(); it != keyboard.second.keyMap.end(); it++) {
@@ -119,7 +121,7 @@ namespace ecs {namespace system {
 	}
 
 	void Controls::UpdateMouses(sf::Event &event) {
-		auto &mouses = ecs::Ecs::getConponentMap<component::Mouse>();
+		auto &mouses = ecs::Ecs::getComponentMap<component::Mouse>();
 
 		for (auto &mouse : mouses) {
 			for (auto it = mouse.second.mouseMap.begin(); it != mouse.second.mouseMap.end(); it++) {
@@ -142,8 +144,8 @@ namespace ecs {namespace system {
 		float time;
 
 		for (auto tomove : deplacements) {
-			auto &keyB = ecs::Ecs::getConponentMap<component::Keyboard>()[tomove];
-			auto &dep = ecs::Ecs::getConponentMap<component::DeplacementKeyBoard>()[tomove];
+			auto &keyB = ecs::Ecs::getComponentMap<component::Keyboard>()[tomove];
+			auto &dep = ecs::Ecs::getComponentMap<component::DeplacementKeyBoard>()[tomove];
 			core::Vector2<float> deplacement(0.f, 0.f);
 
 			if (keyB.keyMap[dep.forward].first)
@@ -172,16 +174,16 @@ namespace ecs {namespace system {
 				deplacement.x = (dep.speed * 0.7071);
 			}
 			time = static_cast<float>(ecs::core::Time::get(TimeUnit::MicroSeconds) - dep.lastMove);
-			ecs::Ecs::getConponentMap<component::Speed>()[tomove].x = time / 1000000.f * deplacement.x;
-			ecs::Ecs::getConponentMap<component::Speed>()[tomove].y = time / 1000000.f * deplacement.y;
+			ecs::Ecs::getComponentMap<component::Speed>()[tomove].x = time / 1000000.f * deplacement.x;
+			ecs::Ecs::getComponentMap<component::Speed>()[tomove].y = time / 1000000.f * deplacement.y;
 			dep.lastMove = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		}
 
 		auto mouses = ecs::Ecs::filter<component::Mouse, component::Speed, component::DeplacementMouse, component::Position>();
-		auto &mouseMap = ecs::Ecs::getConponentMap<component::Mouse>();
-		auto &mouseDepMap = ecs::Ecs::getConponentMap<component::DeplacementMouse>();
-		auto &speedMap = ecs::Ecs::getConponentMap<component::Speed>();
-		auto &posMap = ecs::Ecs::getConponentMap<component::Position>();
+		auto &mouseMap = ecs::Ecs::getComponentMap<component::Mouse>();
+		auto &mouseDepMap = ecs::Ecs::getComponentMap<component::DeplacementMouse>();
+		auto &speedMap = ecs::Ecs::getComponentMap<component::Speed>();
+		auto &posMap = ecs::Ecs::getComponentMap<component::Position>();
 		for (auto mouse : mouses) {
 			mouseDepMap[mouse].lastPosition.x = posMap[mouse].x;
 			mouseDepMap[mouse].lastPosition.y = posMap[mouse].y;

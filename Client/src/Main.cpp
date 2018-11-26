@@ -35,6 +35,8 @@
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
 #include "game/component/Parallax.hpp"
+#include "game/component/Firerate.hpp"
+#include "game/component/AnimationRtype.hpp"
 #include "game/system/Parallaxs.hpp"
 
 int main() {
@@ -45,6 +47,19 @@ int main() {
 		buffer.loadFromFile(path);
 		return buffer;
 	};
+	ID limitTop = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Position>(limitTop, 1280/2, 0);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280, 1, true);
+	ID limitBottom = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Position>(limitBottom, 1280/2, 720);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitBottom, 1280, 1, true);
+	ID limitLeft = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Position>(limitLeft, 0, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1, 720, true);
+	ID limitRight = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Position>(limitRight, 1280, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1, 720, true);
+
 
 	game::system::gen Gen;
 
@@ -52,35 +67,50 @@ int main() {
 	ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
 
 	ID ship = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<game::Firerate>(ship, 100);
 	ecs::Ecs::addComponent<ecs::component::Position>(ship, 1280/2, 720/2);
-	ecs::Ecs::addComponent<ecs::component::Speed>(ship, 10, 10);
+	ecs::Ecs::addComponent<ecs::component::Speed>(ship, 50, 50);
 	ecs::Ecs::addComponent<ecs::component::Drawable>(ship, 0, true);
 	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship);
-	ecs::Ecs::addComponent<ecs::component::AnimatedSpriteMap>(ship, "Sprite/Ship/BlueShip");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").y);
-	ecs::Ecs::addComponent<ecs::component::Keyboard>(ship);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "Sprite/Ship/BlueShip/BlueShip3.png");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").y, true);
 
 	ID enemy = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(ship);
 	ecs::Ecs::addComponent<ecs::component::Position>(enemy, 1000, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Speed>(enemy, 0, 0);
 	ecs::Ecs::addComponent<ecs::component::Drawable>(enemy, 0, true);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("Sprite/Enemy1/Enemy11.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Enemy1/Enemy11.png").y);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(enemy, ecs::graphical::Graphic::getTextureSize("Sprite/Enemy1/Enemy11.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Enemy1/Enemy11.png").y);
 	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(enemy, "Sprite/Enemy1");
 
-
-
-	auto &keymap = ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[ship].keyMap;
-	keymap[KeyKeyboard::KEY_Z] = std::pair<bool, std::function<void(ID)>>(false, [](ID self){
-		ecs::Ecs::getConponentMap<ecs::component::AnimatedSpriteMap>()[self].pos = "up";
-	});
-	keymap[KeyKeyboard::KEY_S] = std::pair<bool, std::function<void(ID)>>(false, [](ID self){
-		ecs::Ecs::getConponentMap<ecs::component::AnimatedSpriteMap>()[self].pos = "down";
-	});
-	keymap[KeyKeyboard::SPACE] = std::pair<bool, std::function<void(ID)>>(false, [](ID self){
-		ID bullet = ecs::entity::Entity::getId();
-		ecs::Ecs::addComponent<ecs::component::Speed>(bullet, 10, 0);
-		ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 0, true);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("Sprite//ClassicBullet/ClassicBullet3.png").y);
-		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(bullet, "Sprite/ClassicBullet");
+	auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[ship].keyMap;
+	keymap[KeyKeyboard::ESCAPE] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {rtype._window->close();});
+	keymap[KeyKeyboard::SPACE] = std::pair<bool, std::function<void(ID)>>(false, [](ID parent) {
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire).count() > ecs::Ecs::getComponentMap<game::Firerate>()[parent]._firerate)
+		{
+			TimedEventAdmin m;
+			ID bullet = ecs::entity::Entity::getId();
+			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, 10, 0);
+			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 0, true);
+			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("Sprite//ClassicBullet/ClassicBullet3.png").y, false, [parent](ID self, ID other){
+					if (other != parent)
+					{
+						TimedEventAdmin t;
+						ID explosion = ecs::entity::Entity::getId();
+						ecs::Ecs::addComponent<ecs::component::Speed>(explosion, 0, 0);
+						ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 0, true);
+						ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
+						ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "Sprite/Explosion", 12);
+                        ecs::Ecs::deleteId(other);
+                        ecs::Ecs::deleteId(self);
+						t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
+					}
+        		});
+			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, "Sprite/ClassicBullet/ClassicBullet3.png");
+			m.addEvent(2, Time::Seconds, [bullet](){ecs::Ecs::deleteId(bullet);});
+			ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();
+		}
 	});
 
 	while (rtype.isOpen()) {

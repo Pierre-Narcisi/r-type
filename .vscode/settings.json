@@ -46,10 +46,21 @@
 		"mutex": "cpp",
 		"ratio": "cpp",
 		"thread": "cpp",
+		"*.ipp": "cpp",
+		"csetjmp": "cpp",
+		"csignal": "cpp",
 		"atomic": "cpp",
+		"bitset": "cpp",
+		"codecvt": "cpp",
 		"deque": "cpp",
+		"rope": "cpp",
+		"slist": "cpp",
+		"future": "cpp",
+		"numeric": "cpp",
 		"cinttypes": "cpp",
-		"algorithm": "cpp",
-		"numeric": "cpp"
+		"typeindex": "cpp",
+		"valarray": "cpp",
+		"variant": "cpp",
+		"algorithm": "cpp"
 	}
 }

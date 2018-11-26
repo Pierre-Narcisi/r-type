@@ -20,14 +20,15 @@ TimedEvent::TimedEvent(): _threadAlive(true),
 				while (func != this->_timedFunctions.end()) {
 					if (func->time > this->_initialTime && func->time < time) {
 						func->func();
-						this->_timedFunctions.erase(func);
-						break;
+						_timedFunctions.erase(func);
+						func--;
 					}
 					func++;
 				}
 			}
-			this->_mutexFunctions.unlock();
-			this->_mutexAlive.lock();
+			_mutexFunctions.unlock();
+			_mutexAlive.lock();
+			std::this_thread::sleep_for(std::chrono::microseconds(16666/2));
 		}
 		this->_mutexAlive.unlock();
 	})
