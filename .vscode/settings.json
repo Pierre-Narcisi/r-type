@@ -45,6 +45,11 @@
 		"condition_variable": "cpp",
 		"mutex": "cpp",
 		"ratio": "cpp",
-		"thread": "cpp"
+		"thread": "cpp",
+		"atomic": "cpp",
+		"deque": "cpp",
+		"cinttypes": "cpp",
+		"algorithm": "cpp",
+		"numeric": "cpp"
 	}
 }
