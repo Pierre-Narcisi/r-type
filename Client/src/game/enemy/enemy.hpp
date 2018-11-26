@@ -11,7 +11,7 @@ namespace game {
 		public:
 			enemy() = default;
 			~enemy() = default;
-			virtual void init(ID _id) = 0;
+			virtual void init(ID _id, int posx, int posy) = 0;
 			virtual void update(ID _id) = 0;
 	};
 }

@@ -3,14 +3,25 @@
 //
 
 #include "enemy1.hpp"
+#include "math.h"
 
-void enemy1::init(ID _id) {
-	ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
-	ecs::Ecs::addComponent<ecs::component::Position>(_id, 1000.f, 150.f);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 100, 100, true);
-	ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.5f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "./assets", 4);
-}
+namespace game {
+	void enemy1::init(ID _id, int posx, int posy) {
+		_time = ecs::core::Time::get(TimeUnit::Seconds);
+		ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 100, 100, true);
+		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
+		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.5f, -0.5f);
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "./Sprite/Enemy1/", 4);
+	}
 
-void enemy1::update(ID _id) {
+	void enemy1::update(ID _id) {
+		auto &pos = ecs::Ecs::getConponentMap<ecs::component::Position>();
+		auto &speed = ecs::Ecs::getConponentMap<ecs::component::Speed>();
+		speed[_id].x = -1;
+		speed[_id].y = sin(pos[_id].x / 50);
+		if (_time + 10 < ecs::core::Time::get(TimeUnit::Seconds)) {
+			ecs::Ecs::deleteId(_id);
+		}
+	}
 }

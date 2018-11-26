@@ -7,10 +7,13 @@
 
 
 #include "component/ai.hpp"
+#include "system/gen.hpp"
 #include "enemy/enemy1/enemy1.hpp"
 #include <iostream>
+#include <unistd.h>
 #include <chrono>
 #include <thread>
+#include "system/ai.hpp"
 #include <zconf.h>
 #include <ecs/Entity.hpp>
 #include <ecs/Ecs.hpp>
@@ -18,10 +21,12 @@
 #include <system/graphical/Graphicals.hpp>
 #include <component/physic/Position.hpp>
 #include <component/control/DeplacementKeyBoard.hpp>
+#include <component/control/Keyboard.hpp>
 #include <component/physic/Speed.hpp>
 #include <system/physic/Speeds.hpp>
 #include <component/physic/Hitbox.hpp>
 #include <component/graphical/AnimatedSprite.hpp>
+#include <component/graphical/AnimatedSpriteMap.hpp>
 #include <component/graphical/Drawable.hpp>
 #include <ecs/DataBank.hpp>
 #include <component/audio/Sound.hpp>
@@ -29,8 +34,11 @@
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
+#include "game/component/Parallax.hpp"
+#include "game/system/Parallaxs.hpp"
 
 int main() {
+	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
 		sf::SoundBuffer buffer;
@@ -38,105 +46,52 @@ int main() {
 		return buffer;
 	};
 
-	ID enemytest = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<game::component::ai>(enemytest, enemytest, new enemy1);
+	game::system::gen Gen;
 
-	ID id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "./assets/Isaac.png");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(id, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 0.f);
-	ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
-	ecs::Ecs::addComponent<ecs::component::Mouse>(id);
-	ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(id, 300.f);
-	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::ESCAPE]
-	= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
-		(void) parent;
-		ecs::graphical::Graphic::get()._window->close();
-	});
-	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::LEFT_ARROW]
-	= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
-		ID id = ecs::entity::Entity::getId();
-		TimedEventAdmin m;
+	ID background = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
 
-		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
-		ecs::Ecs::addComponent<ecs::component::Position>(id,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
-		ecs::Ecs::addComponent<ecs::component::Speed>(id, -10.f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
-				ecs::Ecs::deleteId(other);
-			(void) self;
-		});
-		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
-	});
-	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::UP_ARROW]
-		= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
-		ID id = ecs::entity::Entity::getId();
-		TimedEventAdmin m;
+	ID ship = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Position>(ship, 1280/2, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Speed>(ship, 10, 10);
+	ecs::Ecs::addComponent<ecs::component::Drawable>(ship, 0, true);
+	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship);
+	ecs::Ecs::addComponent<ecs::component::AnimatedSpriteMap>(ship, "Sprite/Ship/BlueShip");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").y);
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(ship);
 
-		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
-		ecs::Ecs::addComponent<ecs::component::Position>(id,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
-		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, -10.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
-				ecs::Ecs::deleteId(other);
-			(void) self;
-		});
-		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
-	});
-	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::RIGHT_ARROW]
-		= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
-		ID id = ecs::entity::Entity::getId();
-		TimedEventAdmin m;
+	ID enemy = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Position>(enemy, 1000, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Drawable>(enemy, 0, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("Sprite/Enemy1/Enemy11.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Enemy1/Enemy11.png").y);
+	ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(enemy, "Sprite/Enemy1");
 
-		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
-		ecs::Ecs::addComponent<ecs::component::Position>(id,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
-		ecs::Ecs::addComponent<ecs::component::Speed>(id, 10.f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
-				ecs::Ecs::deleteId(other);
-			ecs::Ecs::getConponentMap<ecs::component::Sound>()[parent].soundMap["attack"].play();
-			(void) self;
-		});
-		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
-	});
-	ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::DOWN_ARROW]
-		= std::pair<bool, std::function<void(ID)>>(false, [](ID parent){
-		ID id = ecs::entity::Entity::getId();
-		TimedEventAdmin m;
 
-		ecs::Ecs::addComponent<ecs::component::Drawable>(id, 1, true);
-		ecs::Ecs::addComponent<ecs::component::Sprite>(id, ecs::graphical::Graphic::loadedSprite("./assets/Bullet.png"), "./assets/Bullet.png");
-		ecs::Ecs::addComponent<ecs::component::Position>(id,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].x,
-								 ecs::Ecs::getConponentMap<ecs::component::Position>()[parent].y);
-		ecs::Ecs::addComponent<ecs::component::Speed>(id, 0.f, 10.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100, 100, false, [parent](ID self, ID other){
-			if (other != parent && ecs::Ecs::getConponentMap<ecs::component::Sprite>()[other].shared == false)
-				ecs::Ecs::deleteId(other);
-			(void) self;
-		});
-		m.addEvent(2, Time::Seconds, [id](){ecs::Ecs::deleteId(id);});
+
+	auto &keymap = ecs::Ecs::getConponentMap<ecs::component::Keyboard>()[ship].keyMap;
+	keymap[KeyKeyboard::KEY_Z] = std::pair<bool, std::function<void(ID)>>(false, [](ID self){
+		ecs::Ecs::getConponentMap<ecs::component::AnimatedSpriteMap>()[self].pos = "up";
 	});
-	ecs::Ecs::addComponent<ecs::component::Sound>(id);
-	ecs::Ecs::getConponentMap<ecs::component::Sound>()[id].soundMap["attack"].setBuffer(ecs::DataBank<std::string, sf::SoundBuffer>::get("./assets/sounds/death.wav"));
+	keymap[KeyKeyboard::KEY_S] = std::pair<bool, std::function<void(ID)>>(false, [](ID self){
+		ecs::Ecs::getConponentMap<ecs::component::AnimatedSpriteMap>()[self].pos = "down";
+	});
+	keymap[KeyKeyboard::SPACE] = std::pair<bool, std::function<void(ID)>>(false, [](ID self){
+		ID bullet = ecs::entity::Entity::getId();
+		ecs::Ecs::addComponent<ecs::component::Speed>(bullet, 10, 0);
+		ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 0, true);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("Sprite//ClassicBullet/ClassicBullet3.png").y);
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(bullet, "Sprite/ClassicBullet");
+	});
 
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		rtype.update();
-
+		Gen.updateGen();
+		game::system::ai::updateAi();
+		game::Parallaxs::UpdateParallaxs();
 		ecs::system::Controls::UpdateDeplacement();
 		ecs::system::Speeds::UpdateSpeeds();
+
 
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::nanoseconds(x));

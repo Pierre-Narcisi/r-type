@@ -11,7 +11,7 @@
 
 #include <list>
 #include "Json/includes/Parser.hpp"
-#include "TcpSocket/TcpSocket.hpp"
+#include "Network/TcpSocket/TcpSocket.hpp"
 
 namespace common {
 

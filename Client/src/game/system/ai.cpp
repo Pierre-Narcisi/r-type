@@ -6,8 +6,8 @@
 
 namespace game {namespace system {
 	void ai::updateAi() {
-		auto ids = ecs::Ecs::get().filter<component::ai>();
-		auto &ai = ecs::Ecs::get().getConponentMap<component::ai>();
+		auto ids = ecs::Ecs::filter<component::ai>();
+		auto &ai = ecs::Ecs::getConponentMap<component::ai>();
 
 		for (auto id : ids) {
 			ai[id]._my_enemy_ai->update(id);
