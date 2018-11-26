@@ -37,10 +37,10 @@ void	Router::resolve(std::istream &path, json::Entity &req, json::Entity &resp) 
 	std::string p("");
 	auto &stm = getline(path, p, ':');
 
-	for (auto &tmp: _sub) {
-		std::cout << '"' << tmp.first << '"'
-			<< " ? == ? " << '"' << p << '"' << std::endl;
-	}
+	// for (auto &tmp: _sub) {
+	// 	std::cout << '"' << tmp.first << '"'
+	// 		<< " ? == ? " << '"' << p << '"' << std::endl;
+	// }
 	auto job = _sub.find(p);
 	if (job == _sub.end()) {
 		resp["error"] = json::makeObject {

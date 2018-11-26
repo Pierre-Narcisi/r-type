@@ -29,6 +29,8 @@ public:
 	void	addPlayer(ClientConnection &player);
 
 	void	addTask(std::function<void()> const &task);
+
+	auto	getId() { return _id; }
 private:
 	void			_entryPoint();
 
@@ -48,9 +50,6 @@ private:
 	std::mutex						_addPlayerMutex;
 
 	struct DestContainer {
-		~DestContainer() {
-			std::cout << "~Dest" << std::endl;
-		}
 		evt::Event::EvtHdlDestr	dest;
 	};
 

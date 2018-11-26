@@ -38,7 +38,6 @@ namespace evt
 		auto it = _hdls[tpl].end();
 		it--;
 		blk->destructor = [this, &tpl, it, blk] {
-			std::cout << "Hummmmmmmm" << std::endl;
 			_hdls[tpl].erase(it);
 			if (_hdls[tpl].empty())
 				_hdls.erase(tpl);

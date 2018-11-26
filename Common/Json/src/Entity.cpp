@@ -47,7 +47,15 @@ namespace json
 		_data(std::make_shared<Number>((double) nbr))
 	{}
 
+	Entity::Entity(unsigned long nbr):
+		_data(std::make_shared<Number>((double) nbr))
+	{}
+	
 	Entity::Entity(int nbr):
+		_data(std::make_shared<Number>((double) nbr))
+	{}
+
+	Entity::Entity(unsigned int nbr):
 		_data(std::make_shared<Number>((double) nbr))
 	{}
 

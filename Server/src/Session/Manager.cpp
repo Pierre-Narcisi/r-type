@@ -25,7 +25,7 @@ Manager::~Manager() {
 
 void	Manager::_entryPoint() {
 	while (_continue) {
-		
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime));
 	}
 }

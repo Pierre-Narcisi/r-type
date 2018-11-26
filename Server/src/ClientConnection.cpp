@@ -63,6 +63,7 @@ void	ClientConnection::onDataAvailable(std::size_t available) {
 }
 
 
+static int _playerIdCounter = 0;
 void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 	if (!req["username"].isString()) {
 		resp = json::makeObject {
@@ -78,6 +79,7 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 		this->_status.username = username;
 		this->_status.logged = true;
 		resp["status"] = true;
+		resp["id"] = ++_playerIdCounter;
 	} else {
 		resp = json::makeObject {
 			{"error", json::makeObject {
@@ -89,13 +91,21 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 
 void	ClientConnection::_createSession(json::Entity &req, json::Entity &resp) {
 	try {
+		#if defined(_MSC_VER)
+			#define __MAX max
+			#define __MIN min
+		#else
+			#define __MAX std::max
+			#define __MIN std::min
+		#endif
 		auto &session = Server::instance().getSessionManager().create(
 			req["name"].to<std::string>(),
-			std::min(std::max(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)
+			__MIN(__MAX(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)
 		);
 
 		session.addPlayer(*this);
 		resp["status"] = true;
+		resp["id"] = session.getId();
 	} catch (std::exception &e) {
 		resp = json::makeObject {
 			{ "error", json::makeObject {
