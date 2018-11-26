@@ -7,18 +7,18 @@
 #include <iostream>
 
 TimedEvent::TimedEvent(): _threadAlive(true),
-	_thread([&](){
+	_thread([this](){
 		long time;
 		std::vector<TimedFuntion, std::allocator<TimedFuntion>>::iterator func;
-		_mutexAlive.lock();
+		this->_mutexAlive.lock();
 		while (_threadAlive) {
-			_mutexAlive.unlock();
+			this->_mutexAlive.unlock();
 			time = getTime();
-			_mutexFunctions.lock();
-			func = _timedFunctions.begin();
-			if (_timedFunctions.empty() != 1) {
-				while (func != _timedFunctions.end()) {
-					if (func->time > _initialTime && func->time < time) {
+			this->_mutexFunctions.lock();
+			func = this->_timedFunctions.begin();
+			if (this->_timedFunctions.empty() != 1) {
+				while (func != this->_timedFunctions.end()) {
+					if (func->time > this->_initialTime && func->time < time) {
 						func->func();
 						_timedFunctions.erase(func);
 						func--;
@@ -30,7 +30,7 @@ TimedEvent::TimedEvent(): _threadAlive(true),
 			_mutexAlive.lock();
 			std::this_thread::sleep_for(std::chrono::microseconds(16666/2));
 		}
-		_mutexAlive.unlock();
+		this->_mutexAlive.unlock();
 	})
 {
 	_initialTime = getTime();
@@ -71,4 +71,5 @@ void TimedEvent::addEvent(long time, Time unit, std::function<void()> function) 
 	_mutexFunctions.lock();
 	_timedFunctions.emplace_back(TimedFuntion(getTime() + _time, function));
 	_mutexFunctions.unlock();
+
 }
