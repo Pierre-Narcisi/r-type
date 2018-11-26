@@ -17,7 +17,6 @@ namespace ecs {namespace system {
 		auto &speed = ecs::Ecs::getComponentMap<component::Speed>();
 		auto &position = ecs::Ecs::getComponentMap<component::Position>();
 
-		auto &positionss = Ecs::getComponentMap<component::Position>();
 		auto &hitboxs = Ecs::getComponentMap<component::Hitbox>();
 		component::Position tmpPos;
 		bool comeY = false;

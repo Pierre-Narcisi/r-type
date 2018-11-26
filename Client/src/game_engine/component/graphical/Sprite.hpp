@@ -26,8 +26,8 @@ namespace ecs {namespace component {
 			other.sprite = nullptr;
 			other.texture = nullptr;
 		}
-		Sprite(sf::Sprite *sprite, std::string path) {
-			this->sprite = sprite;
+		Sprite(graphical::BundleSprite &bundled, std::string path) {
+			this->sprite = bundled.sprite;
 			this->size = graphical::Graphic::getTextureSize(path);
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
 			this->shared = true;
