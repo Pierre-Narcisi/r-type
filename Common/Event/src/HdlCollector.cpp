@@ -9,7 +9,7 @@
  */
 
 #include "Event/HdlCollector.hpp"
-
+#include <iostream>
 namespace evt
 {
 	HdlCollector::~HdlCollector()
@@ -20,24 +20,25 @@ namespace evt
 	Event::EvtHdlDestr
 	HdlCollector::add(Event::EvtHdlDestr const &hdl)
 	{
-		auto it = _unregisterEventsHdls.insert(_unregisterEventsHdls.end(), &hdl);
+		auto it = _unregisterEventsHdls.insert(_unregisterEventsHdls.end(), hdl);
 		return ([this, it] () {
+			auto fct = *it;
 			this->_unregisterEventsHdls.erase(it);
-			(**it)();
+			fct();
 		});
 	}
 
 	HdlCollector
 	&HdlCollector::operator<<(Event::EvtHdlDestr const &hdl)
 	{
-		_unregisterEventsHdls.push_back(&hdl);
+		_unregisterEventsHdls.push_back(hdl);
 		return (*this);
 	}
 
 	void	HdlCollector::flush(void)
 	{
-		for (auto destructor : _unregisterEventsHdls) {
-			(*destructor)();
+		for (auto &destructor : _unregisterEventsHdls) {
+			(destructor)();
 		}
 		_unregisterEventsHdls.clear();
 	}

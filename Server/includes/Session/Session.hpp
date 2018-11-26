@@ -38,7 +38,7 @@ private:
 	int				_playerMax;
 
 	bool								_continue = true;
-	std::thread							_thread;
+	std::unique_ptr<std::thread>		_thread;
 	std::deque<std::function<void()>>	_pool;
 	std::mutex							_poolLock;
 	std::mutex							_pickLock;
@@ -46,6 +46,17 @@ private:
 	evt::HdlCollector				_collector;
 	std::list<ClientConnection*>	_players;
 	std::mutex						_addPlayerMutex;
+
+	struct DestContainer {
+		~DestContainer() {
+			std::cout << "~Dest" << std::endl;
+		}
+		evt::Event::EvtHdlDestr	dest;
+	};
+
+	std::list<DestContainer>	_destList;
+
+	friend Manager;
 };
 
 }}

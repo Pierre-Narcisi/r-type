@@ -8,7 +8,6 @@
  * --------------------------------------------------------------------------
  */
 
-#include <iostream>
 #include "Event/Event.hpp"
 
 namespace evt
@@ -16,7 +15,7 @@ namespace evt
 	Event::Event(std::function<void ()> const &onEmpty_):
 		onEmpty(onEmpty_) {}
 
-	#ifdef DEBUG_ON
+	#if !defined(NDEBUG)
 	void	Event::dump() const
 	{
 		std::cout << "{" << std::endl;
@@ -24,7 +23,7 @@ namespace evt
 			std::cout << "\t[\"" << evtType.first.c_str() << "\"] = " <<
 				evtType.second.size() << ',' << std::endl;
 		}
-		std::cout << "}";
+		std::cout << "}" << std::endl;
 	}
 	#endif
 
@@ -39,6 +38,7 @@ namespace evt
 		auto it = _hdls[tpl].end();
 		it--;
 		blk->destructor = [this, &tpl, it, blk] {
+			std::cout << "Hummmmmmmm" << std::endl;
 			_hdls[tpl].erase(it);
 			if (_hdls[tpl].empty())
 				_hdls.erase(tpl);

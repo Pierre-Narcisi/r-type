@@ -22,15 +22,15 @@ public:
 	Manager(std::uint32_t ticks = 60); //ms
 	~Manager();
 
-	void	create(std::string const &name, int playerMax = 4);
+	Session	&create(std::string const &name, int playerMax = 4);
 private:
 	void			_entryPoint();
 	std::uint32_t	_generateId();
 
-	bool				_continue = true;
-	std::uint32_t		_sleepTime;
-	std::thread			_thread;
-	std::list<Session>	_sessions;
+	bool							_continue = true;
+	std::uint32_t					_sleepTime;
+	std::unique_ptr<std::thread>	_thread;
+	std::list<Session>				_sessions;
 	//UdpListener; // UdpServer
 };
 

@@ -5,10 +5,12 @@
 ** ClientConnection.cpp
 */
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include "ClientConnection.hpp"
 #include "Server.hpp"
+#include "Constant.hpp"
 
 namespace rtype {
 
@@ -85,7 +87,26 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 	}
 }
 
+void	ClientConnection::_createSession(json::Entity &req, json::Entity &resp) {
+	try {
+		auto &session = Server::instance().getSessionManager().create(
+			req["name"].to<std::string>(),
+			std::min(std::max(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)
+		);
+
+		session.addPlayer(*this);
+		resp["status"] = true;
+	} catch (std::exception &e) {
+		resp = json::makeObject {
+			{ "error", json::makeObject {
+				{ "message", e.what() }
+			}}
+		};
+	}
+}
+
 void	ClientConnection::_routerInit() {
+	namespace pl = std::placeholders;
 	std::shared_ptr<Router>	sessionRouter(new Router());
 	
 	sessionRouter->use([this] (json::Entity &req, json::Entity &resp, std::function<void()> &next) {
@@ -98,13 +119,9 @@ void	ClientConnection::_routerInit() {
 		}
 	});
 
-	sessionRouter->use("create", [this] (json::Entity &req, json::Entity &resp) {
-		resp["status"] = "created";
-	});
+	sessionRouter->use("create", std::bind(&ClientConnection::_createSession, this, pl::_1, pl::_2));
 
-	_router.use("login", [this] (json::Entity &req, json::Entity &resp) {
-		this->_login(req, resp);
-	});
+	_router.use("login", std::bind(&ClientConnection::_login, this, pl::_1, pl::_2));
 	_router.use("session", sessionRouter);
 }
 

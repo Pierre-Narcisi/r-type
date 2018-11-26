@@ -21,7 +21,7 @@ namespace evt
 		_events.erase(eventName);
 	}
 
-#ifdef DEBUG_ON
+#if !defined(NDEBUG)
 	template<typename T>
 	void	BasicManager<T>::dump() const
 	{

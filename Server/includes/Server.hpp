@@ -39,11 +39,11 @@ private:
 	Server() = default;
 	void	_initSignalCatch();
 
+	session::Manager		_sessionManager;
 	std::unique_ptr<nw::TcpListener<ClientConnection>>
 							_listener;
 	std::function<void()>	_stop;
 	common::Opts			_opts;
-	session::Manager		_sessionManager;
 };
 
 }

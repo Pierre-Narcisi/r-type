@@ -16,10 +16,14 @@
 #include <typeindex>
 #include <vector>
 
+#if !defined(NDEBUG)
+ #include <iostream>
+#endif
+
 namespace evt
 {
 	template <typename Ret, typename ...Args>
-	inline std::string	Event::_extractTemplate()
+	constexpr inline std::string	Event::_extractTemplate()
 	{
 		std::ostringstream	stm;
 		bool			first = false;
@@ -61,7 +65,11 @@ namespace evt
 		auto	ret = std::make_shared<std::vector<Ret>>(rList->second.size());
 		auto	&vec = *(ret.get());
 
-		for (auto ptr : rList->second) {
+		auto it = rList->second.begin();
+		while (it != rList->second.end()) {
+			auto *ptr = *it;
+			
+			it++;
 			vec[i] = static_cast<EvtHdlBlock<Ret, Args...>*>(ptr)->hdl(args...);
 			++i;
 		}
@@ -78,7 +86,13 @@ namespace evt
 		if (rList == _hdls.end())
 			return;
 
-		for (auto ptr : rList->second) {
+		int i = 0;
+		auto it = rList->second.begin();
+		while (it != rList->second.end()) {
+			auto *ptr = *it;
+			it++;
+
+			std::cout << i++ << std::endl;
 			static_cast<EvtHdlBlock<void, Args...>*>(ptr)->hdl(args...);
 		}
 	}

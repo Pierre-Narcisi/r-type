@@ -62,9 +62,14 @@ void	Server::start() {
 	_stop = [this] { _listener->stop(); };
 
 	_listener->onNewConnection = [this] (ClientConnection &slave) {
+		auto it = _listener->getSlaves().end();
+		it--;
 		auto &addr = reinterpret_cast<const sockaddr&>(slave.getNativeAddr());
 
 		std::cout << "New connection form " << nw::TcpEndpoint::getIp(addr) << std::endl;
+		// slave.onDestroy.addHandler([this, it] {
+		// 	_listener->getSlaves().erase(it);
+		// });
 	};
 
 	_listener->init();

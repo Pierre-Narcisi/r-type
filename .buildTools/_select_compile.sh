@@ -20,10 +20,10 @@ elif [ "$1" = "--nodocker" ]; then
 	shift
   ./.buildTools/_start_compile.sh $buildType $@
 else
-	cmd=$(echo "/repo/.buildTools/_start_compile.sh $buildType $@")
+	cmd=$(echo "$(pwd)/.buildTools/_start_compile.sh $buildType $@")
 
   docker run \
-	-v $(pwd):/repo \
+	-v $(pwd):$(pwd) \
 	-v $(pwd)/.cache:/root/.conan \
 	-t \
 		epitechcontent/epitest-docker \

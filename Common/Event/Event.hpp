@@ -57,7 +57,7 @@ namespace evt
 		template <typename ...Args>
 		void	fire(Args... args);
 		bool	isEmpty(void) const;
-#ifdef DEBUG_ON
+#if !defined(NDEBUG)
 		void	dump() const;
 #endif
 	public:
@@ -67,7 +67,7 @@ namespace evt
 					Event::EvtHdlBlockDestr *blk);
 	private:
 		template <typename Ret, typename ...Args>
-		inline std::string	_extractTemplate();
+		constexpr inline std::string	_extractTemplate();
 
 		std::unordered_map <
 			std::string,

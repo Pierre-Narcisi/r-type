@@ -31,7 +31,8 @@ private:
 	void	_sendJson(json::Entity const &rep);
 	void	_routerInit();
 
-	void	_login(json::Entity &req, json::Entity &res);
+	void	_login(json::Entity &req, json::Entity &resp);
+	void	_createSession(json::Entity &req, json::Entity &resp);
 
 	struct {
 		bool		logged = false;

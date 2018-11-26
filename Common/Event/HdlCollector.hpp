@@ -26,6 +26,6 @@ namespace evt
 
 		void	flush(void);
 	private:
-		std::list<Event::EvtHdlDestr const *>	_unregisterEventsHdls;
+		std::list<Event::EvtHdlDestr>	_unregisterEventsHdls;
 	};
 }
