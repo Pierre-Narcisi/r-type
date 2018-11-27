@@ -17,12 +17,7 @@ namespace ecs {namespace component {
 			shared = false;
 		}
 
-		Sprite(Sprite &&other):
-			sprite(other.sprite),
-			texture(other.texture),
-			size(other.size),
-			shared(other.shared)
-		{
+		Sprite(Sprite &&other): sprite(other.sprite), texture(other.texture), size(other.size), shared(other.shared) {
 			other.sprite = nullptr;
 			other.texture = nullptr;
 		}
@@ -31,6 +26,7 @@ namespace ecs {namespace component {
 			this->size = graphical::Graphic::getTextureSize(path);
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
 			this->shared = true;
+			this->boxSize = size;
 		}
 		Sprite(std::string path) {
 			this->texture = new sf::Texture();
@@ -43,8 +39,10 @@ namespace ecs {namespace component {
 			this->size = graphical::Graphic::getTextureSize(path);
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
 			this->shared = false;
+			this->boxSize = size;
 		}
-		Sprite(std::string path, bool visible) {
+
+		Sprite(std::string path, core::Vector2<float> size) {
 			this->texture = new sf::Texture();
 
 			if (!this->texture->loadFromFile(path)) {
@@ -53,21 +51,26 @@ namespace ecs {namespace component {
 			}
 			this->sprite = new sf::Sprite(*this->texture);
 			this->size = graphical::Graphic::getTextureSize(path);
-			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
-			this->shared = false;
-		}
-		Sprite(std::string path, bool visible, unsigned int layer) {
-			this->texture = new sf::Texture();
 
-			if (!this->texture->loadFromFile(path)) {
-				std::cout << "src/game_engine/component/graphical/Sprite: Couldn't load texture " << path << std::endl;
-				exit(84);
-			}
-			this->sprite = new sf::Sprite(*this->texture);
-			this->size = graphical::Graphic::getTextureSize(path);
+			float y = size.y / this->size.y;
+			float x = size.x / this->size.x;
+
 			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
+
+			if (y < x) {
+				this->sprite->setScale(y, y);
+				this->size.x = this->size.x * y;
+				this->size.y = this->size.y * y;
+			} else {
+				this->sprite->setScale(x, x);
+				this->size.x = this->size.x * x;
+				this->size.y = this->size.y * x;
+			}
+
 			this->shared = false;
+			this->boxSize = size;
 		}
+
 		~Sprite() {
 			if (!shared) {
 				delete sprite;
@@ -87,7 +90,8 @@ namespace ecs {namespace component {
 
 		sf::Sprite				*sprite;
 		sf::Texture				*texture;
-		ecs::core::Vector2<unsigned int>	size;
+		ecs::core::Vector2<float>		size;
+		ecs::core::Vector2<float>		boxSize;
 		bool 					shared;
 	};
 }}

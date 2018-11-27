@@ -9,14 +9,14 @@ namespace game {
 	void enemy1::init(ID _id, int posx, int posy) {
 		_time = ecs::core::Time::get(TimeUnit::Seconds);
 		ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 100, 100, true, [](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "./Sprite/Enemy1/", 4, ecs::core::Vector2<float>(50, 50));
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, _id, true, [](ID self, ID other){
 			if (ecs::Ecs::idHasComponents<ecs::component::Keyboard>(other))
 				ecs::Ecs::deleteId(other);
 			ecs::Ecs::deleteId(self);
 		});
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id);
-		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "./Sprite/Enemy1/", 4);
 	}
 
 	void enemy1::update(ID _id) {
