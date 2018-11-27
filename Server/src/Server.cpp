@@ -10,6 +10,8 @@
 #include "Constant.hpp"
 #include "Server.hpp"
 
+#include "Network/UdpSocket/UdpSocket.hpp"
+
 #define ERROR(__text) { \
 	resp = json::makeObject { \
 		{ "error", json::makeObject { \
@@ -129,8 +131,8 @@ void	Server::listSessions(json::Entity &req, json::Entity &resp) {
 		resp["sessions"].push(json::makeObject {
 			{ "name", session._name },
 			{ "id", session._id },
-			{ "playerCount", session._players.size() },
-			{ "playerMax", session._playerMax },
+			{ "playerCount", (int) session._players.size() },
+			{ "playerMax", session._playerMax }
 		});
 	}
 	resp["status"] = true;

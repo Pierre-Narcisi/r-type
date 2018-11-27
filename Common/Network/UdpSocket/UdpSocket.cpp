@@ -7,15 +7,21 @@
 
 #include <memory>
 #include "UdpSocket.hpp"
+#include "Network/TcpSocket/TcpSocket.hpp"
 
 namespace nw {
+
+UdpSocket::~UdpSocket() {
+	SOCKETCLOSE(_sock);
+}
 
 UdpEndpoint	UdpSocket::sendTo(UdpBuffer const &buffer, UdpEndpoint const &ep) {
 	if (ep._ai.size() > 0) {
 		auto		*curAddr = reinterpret_cast<sockaddr_in*>(ep._ai[0].get());
 		auto		newAddr = *curAddr;
 		
-		newAddr.sin_port = ep._port;
+		if (!_isListener)
+			newAddr.sin_port = ep._port;
 
 		::sendto(_sock, buffer.buf, buffer.len, 0, (const sockaddr*)&newAddr, sizeof(newAddr));
 		return (newAddr);
@@ -24,12 +30,20 @@ UdpEndpoint	UdpSocket::sendTo(UdpBuffer const &buffer, UdpEndpoint const &ep) {
 	}
 }
 
-void	UdpSocket::recvFrom(UdpBuffer &buffer, UdpEndpoint const &ep) {
+long	UdpSocket::recvFrom(UdpBuffer &buffer, UdpEndpoint &ep) {
+	if (_isListener) {
+		if (ep._ai.size() == 0) {
+			ep._ai.emplace_back(reinterpret_cast<sockaddr*>(new sockaddr_in{0}));
+		}
+	}
 	if (ep._ai.size() > 0) {
 		auto		*curAddr = reinterpret_cast<sockaddr_in*>(ep._ai[0].get());
 		socklen_t	len = sizeof(*curAddr);
 
-		::recvfrom(_sock, buffer.buf, buffer.len, 0, (sockaddr*)curAddr, &len);
+		auto res = ::recvfrom(_sock, buffer.buf, buffer.len, 0, (sockaddr*)curAddr, &len);
+		if (res >= 0)
+			buffer.len = res;
+		return res;
 	} else {
 		throw std::runtime_error("Given endpoint contains zero remote addr");
 	}
@@ -37,6 +51,20 @@ void	UdpSocket::recvFrom(UdpBuffer &buffer, UdpEndpoint const &ep) {
 
 int		UdpSocket::setNonBlocking(bool isNonBlocking) {
 	return SOCKETIOCTL(_sock, FIONBIO, &isNonBlocking);
+}
+
+std::uint16_t	UdpSocket::makeMeAsListener(std::uint16_t port) {
+	sockaddr_in	sin = {0};
+
+	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
+
+	if(bind(_sock, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) != 0) {
+		throw std::runtime_error(TcpSocket::getLastNetError());
+	}
+	_isListener = true;
+	return (port);
 }
 
 /* Usage:
@@ -53,6 +81,34 @@ int main() {
 	test.recvFrom(buffer, res);
 	std::cout << buf << std::endl;
 
+}
+
+Server:
+
+int main() {
+	nw::UdpSocket test;
+
+	test.makeMeAsListener(1338);
+
+	char buf[1024];
+	nw::UdpBuffer buffer(buf, sizeof(buf));
+
+	test.setNonBlocking(true);
+	nw::UdpEndpoint ep;
+
+	while (true) {
+		auto c = test.recvFrom(buffer, ep);
+		std::cout << "len: " << c << std::endl;
+		if (c > -1) {
+			buf[c] = 0;
+			std::cout << ep.getResolvedIps().front() << ": " << buf << std::endl;
+
+			test.sendTo(buffer, ep);
+			break;
+		}
+		std::cout << "loop" << std::endl;
+		//usleep(1000000);
+	}
 }
 
 */

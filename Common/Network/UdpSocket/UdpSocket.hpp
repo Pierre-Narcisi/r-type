@@ -47,13 +47,17 @@ struct UdpBuffer {
 class UdpSocket {
 public:
 	UdpSocket() = default;
+	~UdpSocket();
 
 	UdpEndpoint	sendTo(UdpBuffer const &buffer, UdpEndpoint const &ep);
-	void		recvFrom(UdpBuffer &buffer, UdpEndpoint const &ep);
+	long		recvFrom(UdpBuffer &buffer, UdpEndpoint &ep);
 
-	int			setNonBlocking(bool isNonBlocking = true);
+	int				setNonBlocking(bool isNonBlocking = true);
+	std::uint16_t	makeMeAsListener(std::uint16_t port = 0); // if port = 0, port is auto generated
 private:
 	Socket	_sock = UdpEndpoint::createSocket();
+
+	bool			_isListener = false;
 };
 
 }
