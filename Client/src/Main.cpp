@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <chrono>
 #include <thread>
+#include "game/system/walls.hpp"
 #include "system/ai.hpp"
 #include <zconf.h>
 #include <ecs/Entity.hpp>
@@ -70,6 +71,7 @@ int main() {
 
 
 	game::system::gen Gen;
+	game::system::walls Walls;
 
 	ID background = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
@@ -119,6 +121,7 @@ int main() {
 	game.addUpdate(10, [](){ecs::system::Controls::UpdateDeplacement();});
 	game.addUpdate(10, [](){ecs::system::Speeds::UpdateSpeeds();});
 	game.addUpdate(9, [](){game::system::ai::updateAi();});
+	game.addUpdate(8, [&Walls](){Walls.updateWalls();});
 	game.addUpdate(9, [&Gen](){Gen.updateGen();});
 
 	while (rtype.isOpen()) {
