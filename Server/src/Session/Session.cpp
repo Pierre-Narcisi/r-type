@@ -7,6 +7,7 @@
 
 #include <functional>
 #include "Session/Session.hpp"
+#include "Event/Manager.hpp"
 
 namespace rtype { namespace session {
 
@@ -16,6 +17,15 @@ Session::Session(Manager *parent, std::uint32_t id, std::string const &name, int
 		_name(name),
 		_playerMax(playerMax) {
 	_thread = std::unique_ptr<std::thread>(new std::thread(&Session::_entryPoint, this)); // Force start after mutex init
+
+	evt::Manager::get()["onPlayerDisconnect"]->addHandler<void, ClientConnection&>([this] (ClientConnection &clt) {
+		for (auto it = _players.begin(); it != _players.end(); ++it) {
+			if (*it == &clt) {
+				_players.erase(it);
+				return;
+			}
+		}
+	});
 }
 
 Session::~Session() {
@@ -57,17 +67,10 @@ void	Session::addPlayer(ClientConnection &player) {
 	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	_players.push_back(&player);
-	auto it = _players.end();
-	it--;
+}
 
-	_destList.emplace_back();
-	auto destIt = _destList.end();
-	destIt--;
-	destIt->dest = _collector.add(player.onDestroy.addHandler([this, it, destIt] {
-		destIt->dest();
-		_destList.erase(destIt);
-		_players.erase(it);
-	}));
+void	Session::_rmPlayer(decltype(_players)::iterator player) {
+	_players.erase(player);
 }
 
 void	Session::addTask(std::function<void()> const &task) {

@@ -45,7 +45,7 @@ Session	&Manager::create(std::string const &name, int playerMax) {
 		}
 	}
 
-	return _sessions.emplace_back(this, _generateId(), name, playerMax);
+	return _sessions.emplace_front(this, _generateId(), name, playerMax);
 }
 
 }}

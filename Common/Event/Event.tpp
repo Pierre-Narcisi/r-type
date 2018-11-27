@@ -56,8 +56,8 @@ namespace evt
 	Event::fire(Args... args)
 	{
 		static std::string	tpl = _extractTemplate<Ret, Args...>();
-		int		i = 0;
-		auto	rList = _hdls.find(tpl);
+		int					i = 0;
+		auto				rList = _hdls.find(tpl);
 		
 		if (rList == _hdls.end())
 			return std::make_shared<std::vector<Ret>>();
@@ -81,7 +81,7 @@ namespace evt
 	Event::fire(Args... args)
 	{
 		static std::string	tpl = _extractTemplate<void, Args...>();
-		auto			rList = _hdls.find(tpl);
+		auto				rList = _hdls.find(tpl);
 		
 		if (rList == _hdls.end())
 			return;
@@ -89,8 +89,8 @@ namespace evt
 		auto it = rList->second.begin();
 		while (it != rList->second.end()) {
 			auto *ptr = *it;
+			
 			it++;
-
 			static_cast<EvtHdlBlock<void, Args...>*>(ptr)->hdl(args...);
 		}
 	}

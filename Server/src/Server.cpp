@@ -10,8 +10,15 @@
 #include "Constant.hpp"
 #include "Server.hpp"
 
+#define ERROR(__text) { \
+	resp = json::makeObject { \
+		{ "error", json::makeObject { \
+			{ "message", __text } \
+		}} \
+	}; \
+	return; \
+}
 
-#include "Network/UdpSocket/UdpSocket.hpp"
 namespace rtype {
 
 void	Server::_initSignalCatch() {
@@ -86,6 +93,86 @@ bool	Server::isConnected(std::string const username) {
 		}
 	}
 	return false;
+}
+
+void	Server::createSession(ClientConnection *me, json::Entity &req, json::Entity &resp) {
+	try {
+		#if defined(_MSC_VER)
+			#define __MAX max
+			#define __MIN min
+		#else
+			#define __MAX std::max
+			#define __MIN std::min
+		#endif
+		auto &session = Server::instance().getSessionManager().create(
+			req["name"].to<std::string>(),
+			__MIN(__MAX(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)
+		);
+
+		session.addPlayer(*me);
+		resp["status"] = true;
+		resp["id"] = session.getId();
+	} catch (std::exception &e) {
+		resp = json::makeObject {
+			{ "error", json::makeObject {
+				{ "message", e.what() }
+			}}
+		};
+	}
+}
+
+void	Server::listSessions(json::Entity &req, json::Entity &resp) {
+	resp["sessions"] = json::Entity(json::Entity::ARR);
+	auto &list = _sessionManager.getSessions();
+
+	for (auto &session: list) {
+		resp["sessions"].push(json::makeObject {
+			{ "name", session._name },
+			{ "id", session._id },
+			{ "playerCount", session._players.size() },
+			{ "playerMax", session._playerMax },
+		});
+	}
+	resp["status"] = true;
+}
+
+void	Server::joinSession(ClientConnection *me, json::Entity &req, json::Entity &resp) {
+	if (!req["sessionId"].isNumber()) ERROR("sessionId is not a number!")
+	
+	auto id = (uint32_t) req["sessionId"].to<int>();
+	for (auto &session: Server::instance().getSessionManager().getSessions()) {
+		if (session._id == id) {
+			for (auto &client: session._players) {
+				if (client->_status.username == me->_status.username)
+					ERROR("You are already in");
+			}
+			session.addPlayer(*me);
+			resp["status"] = true;
+			return;
+		}
+	}
+	ERROR("sessionId: Not found");
+}
+
+void	Server::quitSession(ClientConnection *me, json::Entity &req, json::Entity &resp) {
+	if (!req["sessionId"].isNumber()) ERROR("sessionId is not a number!")
+
+	auto id = (uint32_t) req["sessionId"].to<int>();
+	for (auto &session: Server::instance().getSessionManager().getSessions()) {
+		if (session._id == id) {
+			auto it = session._players.begin();
+
+			for (; it != session._players.end(); ++it) {
+				if ((*it)->_status.username == me->_status.username) {
+					session._rmPlayer(it);
+					resp["status"] = true;
+					return;
+				}
+			}
+			ERROR("You are not in");
+		}
+	}
+	ERROR("sessionId: Not found");
 }
 
 void	Server::stop() {

@@ -23,6 +23,8 @@ public:
 	~Manager();
 
 	Session	&create(std::string const &name, int playerMax = 4);
+
+	auto	&getSessions() { return _sessions; }
 private:
 	void			_entryPoint();
 	std::uint32_t	_generateId();

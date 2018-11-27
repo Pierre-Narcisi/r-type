@@ -29,7 +29,7 @@ namespace evt
 
 		EventWrapper	operator[](T const &eventName);
 		void		removeEvent(T const &eventName);
-#ifdef DEBUG_ON
+#if !defined(NDEBUG)
 		void	dump() const;
 #endif
 	private:

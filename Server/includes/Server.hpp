@@ -35,6 +35,11 @@ public:
 	bool	isConnected(std::string const username);
 
 	auto	&getSessionManager() { return _sessionManager; }
+	
+	void	listSessions(json::Entity &req, json::Entity &resp);
+	void	createSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
+	void	joinSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
+	void	quitSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
 private:
 	Server() = default;
 	void	_initSignalCatch();

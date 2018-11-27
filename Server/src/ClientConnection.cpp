@@ -89,32 +89,6 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 	}
 }
 
-void	ClientConnection::_createSession(json::Entity &req, json::Entity &resp) {
-	try {
-		#if defined(_MSC_VER)
-			#define __MAX max
-			#define __MIN min
-		#else
-			#define __MAX std::max
-			#define __MIN std::min
-		#endif
-		auto &session = Server::instance().getSessionManager().create(
-			req["name"].to<std::string>(),
-			__MIN(__MAX(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)
-		);
-
-		session.addPlayer(*this);
-		resp["status"] = true;
-		resp["id"] = session.getId();
-	} catch (std::exception &e) {
-		resp = json::makeObject {
-			{ "error", json::makeObject {
-				{ "message", e.what() }
-			}}
-		};
-	}
-}
-
 void	ClientConnection::_routerInit() {
 	namespace pl = std::placeholders;
 	std::shared_ptr<Router>	sessionRouter(new Router());
@@ -129,7 +103,10 @@ void	ClientConnection::_routerInit() {
 		}
 	});
 
-	sessionRouter->use("create", std::bind(&ClientConnection::_createSession, this, pl::_1, pl::_2));
+	sessionRouter->use("create", std::bind(&Server::createSession, &Server::instance(), this, pl::_1, pl::_2));
+	sessionRouter->use("list", std::bind(&Server::listSessions, &Server::instance(), pl::_1, pl::_2));
+	sessionRouter->use("join", std::bind(&Server::joinSession, &Server::instance(), this, pl::_1, pl::_2));
+	sessionRouter->use("quit", std::bind(&Server::quitSession, &Server::instance(), this, pl::_1, pl::_2));
 
 	_router.use("login", std::bind(&ClientConnection::_login, this, pl::_1, pl::_2));
 	_router.use("session", sessionRouter);

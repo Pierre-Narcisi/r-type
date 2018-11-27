@@ -46,9 +46,9 @@
 		"mutex": "cpp",
 		"ratio": "cpp",
 		"thread": "cpp",
+		"csignal": "cpp",
 		"strstream": "cpp",
 		"csetjmp": "cpp",
-		"csignal": "cpp",
 		"atomic": "cpp",
 		"bitset": "cpp",
 		"codecvt": "cpp",
@@ -64,6 +64,7 @@
 		"algorithm": "cpp",
 		"forward_list": "cpp",
 		"unordered_set": "cpp",
-		"scoped_allocator": "cpp"
+		"scoped_allocator": "cpp",
+		"*.ipp": "cpp"
 	}
 }

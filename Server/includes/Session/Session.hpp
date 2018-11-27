@@ -46,16 +46,20 @@ private:
 	std::mutex							_pickLock;
 
 	evt::HdlCollector				_collector;
-	std::list<ClientConnection*>	_players;
 	std::mutex						_addPlayerMutex;
 
-	struct DestContainer {
-		evt::Event::EvtHdlDestr	dest;
-	};
+	// struct DestContainer {
+	// 	ClientConnection		*player;
+	// 	evt::Event::EvtHdlDestr	dest;
+	// };
 
-	std::list<DestContainer>	_destList;
+	std::list<ClientConnection*>	_players;
+
+
+	void	_rmPlayer(decltype(_players)::iterator player);
 
 	friend Manager;
+	friend ::rtype::Server;
 };
 
 }}
