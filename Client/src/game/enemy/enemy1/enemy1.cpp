@@ -24,7 +24,7 @@ namespace game {
 		auto &speed = ecs::Ecs::getComponentMap<ecs::component::Speed>();
 		speed[_id].x = -3;
 		speed[_id].y = sin(pos[_id].x / 70);
-		if (pos[_id].x < -1) {
+		if (pos[_id].x < -ecs::Ecs::getComponentMap<ecs::component::AnimatedSprite>()[_id].boxSize.x/2) {
 			ecs::Ecs::deleteId(_id);
 		}
 	}
