@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Constant.hpp"
 #include "Server.hpp"
+#include "WindowsCtor.hpp"
 
 #include "Network/UdpSocket/UdpSocket.hpp"
 
@@ -16,12 +17,21 @@
 	resp = json::makeObject { \
 		{ "error", json::makeObject { \
 			{ "message", __text } \
-		}} \
+		}}, \
+		{ "status", false } \
 	}; \
 	return; \
 }
 
 namespace rtype {
+
+Server::_Init::_Init() {
+	initWSA();
+}
+
+Server::_Init::~_Init() {
+	closeWSA();
+}
 
 void	Server::_initSignalCatch() {
 	static auto handler = [] (int sig) {
@@ -56,10 +66,6 @@ int	Server::init(int ac, char **av) {
 		std::cout << _opts << std::endl;
 		return -1;
 	}
-
-	std::cout <<
-		"port : " << _opts["port"]->as<common::Opts::Int>() << std::endl <<
-		"host : " << _opts["host"]->as<common::Opts::String>() << std::endl;
 	return (0);
 }
 
@@ -76,12 +82,10 @@ void	Server::start() {
 		auto &addr = reinterpret_cast<const sockaddr&>(slave.getNativeAddr());
 
 		std::cout << "New connection form " << nw::TcpEndpoint::getIp(addr) << std::endl;
-		// slave.onDestroy.addHandler([this, it] {
-		// 	_listener->getSlaves().erase(it);
-		// });
 	};
 
 	_listener->init();
+	std::cout << "Server listening on (tcp): " << _opts["port"]->as<common::Opts::Int>() << std::endl;
 	_listener->run();
 }
 

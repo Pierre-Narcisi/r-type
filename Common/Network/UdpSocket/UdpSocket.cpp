@@ -9,6 +9,7 @@
 #include "UdpSocket.hpp"
 #include "Network/TcpSocket/TcpSocket.hpp"
 
+#include <iostream>
 namespace nw {
 
 UdpSocket::~UdpSocket() {
@@ -54,17 +55,20 @@ int		UdpSocket::setNonBlocking(bool isNonBlocking) {
 }
 
 std::uint16_t	UdpSocket::makeMeAsListener(std::uint16_t port) {
-	sockaddr_in	sin = {0};
+	sockaddr_in	sin = { 0 };
+	socklen_t	len = sizeof(sin);
 
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
 
-	if(bind(_sock, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) != 0) {
+	if(bind(_sock, reinterpret_cast<sockaddr*>(&sin), len) != 0) {
+		std::cout << TcpSocket::getLastNetError() << std::endl;
 		throw std::runtime_error(TcpSocket::getLastNetError());
 	}
+	getsockname(_sock, reinterpret_cast<sockaddr*>(&sin), &len);
 	_isListener = true;
-	return (port);
+	return (ntohs(sin.sin_port));
 }
 
 /* Usage:

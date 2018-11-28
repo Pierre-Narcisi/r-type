@@ -18,7 +18,7 @@ namespace rtype {
 
 class Server;
 
-class ClientConnection: public nw::TcpListenerSlave, public common::JsonBuider {
+class ClientConnection: public nw::TcpListenerSlave, public common::JsonBuilder {
 public:
 	ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr);
 	~ClientConnection() {

@@ -6,13 +6,11 @@
 */
 
 #include <iostream>
-#include "WindowsCtor.hpp"
 #include "Server.hpp"
 
 int main(int ac, char **av) {
 	auto	&s = rtype::Server::instance();
 
-	initWSA();
 	if (s.init(ac, av)) {
 		rtype::Server::cleanUpInstance();
 		return (0);
@@ -29,6 +27,5 @@ int main(int ac, char **av) {
 	}
 #endif
 	rtype::Server::cleanUpInstance();
-	closeWSA();
 	return (0);
 }

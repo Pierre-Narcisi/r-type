@@ -24,7 +24,7 @@ inline void ClientConnection::_sendJson(json::Entity const &resp) {
 
 ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr):
 		TcpListenerSlave(socketFd, addr),
-		JsonBuider(_sock) {
+		JsonBuilder(_sock) {
 	_onIllegalJson = [this] (json::Parser::ParserException const &e) {
 		std::cout << e.what() << std::endl;
 
@@ -36,6 +36,10 @@ ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAdd
 	};
 
 	_routerInit();
+	_sendJson(json::makeObject {
+		{ "message", "Welcome to the r-type server!" },
+		{ "sessionsPort", (int) Server::instance().getSessionManager().getListeningPort() }
+	});
 }
 
 void	ClientConnection::onDataAvailable(std::size_t available) {
@@ -69,7 +73,8 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 		resp = json::makeObject {
 			{"error", json::makeObject {
 				{"message", "ill-formed request: username is not a string"}
-			}}
+			}},
+			{ "status", false }
 		};
 		return;
 	}
@@ -84,7 +89,8 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 		resp = json::makeObject {
 			{"error", json::makeObject {
 				{"message", "Username already in use"}
-			}}
+			}},
+			{ "status", false }
 		};
 	}
 }
@@ -100,6 +106,7 @@ void	ClientConnection::_routerInit() {
 			resp["error"] = json::makeObject {
 				{ "message", "Not logged in" }
 			};
+			resp["status"] = false;
 		}
 	});
 

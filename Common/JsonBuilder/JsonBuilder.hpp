@@ -15,9 +15,9 @@
 
 namespace common {
 
-class JsonBuider {
+class JsonBuilder {
 public:
-	JsonBuider(nw::TcpSocket &socket): _socket(socket) {}
+	JsonBuilder(nw::TcpSocket &socket): _socket(socket) {}
 protected:
 	std::list<json::Entity>	_extractJsonObjects(std::size_t available);
 

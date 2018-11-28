@@ -1,0 +1,68 @@
+{
+	"After Connection": {
+		"message": "${message}", // is a string -- Useless
+		"sessionsPort": "${port}" // is a number -- The UDP server port
+	},
+
+	"Available Requests": {
+		"login": { //path = route
+			"request": {
+				"path": "login",
+				"username": "${pseudo}" //is string
+			},
+			"response": {
+				"status": "True || False", //is a bool
+				"id": "${id}" //is a number -- my id on the server (maybe useless)
+			}
+		},
+		"session" : [ // need to be logged in
+			{
+				
+				"request": {
+					"path": "session:list"
+				},
+				"response": {
+					"status": "True || False", //is a bool
+					"sessions": [
+						{
+							"name": "${name}", // is a string
+							"id": "${id}", //is a number -- session id on the server
+							"playerCount": "${playercount}", // is a number -- player in this session
+							"playerMax": "${maxPlayer}", // is a number -- do I have to explain this ?
+						}
+					]
+				}
+			},
+			{
+				"request": { //your are automatically connected to the created session
+					"path": "session:create",
+					"name": "${name}", // is string -- Session name
+					"playerMax": "${maxPlayer}" // is number
+				},
+				"response": {
+					"status": "True || False", //is a bool
+					"id": "${id}" // is a number -- Id of the session on the server
+				}
+			},
+			{
+				"request": {
+					"path": "session:join",
+					"id": "${id}"
+				},
+				"response": {
+					"status": "True || False"
+				}
+			},
+			{
+				"request": {
+					"path": "session:quit",
+					"id": "${id}"
+				},
+				"response": {
+					"status": "True || False"
+				}
+			}
+		]
+	}
+
+}

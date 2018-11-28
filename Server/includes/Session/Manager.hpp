@@ -12,8 +12,10 @@
 #include <cstddef>
 #include <string>
 #include <thread>
+#include <mutex>
 #include <unordered_map>
 #include "Session/Session.hpp"
+#include "Network/UdpSocket/UdpSocket.hpp"
 
 namespace rtype { namespace session {
 
@@ -25,6 +27,7 @@ public:
 	Session	&create(std::string const &name, int playerMax = 4);
 
 	auto	&getSessions() { return _sessions; }
+	auto	getListeningPort() { return _port; }
 private:
 	void			_entryPoint();
 	std::uint32_t	_generateId();
@@ -33,7 +36,8 @@ private:
 	std::uint32_t					_sleepTime;
 	std::unique_ptr<std::thread>	_thread;
 	std::list<Session>				_sessions;
-	//UdpListener; // UdpServer
+	nw::UdpSocket					_sock;
+	std::uint16_t					_port;
 };
 
 }}

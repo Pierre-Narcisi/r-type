@@ -13,7 +13,7 @@
 
 namespace common {
 
-std::list<json::Entity>	JsonBuider::_extractJsonObjects(std::size_t available) {
+std::list<json::Entity>	JsonBuilder::_extractJsonObjects(std::size_t available) {
 	auto pos = _buffer.size();
 
 	_buffer.resize(_buffer.size() + available);

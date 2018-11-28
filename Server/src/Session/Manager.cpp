@@ -14,18 +14,31 @@ namespace rtype { namespace session {
 
 Manager::Manager(std::uint32_t ticks):
 		_sleepTime(1000 / ticks) {
+	_port = _sock.makeMeAsListener();
+	_sock.setNonBlocking(true);
 	_thread = std::unique_ptr<std::thread>(new std::thread(&Manager::_entryPoint, this)); // Force start after mutex init
+	std::cout << "Session manager listening on (udp): " << _port << std::endl;
 }
 
 Manager::~Manager() {
 	_continue = false;
 	_thread->join();
-
 }
 
 void	Manager::_entryPoint() {
-	while (_continue) {
+	char 			buf[2048];
+	nw::UdpBuffer 	recvBuffer(buf, sizeof(buf));
+	nw::UdpEndpoint	ep;
 
+	while (_continue) {
+		while (_sock.recvFrom(recvBuffer, ep) > 0) {
+			
+			// buf[recvBuffer.len] = 0;
+			// std::cout << buf << std::endl;
+			// Send to session;
+
+			recvBuffer.len = sizeof(buf); 
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime));
 	}
 }
