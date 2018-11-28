@@ -12,8 +12,8 @@ namespace game {
         }
 
         ecs::component::Sprite      sprite;
-        float                       speed;
-        long                        lastTime;
+        float                       speed = 0;
+        long                        lastTime = 0;
         ecs::core::Vector2<float>   position;
     };
 }
