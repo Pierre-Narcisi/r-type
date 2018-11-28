@@ -8,7 +8,7 @@
 #include <QNetworkReply>
 #include <QTimer>
 #include <mutex>
-#include "Json/includes/Entity.hpp"
+#include "Json/Entity.hpp"
 
 class GameItem;
 

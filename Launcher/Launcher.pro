@@ -62,8 +62,8 @@ HEADERS += \
     version.h \
     about.h \
     gamelauncher.h \
-    $$COMMON_PATH/Json/includes/Parser.hpp \
-    $$COMMON_PATH/Json/includes/Entity.hpp
+    $$COMMON_PATH/Json/Parser.hpp \
+    $$COMMON_PATH/Json/Entity.hpp
 
 FORMS += \
         launchermainwindows.ui \

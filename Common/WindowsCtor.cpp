@@ -7,29 +7,13 @@
 
 #if defined _MSC_VER
 
-#include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
-#include "ctor.h"
+#include <iostream>
 #pragma comment(lib, "ws2_32.lib")
 
 static WSADATA wsaData;
-
-#ifdef HAS_CONSTRUCTORS
-CONSTRUCTOR(initWSA)
-DESTRUCTOR(closeWSA)
-#else
-#ifdef _MSC_VER
-static void initWSA(void);
-static void closeWSA(void);
-#pragma data_seg(".CRT$XCU")
-static void (*msc_ctor)(void) = initWSA;
-#pragma data_seg(".CRT$XPU")
-static void (*msc_dtor)(void) = closeWSA;
-#pragma data_seg()
-#endif
-#endif
 
 void initWSA()
 {
@@ -44,5 +28,10 @@ void closeWSA()
 {
 	WSACleanup();
 }
+
+#else
+
+void initWSA() {}
+void closeWSA() {}
 
 #endif

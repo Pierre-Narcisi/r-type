@@ -35,10 +35,10 @@ namespace ecs{
         }
 
         static void deleteId(ID id) {
-            for (auto &del : get()._deleteIds[id]) {
-            	del.second();
-            }
-            get()._deleteIds[id].clear();
+        	for (auto &del : get()._deleteIds[id]) {
+            		del.second();
+            	}
+            	get()._deleteIds.erase(id);
         }
 
         template <typename T>

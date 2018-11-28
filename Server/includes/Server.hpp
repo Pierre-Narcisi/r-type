@@ -10,6 +10,9 @@
 
 #include <functional>
 #include "Opts/Opts.hpp"
+#include "TcpListener.hpp"
+#include "ClientConnection.hpp"
+#include "Session/Manager.hpp"
 
 namespace rtype {
 
@@ -29,12 +32,29 @@ public:
 	
 	void	start();
 	void	stop();
+	bool	isConnected(std::string const username);
+
+	auto	&getSessionManager() { return _sessionManager; }
+	
+	void	listSessions(json::Entity &req, json::Entity &resp);
+	void	createSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
+	void	joinSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
+	void	quitSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
 private:
 	Server() = default;
+	~Server() = default;
 	void	_initSignalCatch();
 
+	struct _Init {
+		_Init();
+		~_Init();
+	}						_initWSA; //this is an hack to init WSA before all
+
+	session::Manager		_sessionManager;
+	std::unique_ptr<nw::TcpListener<ClientConnection>>
+							_listener;
 	std::function<void()>	_stop;
-	common::Opts			opts;
+	common::Opts			_opts;
 };
 
 }

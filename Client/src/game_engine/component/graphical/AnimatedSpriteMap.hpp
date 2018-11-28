@@ -18,8 +18,8 @@ namespace ecs {namespace component {
 			if (boost::filesystem::exists(path)) {
 				boost::filesystem::directory_iterator	endItr;
 				for (boost::filesystem::directory_iterator itr(path)
-				;itr != endItr
-				;++itr) {
+					;itr != endItr
+					;++itr) {
 					if (boost::filesystem::is_directory(itr->status())) {
 						sorted.insert(itr->path().filename().string());
 					}
@@ -41,8 +41,102 @@ namespace ecs {namespace component {
 				exit(84);
 			}
 			pos = *sorted.begin();
+			boxSize = animatedSprites.begin()->second.boxSize;
 		}
+		AnimatedSpriteMap(std::string path, core::Vector2<float> size) {
+			std::set<std::string> sorted;
+			if (boost::filesystem::exists(path)) {
+				boost::filesystem::directory_iterator	endItr;
+				for (boost::filesystem::directory_iterator itr(path)
+					;itr != endItr
+					;++itr) {
+					if (boost::filesystem::is_directory(itr->status())) {
+						sorted.insert(itr->path().filename().string());
+					}
+				}
+				if (sorted.size() == 0) {
+					std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: No folders found in \"" << path << "\"" << std::endl;
+					exit(84);
+				}
+				for (auto it = sorted.begin(); it != sorted.end(); it++) {
+					animatedSprites[*it] = AnimatedSprite(path + "/" + *it, size);
+				}
+			} else {
+				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Missing directory \"" << path << "\"" << std::endl;
+				exit(84);
+			}
+
+			if (animatedSprites.empty()) {
+				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Directory must at least have 1 sprite" << std::endl;
+				exit(84);
+			}
+			pos = *sorted.begin();
+			boxSize = size;
+		}
+		AnimatedSpriteMap(std::string path, int framesPerSecond) {
+			std::set<std::string> sorted;
+			if (boost::filesystem::exists(path)) {
+				boost::filesystem::directory_iterator	endItr;
+				for (boost::filesystem::directory_iterator itr(path)
+					;itr != endItr
+					;++itr) {
+					if (boost::filesystem::is_directory(itr->status())) {
+						sorted.insert(itr->path().filename().string());
+					}
+				}
+				if (sorted.size() == 0) {
+					std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: No folders found in \"" << path << "\"" << std::endl;
+					exit(84);
+				}
+				for (auto it = sorted.begin(); it != sorted.end(); it++) {
+					animatedSprites[*it] = AnimatedSprite(path + "/" + *it, framesPerSecond);
+				}
+			} else {
+				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Missing directory \"" << path << "\"" << std::endl;
+				exit(84);
+			}
+
+			if (animatedSprites.empty()) {
+				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Directory must at least have 1 sprite" << std::endl;
+				exit(84);
+			}
+			pos = *sorted.begin();
+			boxSize = animatedSprites.begin()->second.boxSize;
+
+		}
+		AnimatedSpriteMap(std::string path, int framesPerSecond, core::Vector2<float> size) {
+			std::set<std::string> sorted;
+			if (boost::filesystem::exists(path)) {
+				boost::filesystem::directory_iterator	endItr;
+				for (boost::filesystem::directory_iterator itr(path)
+					;itr != endItr
+					;++itr) {
+					if (boost::filesystem::is_directory(itr->status())) {
+						sorted.insert(itr->path().filename().string());
+					}
+				}
+				if (sorted.size() == 0) {
+					std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: No folders found in \"" << path << "\"" << std::endl;
+					exit(84);
+				}
+				for (auto it = sorted.begin(); it != sorted.end(); it++) {
+					animatedSprites[*it] = AnimatedSprite(path + "/" + *it, framesPerSecond, size);
+				}
+			} else {
+				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Missing directory \"" << path << "\"" << std::endl;
+				exit(84);
+			}
+
+			if (animatedSprites.empty()) {
+				std::cout << "src/game_engine/component/graphical/AnimatedSpriteMap: Directory must at least have 1 sprite" << std::endl;
+				exit(84);
+			}
+			pos = *sorted.begin();
+			boxSize = size;
+		}
+
 		std::unordered_map<std::string, AnimatedSprite>	animatedSprites;
 		std::string					pos;
+		core::Vector2<float>				boxSize;
 	};
 }}

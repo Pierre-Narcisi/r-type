@@ -8,7 +8,7 @@
 #include "cache.h"
 #include "singletons.h"
 #include "mastergetter.h"
-#include "Json/includes/Parser.hpp"
+#include "Json/Parser.hpp"
 
 MasterGetter::MasterGetter():
     _manager(Singletons::getManager()) {}
@@ -81,7 +81,7 @@ void MasterGetter::_filterString(json::Entity &str, std::string const &current)
         {"currentLocation", current},
         {"masterLocation", _masterPos}
     };
-    std::string         &s = const_cast<std::string&>(str.getData<json::String>().get());
+    std::string         &s = str.getData<json::String>().get();
     long long           start = -1;
     bool                lock = false;
     std::size_t         i = 0;
