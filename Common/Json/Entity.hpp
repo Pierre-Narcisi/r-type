@@ -200,7 +200,7 @@ namespace json
 		virtual	void
 		print(std::ostream &stm, Entity::StringifyAttr attr, int depth) const final;
 		const std::string	&get(void) const;
-		std::string			get(void);
+        std::string         &get(void);
 		void				set(std::string const &str);
 
 		virtual	std::string	toString(void) const final;

@@ -5,7 +5,7 @@
 #include <QDir>
 #include <iostream>
 #include <fstream>
-#include "Json/includes/Parser.hpp"
+#include "Json/Parser.hpp"
 #include "cache.h"
 #include "launchermainwindows.h"
 #include "ui_launchermainwindows.h"

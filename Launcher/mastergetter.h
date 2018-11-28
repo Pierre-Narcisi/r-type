@@ -5,7 +5,7 @@
 #include <string>
 #include <functional>
 #include <QNetworkAccessManager>
-#include "Json/includes/Entity.hpp"
+#include "Json/Entity.hpp"
 
 class MasterGetter
 {

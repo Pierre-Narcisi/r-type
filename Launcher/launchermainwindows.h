@@ -5,7 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QKeyEvent>
-#include "Json/includes/Entity.hpp"
+#include "Json/Entity.hpp"
 #include "mastergetter.h"
 #include "gameitem.h"
 #include "resoucesdownloader.h"
