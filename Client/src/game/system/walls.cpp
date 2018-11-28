@@ -11,6 +11,7 @@ namespace game {namespace system {
 			_bindDown = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindDown, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/Walls/Wall1.png"], "Sprite/Walls/Wall1.png");
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, _bindDown, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.y;
 			ecs::Ecs::addComponent<game::component::wall>(_bindDown);
@@ -28,6 +29,7 @@ namespace game {namespace system {
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindDown, 1, true);
 			ecs::Ecs::addComponent<game::component::wall>(_bindDown);
 			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[wall], wall);
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, _bindDown, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.y;
 			ecs::Ecs::addComponent<ecs::component::Position>(_bindDown, oldPosX + oldSizeX / 2 + x / 2, 720 - y / 2);
@@ -40,6 +42,7 @@ namespace game {namespace system {
 			ecs::Ecs::addComponent<game::component::wall>(_bindUp);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindUp, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/Walls/Wall1.png"], "Sprite/Walls/Wall1.png");
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, _bindUp, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.y;
 			ecs::Ecs::addComponent<ecs::component::Position>(_bindUp, 1280 + x / 2, 0 + y / 2);
@@ -56,6 +59,7 @@ namespace game {namespace system {
 			ecs::Ecs::addComponent<game::component::wall>(_bindUp);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindUp, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[wall], wall);
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, _bindUp, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.y;
 			ecs::Ecs::addComponent<ecs::component::Position>(_bindUp, oldPosX + oldSizeX / 2 + x / 2, 0 + y / 2);

@@ -6,6 +6,7 @@
 
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
+#include "component/physic/Hitbox.hpp"
 #include <component/graphical/Sprite.hpp>
 #include <component/graphical/Drawable.hpp>
 #include <ecs/DataBank.hpp>
