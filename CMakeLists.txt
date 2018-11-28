@@ -96,6 +96,8 @@ add_executable(rtype
 	Client/src/game/system/Parallaxs.hpp
 	Client/src/game/system/Parallaxs.cpp
 
+	Client/src/game/menu/Menu.hpp
+
 )
 
 find_package (Threads)
