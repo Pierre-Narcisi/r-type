@@ -1,5 +1,5 @@
 
-#include "../../game_engine/component/graphical/Sprite.hpp"
+#include "component/graphical/Sprite.hpp"
 
 namespace game {
     struct Parallax {

@@ -6,7 +6,9 @@
 */
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
+#define NOSPRITE
 #include <component/physic/Hitbox.hpp>
+#undef NOSPRITE
 #include "ecs/Ecs.hpp"
 #include "Speeds.hpp"
 

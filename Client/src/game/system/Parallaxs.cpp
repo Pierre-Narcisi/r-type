@@ -1,6 +1,6 @@
 #include "Parallaxs.hpp"
 #include "../component/Parallax.hpp"
-#include "../../game_engine/core/Time.hpp"
+#include "core/Time.hpp"
 #include <iostream>
 
 namespace game {

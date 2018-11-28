@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../../game_engine/ecs/Ecs.hpp"
-#include "../../game_engine/sfml/Graphic.hpp"
+#include "ecs/Ecs.hpp"
+#include "sfml/Graphic.hpp"
 
 namespace game {
     class Parallaxs {

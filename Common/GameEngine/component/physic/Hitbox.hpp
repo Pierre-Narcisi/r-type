@@ -10,14 +10,17 @@
 #include <functional>
 #include <core/CoreVector.hpp>
 #include "ecs/Entity.hpp"
-#include "component/graphical/Sprite.hpp"
-#include "component/graphical/AnimatedSprite.hpp"
-#include "component/graphical/AnimatedSpriteMap.hpp"
+#if !defined(NOSPRITE)
+ #include "component/graphical/Sprite.hpp"
+ #include "component/graphical/AnimatedSprite.hpp"
+ #include "component/graphical/AnimatedSpriteMap.hpp"
+#endif
 #include "ecs/Ecs.hpp"
 
 namespace ecs {namespace component {
 	struct Hitbox {
 		Hitbox() {}
+#if !defined(NOSPRITE)
 		Hitbox(ID id) {
 			this->collidable = false;
 			if (ecs::Ecs::idHasComponents<component::Sprite>(id)) {
@@ -72,6 +75,7 @@ namespace ecs {namespace component {
 				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
 			}
 		}
+#endif
 		Hitbox(float width, float height) {
 			this->width = width / 2;
 			this->height = height / 2;
