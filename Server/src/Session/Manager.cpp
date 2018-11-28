@@ -31,6 +31,8 @@ void	Manager::_entryPoint() {
 	nw::UdpEndpoint	ep;
 
 	while (_continue) {
+		std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+		start = std::chrono::high_resolution_clock::now();
 		while (_sock.recvFrom(recvBuffer, ep) > 0) {
 			
 			// buf[recvBuffer.len] = 0;
@@ -39,7 +41,10 @@ void	Manager::_entryPoint() {
 
 			recvBuffer.len = sizeof(buf); 
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime));
+		end = std::chrono::high_resolution_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		
+		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime - elapsed));
 	}
 }
 
