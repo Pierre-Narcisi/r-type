@@ -16,7 +16,7 @@ namespace game {
 		});
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id);
-		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "./Sprite/Enemy1/", 4);
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite//Enemy1/", 4);
 	}
 
 	void enemy1::update(ID _id) {

@@ -425,7 +425,7 @@ namespace json
 		return *this;
 	}
 
-	std::string	String::get(void)
+    std::string         &String::get(void)
 	{
 		return *this;
 	}

@@ -82,8 +82,8 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Speed>(ship);
 	ecs::Ecs::addComponent<ecs::component::Drawable>(ship, 0, true);
 	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship, 300.f);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "Sprite/Ship/BlueShip/BlueShip3.png");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").x, ecs::graphical::Graphic::getTextureSize("Sprite/Ship/BlueShip/up/BlueShip1.png").y, true);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "assets/Sprite/Ship/BlueShip/BlueShip3.png");
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("assets/Sprite/Ship/BlueShip/up/BlueShip1.png").x, ecs::graphical::Graphic::getTextureSize("assets/Sprite/Ship/BlueShip/up/BlueShip1.png").y, true);
 
 	auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[ship].keyMap;
 	keymap[KeyKeyboard::ESCAPE] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {rtype._window->close();});
@@ -96,19 +96,19 @@ int main() {
 			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 5, 5, false, [parent](ID self, ID other){ if(other!=parent){ecs::Ecs::deleteId(other);}});
-			/*ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("Sprite//ClassicBullet/ClassicBullet3.png").y, false, [parent](ID self, ID other){
+			/*ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("assets/Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("assets/Sprite//ClassicBullet/ClassicBullet3.png").y, false, [parent](ID self, ID other){
 				if (other != parent) {
 					TimedEventAdmin t;
 					ID explosion = ecs::entity::Entity::getId();
 					ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 					ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
-					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "Sprite/Explosion", 12);
+					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12);
                		ecs::Ecs::deleteId(other);
                		ecs::Ecs::deleteId(self);
 					t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
 				}
         	});*/
-			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/ClassicBullet/ClassicBullet3.png"], "Sprite/ClassicBullet/ClassicBullet3.png");
+			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
 			m.addEvent(10, Time::Seconds, [bullet](){ecs::Ecs::deleteId(bullet);});
 			ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();
 		//}

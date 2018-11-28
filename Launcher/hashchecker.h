@@ -5,7 +5,7 @@
 #include <QRunnable>
 #include <QThread>
 #include <functional>
-#include "Json/includes/Entity.hpp"
+#include "Json/Entity.hpp"
 
 #ifdef TARGET_UNIX
  #define TARGETSTR "linux"
