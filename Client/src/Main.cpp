@@ -34,12 +34,19 @@
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
-#include "game/component/Parallax.hpp"
 #include "game/component/Firerate.hpp"
 #include "game/component/AnimationRtype.hpp"
-#include "game/system/Parallaxs.hpp"
+
+#include "game/menu/Menu.hpp"
 
 int main() {
+	{
+		rtype::Menu menu;
+
+		menu.run();
+	}
+}
+/*
 	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
@@ -94,7 +101,7 @@ int main() {
 			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 5, 5, false, [parent](ID self, ID other){ if(other!=parent){ecs::Ecs::deleteId(other);}});
-			/*ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("Sprite//ClassicBullet/ClassicBullet3.png").y, false, [parent](ID self, ID other){
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("Sprite//ClassicBullet/ClassicBullet3.png").y, false, [parent](ID self, ID other){
 				if (other != parent) {
 					TimedEventAdmin t;
 					ID explosion = ecs::entity::Entity::getId();
@@ -105,7 +112,7 @@ int main() {
                		ecs::Ecs::deleteId(self);
 					t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
 				}
-        	});*/
+        	});
 			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/ClassicBullet/ClassicBullet3.png"], "Sprite/ClassicBullet/ClassicBullet3.png");
 			m.addEvent(10, Time::Seconds, [bullet](){ecs::Ecs::deleteId(bullet);});
 			ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();
@@ -130,3 +137,4 @@ int main() {
 	}
 
 }
+*/
