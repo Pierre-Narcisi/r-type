@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QNetworkAccessManager>
-#include "Json/includes/Entity.hpp"
+#include "Json/Entity.hpp"
 #include "resoucesdownloader.h"
 #include "hashchecker.h"
 

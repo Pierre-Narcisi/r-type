@@ -10,7 +10,6 @@
 #include "system/gen.hpp"
 #include "enemy/enemy1/enemy1.hpp"
 #include <iostream>
-#include <unistd.h>
 #include <chrono>
 #include <thread>
 #include "game/system/walls.hpp"
@@ -39,8 +38,11 @@
 #include "game/component/Firerate.hpp"
 #include "game/component/AnimationRtype.hpp"
 #include "game/system/Parallaxs.hpp"
+#include "WindowsCtor.hpp"
 
 int main() {
+	initWSA(); //Need by Windows
+
 	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
@@ -82,7 +84,7 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Speed>(ship);
 	ecs::Ecs::addComponent<ecs::component::Drawable>(ship, 0, true);
 	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship, 300.f);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "Sprite/Ship/BlueShip/BlueShip3.png", ecs::core::Vector2<float>(64, 32));
+	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "assets/Sprite/Ship/BlueShip/BlueShip3.png", ecs::core::Vector2<float>(64, 32));
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ship, true);
 
 	auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[ship].keyMap;
@@ -95,14 +97,14 @@ int main() {
 			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, 10, 0);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
-			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/ClassicBullet/ClassicBullet3.png"], "Sprite/ClassicBullet/ClassicBullet3.png");
+			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, bullet, false, [parent](ID self, ID other){
 				if (other != parent) {
 					TimedEventAdmin t;
 					ID explosion = ecs::entity::Entity::getId();
 					ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 					ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
-					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
+					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
                				ecs::Ecs::deleteId(other);
                				ecs::Ecs::deleteId(self);
 					t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
@@ -126,9 +128,10 @@ int main() {
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		game.update();
-	
+
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}
 
+	closeWSA();
 }

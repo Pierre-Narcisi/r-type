@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <cstring>
-#include "../includes/Entity.hpp"
+#include "Json/Entity.hpp"
 
 namespace json
 {
@@ -47,7 +47,15 @@ namespace json
 		_data(std::make_shared<Number>((double) nbr))
 	{}
 
+	Entity::Entity(unsigned long nbr):
+		_data(std::make_shared<Number>((double) nbr))
+	{}
+	
 	Entity::Entity(int nbr):
+		_data(std::make_shared<Number>((double) nbr))
+	{}
+
+	Entity::Entity(unsigned int nbr):
 		_data(std::make_shared<Number>((double) nbr))
 	{}
 
@@ -417,7 +425,7 @@ namespace json
 		return *this;
 	}
 
-	std::string	String::get(void)
+    std::string         &String::get(void)
 	{
 		return *this;
 	}
