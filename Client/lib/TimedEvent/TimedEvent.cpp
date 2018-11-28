@@ -10,7 +10,7 @@
 
 TimedEvent::TimedEvent()
 {
-	ecs::Ecs::get().addUpdate(10, [this](){
+	ecs::Ecs::get().addUpdate(5, [this](){
 		long time;
 		std::vector<TimedFuntion, std::allocator<TimedFuntion>>::iterator func;
 		time = ecs::core::Time::get(TimeUnit::NanoSeconds);

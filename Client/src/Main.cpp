@@ -12,6 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include "game/system/walls.hpp"
 #include "system/ai.hpp"
 #include <zconf.h>
 #include <ecs/Entity.hpp>
@@ -57,7 +58,7 @@ int main() {
 		return buffer;
 	};
 
-	ID limitTop = ecs::entity::Entity::getId();
+	/*ID limitTop = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitTop, 1280/2, 0);
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280, 1, true);
 	ID limitBottom = ecs::entity::Entity::getId();
@@ -68,10 +69,11 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1, 720, true);
 	ID limitRight = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitRight, 1280, 720/2);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1, 720, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1, 720, true);*/
 
 
 	game::system::gen Gen;
+	game::system::walls Walls;
 
 	ID background = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
@@ -81,52 +83,57 @@ int main() {
 	ecs::Ecs::addComponent<ecs::component::Position>(ship, 1280/2, 720/2);
 	ecs::Ecs::addComponent<ecs::component::Speed>(ship);
 	ecs::Ecs::addComponent<ecs::component::Drawable>(ship, 0, true);
-	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship, 300.f);
-	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "assets/Sprite/Ship/BlueShip/BlueShip3.png");
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ecs::graphical::Graphic::getTextureSize("assets/Sprite/Ship/BlueShip/up/BlueShip1.png").x, ecs::graphical::Graphic::getTextureSize("assets/Sprite/Ship/BlueShip/up/BlueShip1.png").y, true);
+	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship, 500.f);
+	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "assets/Sprite/Ship/BlueShip/BlueShip3.png", ecs::core::Vector2<float>(64, 32));
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ship, true);
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(ship);
 
 	auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[ship].keyMap;
 	keymap[KeyKeyboard::ESCAPE] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {rtype._window->close();});
 	keymap[KeyKeyboard::SPACE] = std::pair<bool, std::function<void(ID)>>(false, [](ID parent) {
-		//if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire).count() > ecs::Ecs::getComponentMap<game::Firerate>()[parent]._firerate)
-		//{
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire).count() > ecs::Ecs::getComponentMap<game::Firerate>()[parent]._firerate)
+		{
 			TimedEventAdmin m;
 			ID bullet = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, 10, 0);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
-			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
-			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 5, 5, false, [parent](ID self, ID other){ if(other!=parent){ecs::Ecs::deleteId(other);}});
-			/*ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, ecs::graphical::Graphic::getTextureSize("assets/Sprite/ClassicBullet/ClassicBullet3.png").x, ecs::graphical::Graphic::getTextureSize("assets/Sprite//ClassicBullet/ClassicBullet3.png").y, false, [parent](ID self, ID other){
+			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x + 100, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
+			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, bullet, false, [parent](ID self, ID other){
 				if (other != parent) {
 					TimedEventAdmin t;
 					ID explosion = ecs::entity::Entity::getId();
 					ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 					ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
-					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12);
-               		ecs::Ecs::deleteId(other);
-               		ecs::Ecs::deleteId(self);
+					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
+					if (!ecs::Ecs::idHasComponents<game::component::wall>(other))
+               					ecs::Ecs::deleteId(other);
+               				ecs::Ecs::deleteId(self);
 					t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
 				}
-        	});*/
-			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
-			m.addEvent(10, Time::Seconds, [bullet](){ecs::Ecs::deleteId(bullet);});
+        		});
+			m.addEvent(2, Time::Seconds, [bullet](){ecs::Ecs::deleteId(bullet);});
 			ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();
-		//}
+		}
+		//hidden::ListComponent<ecs::component::Keyboard>::get().getComponentMap().erase(parent);
 	});
 
 	auto &game = ecs::Ecs::get();
 
 	game.addUpdate(100, [&rtype](){rtype.update();});
-	game.addUpdate(1, [](){game::Parallaxs::UpdateParallaxs();});
-	game.addUpdate(10, [](){ecs::system::Controls::UpdateDeplacement();});
-	game.addUpdate(10, [](){ecs::system::Speeds::UpdateSpeeds();});
-	game.addUpdate(9, [](){game::system::ai::updateAi();});
+	game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
+	game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
+	game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+	game.addUpdate(9, &game::system::ai::updateAi);
+	game.addUpdate(8, [&Walls](){Walls.updateWalls();});
 	game.addUpdate(9, [&Gen](){Gen.updateGen();});
 
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		game.update();
-	
+
+		//std::cout << ecs::Ecs::get()._deleteIds.size() << std::endl;
+
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}

@@ -88,13 +88,13 @@ namespace ecs {namespace graphical {
 			}
 
 			/// Tools
-			static core::Vector2<unsigned int> getTextureSize(std::string path) {
+			static core::Vector2<float> getTextureSize(std::string path) {
 				sf::Texture tmp;
 
 				if (!tmp.loadFromFile(path))
-					return core::Vector2<unsigned int>();
+					return core::Vector2<float>();
 				auto size = tmp.getSize();
-				return core::Vector2<unsigned int>(size.x, size.y);
+				return core::Vector2<float>(size.x, size.y);
 			}
 
 			sf::RenderWindow				*_window;

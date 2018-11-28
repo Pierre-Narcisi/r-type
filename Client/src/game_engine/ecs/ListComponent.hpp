@@ -23,9 +23,9 @@ namespace hidden {
         template <typename ...Args>
         std::function<void()> addComponent(ID id, Args... args) {
             _map.try_emplace(id, args...);
-            return ([id, this](){
-            	this->_map.erase(id);
-            });
+            return ([id](){
+		    hidden::ListComponent<T>::get().getComponentMap().erase(id);
+	    });
         }
 
         std::vector<ID> getIdForComponent(std::function<bool(T&)> function) {
