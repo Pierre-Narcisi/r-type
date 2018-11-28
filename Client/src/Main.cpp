@@ -10,7 +10,6 @@
 #include "system/gen.hpp"
 #include "enemy/enemy1/enemy1.hpp"
 #include <iostream>
-#include <unistd.h>
 #include <chrono>
 #include <thread>
 #include "system/ai.hpp"
@@ -38,8 +37,11 @@
 #include "game/component/Firerate.hpp"
 #include "game/component/AnimationRtype.hpp"
 #include "game/system/Parallaxs.hpp"
+#include "WindowsCtor.hpp"
 
 int main() {
+	initWSA(); //Need by Windows
+
 	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
@@ -129,4 +131,5 @@ int main() {
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}
 
+	closeWSA();
 }

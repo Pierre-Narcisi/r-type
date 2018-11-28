@@ -12,6 +12,7 @@
 namespace constant {
     /* Server Program -- default args */
 	constexpr std::uint16_t		defPort = 1337;
+    constexpr int               maxSessionPlayer = 8;
 
     /* Client Program -- default args */
 #if !defined(NDEBUG)

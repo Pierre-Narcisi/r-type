@@ -29,6 +29,7 @@ public:
 	void	init();
 	void	run();
 	void	stop() { _continue = false; }
+	auto	&getSlaves() { return _slaves; }
 private: //members
 	void	_accept();
 public:

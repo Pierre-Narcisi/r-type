@@ -63,7 +63,9 @@ namespace json
 		Entity(Type type = NUL);
 		Entity(double nbr);
 		Entity(long nbr);
+		Entity(unsigned long nbr);
 		Entity(int nbr);
+		Entity(unsigned int nbr);
 		Entity(bool bol);
 		Entity(std::string const &str);
 		Entity(const char *s);

@@ -17,6 +17,7 @@ include_directories(Client/src/game)
 
 set(COMMONS_SRCS
 	Common/WindowsCtor.cpp
+	Common/WindowsCtor.hpp
 
 	Common/Network/EndpointBase.hpp
 
@@ -34,14 +35,22 @@ set(COMMONS_SRCS
 	Common/Opts/Opts.cpp
 	Common/Opts/Opts.hpp
 
-	Common/Json/includes/Entity.hpp
-	Common/Json/includes/Parser.hpp
+	Common/Json/Entity.hpp
+	Common/Json/Parser.hpp
 	Common/Json/src/Entity.cpp
 	Common/Json/src/Parser.cpp
 
 	Common/JsonBuilder/JsonBuilder.hpp
 	Common/JsonBuilder/JsonBuilder.cpp
-)
+
+	Common/Event/Event.hpp
+	Common/Event/Event.tpp
+	Common/Event/Manager.hpp
+	Common/Event/Manager.tpp
+	Common/Event/HdlCollector.hpp
+	Common/Event/src/Event.cpp
+	Common/Event/src/HdlCollector.cpp
+	)
 
 add_executable(rtype
 	${COMMONS_SRCS}
@@ -126,4 +135,14 @@ add_executable(server
 	Server/includes/TcpListener.hpp
 	Server/includes/TcpListenerSlave.hpp
 	Server/includes/TcpListener.tpp
+
+	Server/includes/Router.hpp
+	Server/src/Router.cpp
+
+	Server/includes/Session/Manager.hpp
+	Server/src/Session/Manager.cpp
+	Server/includes/Session/Session.hpp
+	Server/src/Session/Session.cpp
 )
+
+target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})

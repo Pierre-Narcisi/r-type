@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 RootPath="$(
 	cd "$(dirname "$0")"
@@ -9,7 +9,7 @@ cd $RootPath
 buildType=""
 read buildType
 
-echo "Build $buildType..."
+echo "Building $buildType..."
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "usage: $0 [--nodocker {...}]"
@@ -17,12 +17,15 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo " ...: cmake -build config=$buildType __VA_ARGS__"
   exit 0
 elif [ "$1" = "--nodocker" ]; then
-  ./.buildTools/_start_compile.sh $buildType ${@:2}
+	shift
+  ./.buildTools/_start_compile.sh $buildType $@
 else
+	cmd=$(echo "$(pwd)/.buildTools/_start_compile.sh $buildType $@")
+
   docker run \
-	-v $(pwd):/repo \
+	-v $(pwd):$(pwd) \
 	-v $(pwd)/.cache:/root/.conan \
 	-t \
 		epitechcontent/epitest-docker \
-			/bin/bash -c "/repo/.buildTools/_start_compile.sh $buildType $@"
+			/bin/bash -c "$cmd"
 fi

@@ -10,14 +10,14 @@
 #define _JSONBUILDER_HPP
 
 #include <list>
-#include "Json/includes/Parser.hpp"
+#include "Json/Parser.hpp"
 #include "Network/TcpSocket/TcpSocket.hpp"
 
 namespace common {
 
-class JsonBuider {
+class JsonBuilder {
 public:
-	JsonBuider(nw::TcpSocket &socket): _socket(socket) {}
+	JsonBuilder(nw::TcpSocket &socket): _socket(socket) {}
 protected:
 	std::list<json::Entity>	_extractJsonObjects(std::size_t available);
 
