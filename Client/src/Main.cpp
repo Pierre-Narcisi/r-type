@@ -102,7 +102,7 @@ int main() {
 					ID explosion = ecs::entity::Entity::getId();
 					ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 					ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
-					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "Sprite/Explosion", 12);
+					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
                				ecs::Ecs::deleteId(other);
                				ecs::Ecs::deleteId(self);
 					t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
@@ -116,10 +116,10 @@ int main() {
 	auto &game = ecs::Ecs::get();
 
 	game.addUpdate(100, [&rtype](){rtype.update();});
-	game.addUpdate(1, [](){game::Parallaxs::UpdateParallaxs();});
-	game.addUpdate(10, [](){ecs::system::Controls::UpdateDeplacement();});
-	game.addUpdate(10, [](){ecs::system::Speeds::UpdateSpeeds();});
-	game.addUpdate(9, [](){game::system::ai::updateAi();});
+	game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
+	game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
+	game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+	game.addUpdate(9, &game::system::ai::updateAi);
 	game.addUpdate(8, [&Walls](){Walls.updateWalls();});
 	game.addUpdate(9, [&Gen](){Gen.updateGen();});
 
