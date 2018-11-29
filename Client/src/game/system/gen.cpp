@@ -4,6 +4,7 @@
 
 #include "core/Time.hpp"
 #include "enemy/enemy1/enemy1.hpp"
+#include "enemy/enemy2/enemy2.hpp"
 #include "component/enemyFactory.hpp"
 #include "gen.hpp"
 #include <random>
@@ -15,18 +16,22 @@ namespace game {namespace system {
 	}
 
 	void gen::updateGen() {
-		if (_time + _nb * 1 < ecs::core::Time::get(TimeUnit::Seconds)) {
+		if (_time + _nb * 3 < ecs::core::Time::get(TimeUnit::Seconds)) {
 			TimedEventAdmin m;
 			ID enemy = ecs::entity::Entity::getId();
 			m.addEvent(10, Time::Seconds, [enemy](){ecs::Ecs::deleteId(enemy);});
 			std::random_device generator;
-			std::uniform_int_distribution<int> distribution(1,1);
+			std::uniform_int_distribution<int> distribution(1, 2);
 			int my_rand = distribution(generator); 
 			std::uniform_int_distribution<int> dist(3,10);
 			int my_nb_rand = dist(generator);
 			switch  (my_rand) {
 				case 1:
 					ecs::Ecs::addComponent<game::component::enemyFactory<enemy1>>(enemy, my_nb_rand);
+					dist.reset();
+					break;
+				case 2:
+					ecs::Ecs::addComponent<game::component::enemyFactory<enemy2>>(enemy, 1);
 					dist.reset();
 					break;
 				default:
