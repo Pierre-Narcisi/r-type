@@ -21,26 +21,26 @@ namespace ecs {namespace component {
 		Hitbox(ID id) {
 			this->collidable = false;
 			if (ecs::Ecs::idHasComponents<component::Sprite>(id)) {
-				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.y / 2;
 				this->width = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSprite>(id)) {
-				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.y / 2;
 				this->width = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSpriteMap>(id)) {
-				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.y / 2;
 				this->width = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
 			}
 		}
 		Hitbox(ID id, bool collidable) {
 			this->collidable = collidable;
 			if (ecs::Ecs::idHasComponents<component::Sprite>(id)) {
-				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.y / 2;
 				this->width = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSprite>(id)) {
-				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.y / 2;
 				this->width = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSpriteMap>(id)) {
-				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.y / 2;
 				this->width = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
 			}
 		}
@@ -49,13 +49,13 @@ namespace ecs {namespace component {
 			this->collidable = false;
 			if (ecs::Ecs::idHasComponents<component::Sprite>(id)) {
 				this->width = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
-				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.y / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSprite>(id)) {
 				this->width = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
-				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.y / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSpriteMap>(id)) {
 				this->width = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
-				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.y / 2;
 			}
 		}
 		Hitbox(ID id, bool collidable, std::function<void(ID,ID)> function) {
@@ -63,13 +63,13 @@ namespace ecs {namespace component {
 			this->collidable = collidable;
 			if (ecs::Ecs::idHasComponents<component::Sprite>(id)) {
 				this->width = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
-				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<Sprite>()[id].boxSize.y / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSprite>(id)) {
 				this->width = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
-				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSprite>()[id].boxSize.y / 2;
 			} else if (ecs::Ecs::idHasComponents<component::AnimatedSpriteMap>(id)) {
 				this->width = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
-				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.x / 2;
+				this->height = ecs::Ecs::getComponentMap<AnimatedSpriteMap>()[id].boxSize.y / 2;
 			}
 		}
 		Hitbox(float width, float height) {
