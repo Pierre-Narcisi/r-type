@@ -40,7 +40,7 @@ void	Manager::_entryPoint() {
 			
 			if (b.type == proto::Type::UDP_REGISTER) {
 				auto 				playerId = reinterpret_cast<proto::UdpRegister*>(buf)->playerId();
-				proto::UdpConfirm	confirm{proto::Type::UDP_CONFIRM, false};
+				proto::UdpConfirm	confirm{proto::Type::UDP_CONFIRM, 0, 0, false};
 				nw::UdpBuffer		resp{reinterpret_cast<char*>(&confirm), sizeof(confirm)};
 
 				for (auto &clt: Server::instance().getUsers()) {
