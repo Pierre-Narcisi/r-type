@@ -76,13 +76,7 @@ class Menu
             ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(mouse, 100000.f);
             ecs::Ecs::addComponent<ecs::component::Hitbox>(mouse, mouse, false);
 
-            // auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[input].keyMap;
-	        // keymap[KeyKeyboard::ESCAPE] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {rtype._window->close();});
-            // keymap[KeyKeyboard::KEY_0] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {
-            //     ecs::Ecs::getComponentMap<ecs::component::TextDisplay>()[parent]._str += static_cast<char>(event.text.unicode); 
-            // });
-
-            componentsId = { background, title, buttonPlay };
+            componentsId = { background, title, buttonPlay, mouse, input, text };
 
             game.addUpdate(100, [&rtype](){ rtype.update(); });
             game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
@@ -94,9 +88,6 @@ class Menu
                 long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
                 ecs::Ecs::get().update();
 
-                //std::cout << ecs::Ecs::getComponentMap<ecs::component::Position>()[mouse].x << " " << ecs::Ecs::getComponentMap<ecs::component::Position>()[mouse].y << std::endl;
-                //std::cout << ecs::Ecs::getComponentMap<ecs::component::Position>()[buttonPlay].x << " " << ecs::Ecs::getComponentMap<ecs::component::Position>()[buttonPlay].y << std::endl;
-	
                 auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
                 std::this_thread::sleep_for(std::chrono::microseconds(x));
             }

@@ -39,19 +39,16 @@
 
 #include "game/menu/Menu.hpp"
 
-int main() {
-	{
-		rtype::Menu menu;
-
-		menu.run();
-	}
-}
-/*
 #include "game/system/Parallaxs.hpp"
 #include "WindowsCtor.hpp"
 
 int main() {
 	initWSA(); //Need by Windows
+	{
+		rtype::Menu menu;
+
+		menu.run();
+	}
 
 	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
@@ -68,7 +65,7 @@ int main() {
 		return buffer;
 	};
 
-	/*ID limitTop = ecs::entity::Entity::getId();
+	ID limitTop = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitTop, 1280/2, 0);
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280, 1, true);
 	ID limitBottom = ecs::entity::Entity::getId();
@@ -150,4 +147,4 @@ int main() {
 
 	closeWSA();
 }
-*/
+
