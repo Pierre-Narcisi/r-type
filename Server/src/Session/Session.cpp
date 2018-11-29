@@ -25,7 +25,7 @@ Session::Session(Manager *parent, std::uint32_t id, std::string const &name, int
 	evt::Manager::get()["onPlayerDisconnect"]->addHandler<void, ClientConnection&>([this] (ClientConnection &clt) {
 		for (auto it = _players.begin(); it != _players.end(); ++it) {
 			if (it->player == &clt) {
-				_players.erase(it);
+				_rmPlayer(it);
 				return;
 			}
 		}
@@ -38,33 +38,50 @@ Session::~Session() {
 }
 
 void	Session::_entryPoint() {
-	auto	&ecs = ecs::Ecs::get();
-
-	// std::cout << "Ecs ptr: " << (void*) &ecs << std::endl;
+	_game.init();
 	while (_continue) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
-		decltype(_pool)::value_type	fct;
-		{
-			std::lock_guard<std::mutex>	_guard(_pickLock);
-			auto it = _pool.begin();
+		decltype(_pool)::value_type	nextPacket;
+		while (true) {
+			{
+				std::lock_guard<std::mutex>	_guard(_pickLock);
+				auto it = _pool.begin();
 
-			if (it != _pool.end()) {
-				fct = *it;
-				_pool.erase(it);
+				if (it != _pool.end()) {
+					nextPacket = *it;
+					_pool.erase(it);
+				} else {
+					break;
+				}
 			}
-		}
 
-		if (fct != nullptr) {
-			auto packet = fct();
+			if (nextPacket != nullptr) {
+				auto			packet = nextPacket();
+				auto			playerId = packet->playerId();
+				PlayerContainer	*cont = nullptr;
 
-			if (packet != nullptr) {
-				switch (packet->type) {
-					case proto::Type::KEYPRESS: break;
-					case proto::Type::KEYRELEASE: break;
+				for (auto &clt: _players) {
+					if (clt.player->_status.id == playerId) {
+						cont = &clt;
+						break;
+					}
+				}
+				
+				if (cont != nullptr && packet != nullptr) {
+					switch (packet->type) {
+						case proto::Type::KEYPRESS:
+							_game.onKeyPress(cont->ecsId, *reinterpret_cast<proto::KeyPress*>(packet.get()));
+							break;
+						case proto::Type::KEYRELEASE:
+							_game.onKeyRelease(cont->ecsId, *reinterpret_cast<proto::KeyRelease*>(packet.get()));
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
-		ecs.update();
+		_game.update();
 
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
@@ -79,7 +96,6 @@ void	Session::addPlayer(ClientConnection &player) {
 	addTask([this, cont] () {
 		auto	&ecs = ecs::Ecs::get();
 
-		std::cout << "Ecs ptr: " << (void*) &ecs << std::endl;
 		ID id = ecs::entity::Entity::getId();
 		ecs::Ecs::addComponent<ecs::component::Position>(id);
 
@@ -89,9 +105,13 @@ void	Session::addPlayer(ClientConnection &player) {
 }
 
 void	Session::_rmPlayer(decltype(_players)::iterator player) {
-	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+	addTask([this, player] () {
+		std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
-	_players.erase(player);
+		ecs::Ecs::deleteId(player->ecsId);
+		_players.erase(player);
+		return std::shared_ptr<proto::PacketBase>(nullptr);
+	});
 }
 
 void	Session::addTask(decltype(_pool)::value_type const &task) {

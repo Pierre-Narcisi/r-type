@@ -21,14 +21,14 @@ namespace proto {
 # define DECORATED_STRUCT(name, body) struct name body __attribute__((ms_struct)) // use microsoft's struct for file compatibity
 #endif
 
-
 #define PROTO_BASE(_type) \
 	Type	type = _type; \
-	UInt32	sessionId;
+	UInt32	sessionId; \
+	UInt32	playerId;
 
 enum class Type: std::uint8_t {
 	BASE,
-	UDP_RESISTER,
+	UDP_REGISTER,
 	UDP_CONFIRM,
 	MOVE,
 	KEYPRESS,
@@ -63,9 +63,7 @@ private:
 });
 
 DECORATED_STRUCT(UdpRegister, {
-	PROTO_BASE(Type::UDP_RESISTER)
-
-	UInt32	playerId;
+	PROTO_BASE(Type::UDP_REGISTER)
 });
 
 DECORATED_STRUCT(UdpConfirm, {
@@ -77,7 +75,6 @@ DECORATED_STRUCT(UdpConfirm, {
 DECORATED_STRUCT(Move, {
 	PROTO_BASE(Type::MOVE)
 
-	UInt32	playerId;
 	Int32	x;
 	Int32	y;
 });
@@ -85,14 +82,12 @@ DECORATED_STRUCT(Move, {
 DECORATED_STRUCT(KeyPress, {
 	PROTO_BASE(Type::KEYPRESS)
 
-	UInt32			playerId;
 	std::uint8_t	keyCode;
 });
 
 DECORATED_STRUCT(KeyRelease, {
 	PROTO_BASE(Type::KEYRELEASE)
 
-	UInt32			playerId;
 	std::uint8_t	keyCode;
 });
 

@@ -38,9 +38,9 @@ void	Manager::_entryPoint() {
 		while (_sock.recvFrom(recvBuffer, ep) > 0) {
 			auto &b = *reinterpret_cast<proto::PacketBase*>(buf);
 			
-			if (b.type == proto::Type::UDP_RESISTER) {
+			if (b.type == proto::Type::UDP_REGISTER) {
 				auto 				playerId = reinterpret_cast<proto::UdpRegister*>(buf)->playerId();
-				proto::UdpConfirm	confirm{proto::Type::UDP_CONFIRM, 0, false};
+				proto::UdpConfirm	confirm{proto::Type::UDP_CONFIRM, false};
 				nw::UdpBuffer		resp{reinterpret_cast<char*>(&confirm), sizeof(confirm)};
 
 				for (auto &clt: Server::instance().getUsers()) {

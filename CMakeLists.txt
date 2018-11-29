@@ -173,6 +173,8 @@ add_executable(server
 	Server/src/Session/Manager.cpp
 	Server/includes/Session/Session.hpp
 	Server/src/Session/Session.cpp
+	Server/includes/Session/Game.hpp
+	Server/src/Session/Game.cpp
 )
 
 target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})

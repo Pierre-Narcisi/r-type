@@ -18,6 +18,7 @@
 #include "Event/HdlCollector.hpp"
 #include "Network/GameProtocol.hpp"
 #include "ClientConnection.hpp"
+#include "Game.hpp"
 
 namespace rtype { namespace session {
 
@@ -57,7 +58,7 @@ private:
 	};
 
 	std::list<PlayerContainer>	_players;
-
+	Game						_game;
 
 	void	_rmPlayer(decltype(_players)::iterator player);
 
