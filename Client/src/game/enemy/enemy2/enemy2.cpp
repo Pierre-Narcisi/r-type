@@ -9,16 +9,15 @@ namespace game {
 	void enemy2::init(ID _id, int posx, int posy) {
 		_time = ecs::core::Time::get(TimeUnit::Seconds);
 		ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 100, 100, true, [](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy2/Enemy2walk/", 4, ecs::core::Vector2<float>(40, 40));
+		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
+		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.5f, 0.f);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, _id, true, static_cast<std::function<void(ID, ID)>>([](ID self, ID other){
 			if (ecs::Ecs::idHasComponents<ecs::component::Keyboard>(other)) {
 				ecs::Ecs::deleteId(other);
 				ecs::Ecs::deleteId(self);
 			}
-		});
-		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
-		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.5f, 0.f);
-		ecs::Ecs::addComponent<ecs::component::Acceleration>(_id, 0, 1);
-		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy2/Enemy2walk/", 4, ecs::core::Vector2<float>(40, 40));
+		}));
 	}
 
 	void enemy2::update(ID _id) {
