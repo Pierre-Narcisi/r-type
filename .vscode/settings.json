@@ -66,5 +66,6 @@
 		"unordered_set": "cpp",
 		"scoped_allocator": "cpp",
 		"*.ipp": "cpp"
-	}
+	},
+	"C_Cpp.errorSquiggles": "Enabled"
 }
