@@ -12,6 +12,7 @@ endif ()
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+include_directories(Client/)
 include_directories(Client/src/game_engine)
 include_directories(Client/src/game)
 

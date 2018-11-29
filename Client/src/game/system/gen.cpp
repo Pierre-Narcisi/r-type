@@ -16,12 +16,12 @@ namespace game {namespace system {
 	}
 
 	void gen::updateGen() {
-		if (_time + _nb * 1 < ecs::core::Time::get(TimeUnit::Seconds)) {
+		if (_time + _nb * 3 < ecs::core::Time::get(TimeUnit::Seconds)) {
 			TimedEventAdmin m;
 			ID enemy = ecs::entity::Entity::getId();
 			m.addEvent(10, Time::Seconds, [enemy](){ecs::Ecs::deleteId(enemy);});
 			std::random_device generator;
-			std::uniform_int_distribution<int> distribution(1,2);
+			std::uniform_int_distribution<int> distribution(1, 2);
 			int my_rand = distribution(generator); 
 			std::uniform_int_distribution<int> dist(3,10);
 			int my_nb_rand = dist(generator);

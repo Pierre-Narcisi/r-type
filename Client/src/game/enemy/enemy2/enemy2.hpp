@@ -11,8 +11,11 @@
 #include <component/physic/Acceleration.hpp>
 #include <component/physic/Hitbox.hpp>
 #include <component/graphical/Drawable.hpp>
-#include <core/Time.hpp>
+#include "core/Time.hpp"
+#include "lib/TimedEvent/TimedEventAdmin.hpp"
 #include <ecs/Ecs.hpp>
+#include <ecs/DataBank.hpp>
+#include "system/walls.hpp"
 
 namespace game {
 	class enemy2: public game::enemy {

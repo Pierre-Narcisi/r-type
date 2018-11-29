@@ -22,7 +22,7 @@ namespace game {namespace component {
 			TimedEventAdmin admin;
 
 			std::random_device generator;
-			std::uniform_int_distribution<int> distribution(50,700);
+			std::uniform_int_distribution<int> distribution(180,600);
 			y = distribution(generator);
 			for (int i = 0; i < nb; i++) {
 				TimedEvent::get().addEvent(0.25 * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, this));
