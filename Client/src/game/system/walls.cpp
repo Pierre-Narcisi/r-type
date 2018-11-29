@@ -10,7 +10,7 @@ namespace game {namespace system {
 		if (_bindDown == (unsigned long)-1) {
 			_bindDown = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindDown, 1, true);
-			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/Walls/Wall1.png"], "Sprite/Walls/Wall1.png");
+			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/Walls/Wall1.png"], "Sprite/Walls/Wall1.png", ecs::core::Vector2<float>(192, 96));
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, _bindDown, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.y;
@@ -21,14 +21,12 @@ namespace game {namespace system {
 			std::random_device generator;
 			std::uniform_int_distribution<int> distribution(1, 8);
 			int nb = distribution(generator);
-			std::string wall = "Sprite/Walls/Wall"+std::to_string(nb);
-			wall = wall + ".png";
 			int oldSizeX = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.x;
 			int oldPosX = ecs::Ecs::getComponentMap<ecs::component::Position>()[_bindDown].x;
 			_bindDown = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindDown, 1, true);
 			ecs::Ecs::addComponent<game::component::wall>(_bindDown);
-			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[wall], wall);
+			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[_wallList[nb].first], _wallList[nb].first, _wallList[nb].second);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, _bindDown, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindDown].size.y;
@@ -41,7 +39,7 @@ namespace game {namespace system {
 			_bindUp = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<game::component::wall>(_bindUp);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindUp, 1, true);
-			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/Walls/Wall1.png"], "Sprite/Walls/Wall1.png");
+			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["Sprite/WallsRotate/Wall1.png"], "Sprite/WallsRotate/Wall1.png", ecs::core::Vector2<float>(192, 96));
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, _bindUp, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.y;
@@ -49,16 +47,14 @@ namespace game {namespace system {
 			ecs::Ecs::addComponent<ecs::component::Speed>(_bindUp, -0.5f, 0.f);
 		} else if (ecs::Ecs::getComponentMap<ecs::component::Position>()[_bindUp].x < 1280) {
 			std::random_device generator;
-			std::uniform_int_distribution<int> distribution(1, 8);
+			std::uniform_int_distribution<int> distribution(9, 16);
 			int nb = distribution(generator);
-			std::string wall = "Sprite/WallsRotate/Wall"+std::to_string(nb);
-			wall = wall + ".png";
 			int oldSizeX = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.x;
 			int oldPosX = ecs::Ecs::getComponentMap<ecs::component::Position>()[_bindUp].x;
 			_bindUp = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<game::component::wall>(_bindUp);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(_bindUp, 1, true);
-			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[wall], wall);
+			ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[_wallList[nb].first], _wallList[nb].first, _wallList[nb].second);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, _bindUp, false, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}});
 			int x = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.x;
 			int y = ecs::Ecs::getComponentMap<ecs::component::Sprite>()[_bindUp].size.y;

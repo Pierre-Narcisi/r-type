@@ -28,6 +28,28 @@ namespace ecs {namespace component {
 			this->shared = true;
 			this->boxSize = size;
 		}
+		Sprite(graphical::BundleSprite &bundled, std::string path, core::Vector2<float> size) {
+			this->sprite = bundled.sprite;
+			this->size = graphical::Graphic::getTextureSize(path);
+
+			float y = size.y / this->size.y;
+			float x = size.x / this->size.x;
+
+			this->sprite->setOrigin(this->size.x / 2, this->size.y / 2);
+
+			if (y < x) {
+				this->sprite->setScale(y, y);
+				this->size.x = this->size.x * y;
+				this->size.y = this->size.y * y;
+			} else {
+				this->sprite->setScale(x, x);
+				this->size.x = this->size.x * x;
+				this->size.y = this->size.y * x;
+			}
+
+			this->shared = true;
+			this->boxSize = size;
+		}
 		Sprite(std::string path) {
 			this->texture = new sf::Texture();
 
