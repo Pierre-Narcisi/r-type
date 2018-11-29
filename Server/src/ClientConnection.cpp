@@ -67,7 +67,7 @@ void	ClientConnection::onDataAvailable(std::size_t available) {
 }
 
 
-static int _playerIdCounter = 0;
+static std::uint32_t	_playerIdCounter = 0;
 void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 	if (!req["username"].isString()) {
 		resp = json::makeObject {
@@ -81,10 +81,11 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 
 	std::string	username(req["username"].to<std::string>());
 	if (!Server::instance().isConnected(username)) {
+		this->_status.id = ++_playerIdCounter;
 		this->_status.username = username;
 		this->_status.logged = true;
 		resp["status"] = true;
-		resp["id"] = ++_playerIdCounter;
+		resp["id"] = this->_status.id;
 	} else {
 		resp = json::makeObject {
 			{"error", json::makeObject {
@@ -100,13 +101,18 @@ void	ClientConnection::_routerInit() {
 	std::shared_ptr<Router>	sessionRouter(new Router());
 	
 	sessionRouter->use([this] (json::Entity &req, json::Entity &resp, std::function<void()> &next) {
-		if (this->_status.logged) {
+		if (this->_status.logged && this->_status.udpIsSetup) {
 			next();
 		} else {
 			resp["error"] = json::makeObject {
-				{ "message", "Not logged in" }
+				{ "message", json::Entity(json::Entity::ARR) }
 			};
 			resp["status"] = false;
+
+			if (this->_status.logged == false)
+				resp["error"]["message"].push("Not logged in!");
+			if (this->_status.udpIsSetup == false)
+				resp["error"]["message"].push("You need to setup the UDP tunnel before!");
 		}
 	});
 

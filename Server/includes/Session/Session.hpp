@@ -14,7 +14,9 @@
 #include <deque>
 #include <mutex>
 #include <thread>
+#include "GameEngine/ecs/Entity.hpp"
 #include "Event/HdlCollector.hpp"
+#include "Network/GameProtocol.hpp"
 #include "ClientConnection.hpp"
 
 namespace rtype { namespace session {
@@ -22,15 +24,6 @@ namespace rtype { namespace session {
 class Manager;
 
 class Session {
-public:
-	explicit Session(Manager *parent, std::uint32_t id, std::string const &name, int playerMax);
-	~Session();
-
-	void	addPlayer(ClientConnection &player);
-
-	void	addTask(std::function<void()> const &task);
-
-	auto	getId() { return _id; }
 private:
 	void			_entryPoint();
 
@@ -41,19 +34,29 @@ private:
 
 	bool								_continue = true;
 	std::unique_ptr<std::thread>		_thread;
-	std::deque<std::function<void()>>	_pool;
-	std::mutex							_poolLock;
+	std::deque<std::function<std::shared_ptr<proto::PacketBase>()>>
+										_pool;
 	std::mutex							_pickLock;
 
 	evt::HdlCollector				_collector;
 	std::mutex						_addPlayerMutex;
+public:
+	explicit Session(Manager *parent, std::uint32_t id, std::string const &name, int playerMax);
+	~Session();
 
-	// struct DestContainer {
-	// 	ClientConnection		*player;
-	// 	evt::Event::EvtHdlDestr	dest;
-	// };
+	void	addPlayer(ClientConnection &player);
 
-	std::list<ClientConnection*>	_players;
+	void	addTask(decltype(_pool)::value_type const &task);
+
+	auto	getId() { return _id; }
+private:
+
+	struct PlayerContainer {
+		ClientConnection	*player;
+		ID					ecsId;
+	};
+
+	std::list<PlayerContainer>	_players;
 
 
 	void	_rmPlayer(decltype(_players)::iterator player);

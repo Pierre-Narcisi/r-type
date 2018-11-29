@@ -8,7 +8,9 @@
 #include <functional>
 #include <mutex>
 #include <chrono>
+#include "Server.hpp"
 #include "Session/Manager.hpp"
+#include "Network/GameProtocol.hpp"
 
 namespace rtype { namespace session {
 
@@ -34,12 +36,38 @@ void	Manager::_entryPoint() {
 		std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 		start = std::chrono::high_resolution_clock::now();
 		while (_sock.recvFrom(recvBuffer, ep) > 0) {
+			auto &b = *reinterpret_cast<proto::PacketBase*>(buf);
 			
-			// buf[recvBuffer.len] = 0;
-			// std::cout << buf << std::endl;
-			// Send to session;
+			if (b.type == proto::Type::UDP_RESISTER) {
+				auto 				playerId = reinterpret_cast<proto::UdpRegister*>(buf)->playerId();
+				proto::UdpConfirm	confirm{proto::Type::UDP_CONFIRM, 0, false};
+				nw::UdpBuffer		resp{reinterpret_cast<char*>(&confirm), sizeof(confirm)};
 
-			recvBuffer.len = sizeof(buf); 
+				for (auto &clt: Server::instance().getUsers()) {
+					if (clt._status.id == playerId) {
+						clt._udpEndpoint = ep;
+						clt._status.udpIsSetup = true;
+						confirm.status = true;
+						break;
+					}
+				}
+				_sock.sendTo(resp, ep);
+			} else {
+				for (auto &s: _sessions) {
+					if (s._id == b.sessionId()) {
+						auto	*packet = reinterpret_cast<proto::PacketBase*>(::operator new(recvBuffer.len));
+						memmove(packet, buf, recvBuffer.len);
+
+						s.addTask([packet] () {
+							return (std::shared_ptr<proto::PacketBase>(packet));
+						});
+						break;
+					}
+				}
+			}
+
+		
+			recvBuffer.len = sizeof(buf);
 		}
 		end = std::chrono::high_resolution_clock::now();
 		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

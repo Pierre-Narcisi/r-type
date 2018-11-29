@@ -11,7 +11,7 @@
 #include <functional>
 #include "ecs/Entity.hpp"
 
-enum class KeyKeyboard {
+enum class KeyKeyboard: std::uint8_t {
 	KEY_A,
 	KEY_B,
 	KEY_C,

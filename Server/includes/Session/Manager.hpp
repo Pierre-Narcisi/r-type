@@ -29,8 +29,9 @@ public:
 	auto	&getSessions() { return _sessions; }
 	auto	getListeningPort() { return _port; }
 private:
-	void			_entryPoint();
-	std::uint32_t	_generateId();
+	static std::uint32_t	_generateId();
+	
+	void					_entryPoint();
 
 	bool							_continue = true;
 	std::uint32_t					_sleepTime;

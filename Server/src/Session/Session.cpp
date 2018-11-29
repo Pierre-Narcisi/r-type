@@ -6,8 +6,12 @@
 */
 
 #include <functional>
-#include "Session/Session.hpp"
 #include "Event/Manager.hpp"
+#include "GameEngine/ecs/Ecs.hpp"
+#include "GameEngine/core/Time.hpp"
+#include "GameEngine/component/physic/Position.hpp"
+#include "Network/GameProtocol.hpp"
+#include "Session/Session.hpp"
 
 namespace rtype { namespace session {
 
@@ -20,7 +24,7 @@ Session::Session(Manager *parent, std::uint32_t id, std::string const &name, int
 
 	evt::Manager::get()["onPlayerDisconnect"]->addHandler<void, ClientConnection&>([this] (ClientConnection &clt) {
 		for (auto it = _players.begin(); it != _players.end(); ++it) {
-			if (*it == &clt) {
+			if (it->player == &clt) {
 				_players.erase(it);
 				return;
 			}
@@ -30,54 +34,70 @@ Session::Session(Manager *parent, std::uint32_t id, std::string const &name, int
 
 Session::~Session() {
 	_continue = false;
-	_poolLock.unlock();
 	_thread->join();
 }
 
 void	Session::_entryPoint() {
-	_poolLock.lock(); //Have to lock when _pool is empty, addTask will delock the pool
+	auto	&ecs = ecs::Ecs::get();
 
+	// std::cout << "Ecs ptr: " << (void*) &ecs << std::endl;
 	while (_continue) {
-		_poolLock.lock(); //if already lock, it wait for a new task
-		_poolLock.unlock();
-
-		if (!_continue) return;
-
-		decltype(_pool)::iterator	it;
+		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
+		decltype(_pool)::value_type	fct;
 		{
 			std::lock_guard<std::mutex>	_guard(_pickLock);
+			auto it = _pool.begin();
 
-			it = _pool.begin();
+			if (it != _pool.end()) {
+				fct = *it;
+				_pool.erase(it);
+			}
 		}
 
-		(*it)(); //Launch Task
+		if (fct != nullptr) {
+			auto packet = fct();
 
-		{
-			std::lock_guard<std::mutex>	_guard(_pickLock);
-
-			_pool.erase(it);
-
-			if (_pool.size() == 0)
-				_poolLock.lock(); //lock if empty
+			if (packet != nullptr) {
+				switch (packet->type) {
+					case proto::Type::KEYPRESS: break;
+					case proto::Type::KEYRELEASE: break;
+				}
+			}
 		}
+		ecs.update();
+
+		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
+		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}
 }
 
 void	Session::addPlayer(ClientConnection &player) {
 	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
-	_players.push_back(&player);
+
+	auto cont = _players.insert(_players.end(), {&player, (ID)0});
+	addTask([this, cont] () {
+		auto	&ecs = ecs::Ecs::get();
+
+		std::cout << "Ecs ptr: " << (void*) &ecs << std::endl;
+		ID id = ecs::entity::Entity::getId();
+		ecs::Ecs::addComponent<ecs::component::Position>(id);
+
+		cont->ecsId = id;
+		return std::shared_ptr<proto::PacketBase>(nullptr);
+	});
 }
 
 void	Session::_rmPlayer(decltype(_players)::iterator player) {
+	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+
 	_players.erase(player);
 }
 
-void	Session::addTask(std::function<void()> const &task) {
+void	Session::addTask(decltype(_pool)::value_type const &task) {
 	std::lock_guard<std::mutex>	_guard(_pickLock);
 
 	_pool.push_back(task);
-	_poolLock.unlock();
 }
 
 }}

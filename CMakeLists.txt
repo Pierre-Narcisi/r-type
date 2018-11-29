@@ -21,6 +21,7 @@ set(COMMONS_SRCS
 	Common/WindowsCtor.hpp
 
 	Common/Network/EndpointBase.hpp
+	Common/Network/GameProtocol.hpp
 
 	Common/Network/TcpSocket/ATcpSocket.hpp
 	Common/Network/TcpSocket/TcpSocket.hpp
