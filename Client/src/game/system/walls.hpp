@@ -9,6 +9,7 @@
 #include "component/physic/Hitbox.hpp"
 #include <component/graphical/Sprite.hpp>
 #include <component/graphical/Drawable.hpp>
+#include "component/Types.hpp"
 #include <ecs/DataBank.hpp>
 #include <ecs/Ecs.hpp>
 #include "component/wall.hpp"

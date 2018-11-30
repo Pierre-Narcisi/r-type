@@ -120,6 +120,8 @@ add_executable(rtype
 	Client/src/game/enemy/enemy1/enemy1.cpp
 	Client/src/game/enemy/enemy2/enemy2.hpp
 	Client/src/game/enemy/enemy2/enemy2.cpp
+	Client/src/game/enemy/enemy3/enemy3.hpp
+	Client/src/game/enemy/enemy3/enemy3.cpp
 	Client/src/game/system/ai.cpp
 	Client/src/game/system/walls.cpp
 	Client/src/game/system/gen.cpp
