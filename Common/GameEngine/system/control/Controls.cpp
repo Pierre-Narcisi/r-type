@@ -11,6 +11,7 @@
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
 #include <component/control/DeplacementMouse.hpp>
+#include <component/control/LazyDeplacementMouse.hpp>
 #include "component/control/Controller.hpp"
 #include "Controls.hpp"
 #include "ecs/Ecs.hpp"
@@ -22,6 +23,11 @@ namespace ecs {namespace system {
 	void Controls::UpdateControllers(sf::Event &event) {
 		auto &controllers = ecs::Ecs::getComponentMap<component::Controller>();
 		const float DEAD_ZONE = 0.2f;
+
+		if (!(event.type == sf::Event::EventType::JoystickButtonPressed ||
+				   event.type == sf::Event::EventType::JoystickButtonReleased ||
+				   event.type == sf::Event::EventType::JoystickMoved))
+			return;
 
 		for (auto &controller : controllers) {
 
@@ -204,6 +210,13 @@ namespace ecs {namespace system {
 			speedMap[mouse].x = time / 1000000.f * speedMap[mouse].x;
 			speedMap[mouse].y = time / 1000000.f * speedMap[mouse].y;
 			mouseDepMap[mouse] = time;
+		}
+
+		auto lazys = ecs::Ecs::filter<ecs::component::Speed, ecs::component::LazyDeplacementMouse, ecs::component::Mouse>();
+
+		for(auto id : lazys) {
+			posMap[id].x = mouseMap[id].position.x;
+			posMap[id].y = mouseMap[id].position.y;
 		}
 	}
 
