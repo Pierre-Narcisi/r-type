@@ -23,18 +23,9 @@ namespace ecs {namespace graphical {
 
 			if (_event.type == sf::Event::EventType::TextEntered)
 				ecs::component::TextInput(_event);
-			if (_event.type == sf::Event::EventType::TextEntered ||
-			    _event.type == sf::Event::EventType::KeyPressed ||
-			    _event.type == sf::Event::EventType::KeyReleased) {
-				system::Controls::UpdateKeyboards(_event);
-			} else if (_event.type == sf::Event::EventType::MouseButtonPressed ||
-				_event.type == sf::Event::EventType::MouseMoved) {
-				system::Controls::UpdateMouses(_event);
-			} else if (_event.type == sf::Event::EventType::JoystickButtonPressed ||
-				   _event.type == sf::Event::EventType::JoystickButtonReleased ||
-				   _event.type == sf::Event::EventType::JoystickMoved) {
-				system::Controls::UpdateControllers(_event);
-			}
+			system::Controls::UpdateKeyboards(_event);
+			system::Controls::UpdateMouses(_event);
+			system::Controls::UpdateControllers(_event);
 		}
 
 		ecs::system::Graphicals::UpdateGraphicals();

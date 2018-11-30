@@ -53,6 +53,21 @@ namespace ecs {namespace component {
 			_text->setOrigin(_text->getLocalBounds().width/2, _text->getLocalBounds().height/2);
 		}
 
+		TextDisplay(std::string path, std::string str, float posX, float posY, bool input, sf::Color color, int size) {
+			_input = input;
+			_color = color;
+			_size = size;
+			_str = str;
+			_pos.x = posX;
+			_pos.y = posY;
+			_font = new sf::Font();
+			_font->loadFromFile(path);
+			_text = new sf::Text(_str, *_font);
+			_text->setCharacterSize(_size);
+			_text->setFillColor(_color);
+			_text->setOrigin(_text->getLocalBounds().width/2, _text->getLocalBounds().height/2);
+		}
+
 		~TextDisplay() {
 			delete _font;
 			delete _text;
@@ -64,7 +79,7 @@ namespace ecs {namespace component {
 		sf::Color				_color = sf::Color::White;
 
         std::string             _str;
-        unsigned int            _size = 30;
+        unsigned int            _size = 20;
 		bool					_input = false;
 		ecs::core::Vector2<float>		_pos = {0, 0};
 	};
@@ -72,13 +87,14 @@ namespace ecs {namespace component {
 	inline void TextInput(sf::Event _event)
 	{
 		auto ids = ecs::Ecs::filter<TextDisplay>();
-        auto window = ecs::graphical::Graphic::getWindow();
         auto &txt = ecs::Ecs::getComponentMap<TextDisplay>();
 
 		for (auto id : ids) {
 		if (_event.type == sf::Event::TextEntered && txt[id]._input == true)
 		{
-			if (_event.text.unicode <= 122 && _event.text.unicode >= 97)
+			if ((_event.text.unicode <= 122 && _event.text.unicode >= 97) || _event.text.unicode == 45 || _event.text.unicode == 95)
+        		txt[id]._str += static_cast<char>(_event.text.unicode);
+			if (_event.text.unicode <= 90 && _event.text.unicode >= 65)
         		txt[id]._str += static_cast<char>(_event.text.unicode);
 			if (_event.text.unicode <= 57 && _event.text.unicode >= 48)
         		txt[id]._str += static_cast<char>(_event.text.unicode);
@@ -89,7 +105,7 @@ namespace ecs {namespace component {
 	}
 
 
-	inline void UpdateTextDisplay()
+	/*inline void UpdateTextDisplay()
 	{
         auto ids = ecs::Ecs::filter<TextDisplay>();
         auto window = ecs::graphical::Graphic::getWindow();
@@ -101,5 +117,5 @@ namespace ecs {namespace component {
 			txt[id]._text->setOrigin(txt[id]._text->getLocalBounds().width/2, txt[id]._text->getLocalBounds().height/2);
 			window->draw(*txt[id]._text);
         }
-    }
+    }*/
 }}

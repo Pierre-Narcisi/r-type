@@ -19,6 +19,8 @@
 #include "../game/system/Parallaxs.hpp"
 #include "TextDisplay.hpp"
 
+#pragma once
+
 namespace rtype {
 
 class Menu
@@ -48,12 +50,12 @@ class Menu
             ID text = ecs::entity::Entity::getId();
             ecs::Ecs::addComponent<ecs::component::Position>(text, 1280/2, 360);
             ecs::Ecs::addComponent<ecs::component::Drawable>(text, 0, true);
-            ecs::Ecs::addComponent<ecs::component::TextDisplay>(text, "assets/ARCADECLASSIC.TTF", "Please   enter   your   login", 1280/2, 360);
+            ecs::Ecs::addComponent<ecs::component::TextDisplay>(text, "assets/PressStart.ttf", "PLEASE ENTER YOUR LOGIN", 1280/2, 360);
 
             ID input = ecs::entity::Entity::getId();
             ecs::Ecs::addComponent<ecs::component::Position>(input, 1280/2, 420);
             ecs::Ecs::addComponent<ecs::component::Drawable>(input, 0, true);
-            ecs::Ecs::addComponent<ecs::component::TextDisplay>(input, "assets/ARCADECLASSIC.TTF", "", 1280/2, 420, true);
+            ecs::Ecs::addComponent<ecs::component::TextDisplay>(input, "assets/PressStart.ttf", "", 1280/2, 420, true);
             //ecs::Ecs::addComponent<ecs::component::Keyboard>(input);
 
             ID buttonPlay = ecs::entity::Entity::getId();
@@ -76,11 +78,16 @@ class Menu
             ecs::Ecs::addComponent<ecs::component::DeplacementMouse>(mouse, 100000.f);
             ecs::Ecs::addComponent<ecs::component::Hitbox>(mouse, mouse, false);
 
-            componentsId = { background, title, buttonPlay, mouse, input, text };
+            ID key = ecs::entity::Entity::getId();
+            ecs::Ecs::addComponent<ecs::component::Keyboard>(key);
+            ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[key].keyMap[KeyKeyboard::ENTER] =
+            std::pair<bool, std::function<void(ID)>>(false, [&continue_](ID parent) {continue_ = false;});
+
+            componentsId = { background, title, buttonPlay, mouse, input, text, key };
 
             game.addUpdate(100, [&rtype](){ rtype.update(); });
             game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
-            game.addUpdate(1, ecs::component::UpdateTextDisplay);
+            //game.addUpdate(1, ecs::component::UpdateTextDisplay);
 	        game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
 	        game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
 

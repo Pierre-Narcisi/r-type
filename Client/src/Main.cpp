@@ -38,6 +38,7 @@
 #include "game/component/AnimationRtype.hpp"
 
 #include "game/menu/Menu.hpp"
+#include "game/menu/Selection.hpp"
 
 #include "game/system/Parallaxs.hpp"
 #include "WindowsCtor.hpp"
@@ -48,6 +49,12 @@ int main() {
 		rtype::Menu menu;
 
 		menu.run();
+	}
+
+	{
+		rtype::Selection selection;
+
+		selection.run();
 	}
 
 	std::srand(std::time(nullptr));
