@@ -6,6 +6,7 @@
 
 #include "../enemy.hpp"
 #include "component/Types.hpp"
+#include "component/Bonuses.hpp"
 #include <component/physic/Position.hpp>
 #include <component/graphical/AnimatedSprite.hpp>
 #include <component/physic/Speed.hpp>

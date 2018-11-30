@@ -1,3 +1,9 @@
+//
+// Created by pierre on 20/11/2018.
+//
+
+#pragma once
+
 #include <chrono>
 #include <ctime>
 

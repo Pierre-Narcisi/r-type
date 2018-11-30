@@ -12,6 +12,7 @@ namespace game {
 		ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::ENEMY);
 		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy2/Enemy2walk/", 4, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
+		ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id);
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.1f, 1.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, _id, true, static_cast<std::function<void(ID, ID)>>([](ID self, ID other){
 			game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];

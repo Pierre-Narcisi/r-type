@@ -13,6 +13,7 @@ namespace game {
 		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy1/", 4, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -3.f, 0.f);
+		ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, _id, false, static_cast<std::function<void(ID, ID)>>([](ID self, ID other){
 			game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
 			if (type._type == game::component::Type::Types::SHIP) {
