@@ -11,8 +11,8 @@
 #include <iostream>
 #include <sfml/Graphic.hpp>
 
-#include "../../game_engine/ecs/Ecs.hpp"
-#include "../../game_engine/sfml/Graphic.hpp"
+#include "GameEngine/ecs/Ecs.hpp"
+#include "GameEngine/sfml/Graphic.hpp"
 
 namespace ecs {namespace component {
 	struct TextDisplay {

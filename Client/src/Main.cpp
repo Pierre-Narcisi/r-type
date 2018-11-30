@@ -34,11 +34,8 @@
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
-<<<<<<< HEAD
-=======
 #include "game/component/Parallax.hpp"
 #include "game/component/Types.hpp"
->>>>>>> 9039475ccc174b3acb740d82c68820a86c9655fa
 #include "game/component/Firerate.hpp"
 #include "game/component/AnimationRtype.hpp"
 
@@ -79,16 +76,16 @@ int main() {
 
 	ID limitTop = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitTop, 1280/2, 0);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280.f, 1.f, true);
 	ID limitBottom = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitBottom, 1280/2, 720);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitBottom, 1280, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitBottom, 1280.f, 1.f, true);
 	ID limitLeft = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitLeft, 0, 720/2);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1, 720, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1.f, 720.f, true);
 	ID limitRight = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitRight, 1280, 720/2);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1, 720, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1.f, 720.f, true);
 
 
 	game::system::gen Gen;

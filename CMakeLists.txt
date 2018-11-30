@@ -97,6 +97,7 @@ set(ECS_SFML
 	Common/GameEngine/component/control/Controller.hpp
 	Common/GameEngine/system/control/Controls.hpp
 	Common/GameEngine/system/control/Controls.cpp
+	Common/GameEngine/component/control/LazyDeplacementMouse.hpp
 	Common/GameEngine/component/control/DeplacementKeyBoard.hpp
 	Common/GameEngine/component/control/DeplacementMouse.hpp
 )
@@ -132,12 +133,9 @@ add_executable(rtype
 	Client/src/game/system/Parallaxs.hpp
 	Client/src/game/system/Parallaxs.cpp
 
-<<<<<<< HEAD
 	Client/src/game/menu/Menu.hpp
 
-=======
 	Client/src/Main.cpp
->>>>>>> 9039475ccc174b3acb740d82c68820a86c9655fa
 )
 
 find_package (Threads)

@@ -156,7 +156,7 @@ namespace rtype {
                 ecs::Ecs::addComponent<ecs::component::LazyDeplacementMouse>(mouse);
                 ecs::Ecs::addComponent<ecs::component::Hitbox>(mouse, 10.f, 10.f);
 
-                _componentsId = { background, buttonPlay, mouse, text };
+                _componentsId = { background, buttonPlay, mouse, text, back, max_nbr, actual_nbr, txt_current_nbr, txt_max_nbr, name, buttonPrev, buttonNext };
 
 
                 game.addUpdate(100, [this, name, actual_nbr, max_nbr](){
@@ -199,7 +199,7 @@ namespace rtype {
 
         private:
             int                 _index = 0;
-            std::vector<room>     _rooms;
+            std::vector<room>    _rooms;
             std::vector<ID>     _componentsId;
     };
 }
