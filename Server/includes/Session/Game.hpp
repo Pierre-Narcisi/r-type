@@ -20,7 +20,7 @@ class Session;
 
 class	Game {
 public:
-	Game(): _ecs(*reinterpret_cast<ecs::Ecs*>(0)) {}
+	Game(): _ecs(nullptr) {}
 	
 	void	init();
 
@@ -31,7 +31,7 @@ public:
 private:
 	void	_initSystems();
 	
-	ecs::Ecs	&_ecs;
+	ecs::Ecs		*_ecs;
 	std::list<ID>	_collector;
 
 	// friend Manager;

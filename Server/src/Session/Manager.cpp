@@ -31,10 +31,12 @@ void	Manager::_entryPoint() {
 	char 			buf[2048];
 	nw::UdpBuffer 	recvBuffer(buf, sizeof(buf));
 	nw::UdpEndpoint	ep;
+	auto pingCounterStart = std::chrono::high_resolution_clock::now();
 
 	while (_continue) {
 		std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 		start = std::chrono::high_resolution_clock::now();
+
 		while (_sock.recvFrom(recvBuffer, ep) > 0) {
 			auto &b = *reinterpret_cast<proto::PacketBase*>(buf);
 			
@@ -73,6 +75,17 @@ void	Manager::_entryPoint() {
 		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		
 		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime - elapsed));
+		if (std::chrono::duration_cast<std::chrono::seconds>(end - pingCounterStart).count() > 10) {
+			pingCounterStart = end;
+			proto::Ping pingPacket{proto::Type::PING, 0, 0};
+
+			std::cout << "send ping" << std::endl;
+			for (auto &clt: Server::instance().getUsers()) {
+				if (clt._status.udpIsSetup)
+					_sock.sendTo({reinterpret_cast<char*>(&pingPacket), sizeof(pingPacket)}, clt._udpEndpoint);
+			}
+		}
+
 	}
 }
 

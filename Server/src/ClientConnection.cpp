@@ -22,6 +22,7 @@ inline void ClientConnection::_sendJson(json::Entity const &resp) {
 	_sock.write(resultStr.c_str(), resultStr.size());
 }
 
+static std::uint32_t	_playerIdCounter = 0;
 ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr):
 		TcpListenerSlave(socketFd, addr),
 		JsonBuilder(_sock) {
@@ -35,9 +36,11 @@ ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAdd
 		});
 	};
 
+	this->_status.id = ++_playerIdCounter;
 	_routerInit();
 	_sendJson(json::makeObject {
 		{ "message", "Welcome to the r-type server!" },
+		{ "id", (int) this->_status.id },
 		{ "sessionsPort", (int) Server::instance().getSessionManager().getListeningPort() }
 	});
 }
@@ -66,8 +69,6 @@ void	ClientConnection::onDataAvailable(std::size_t available) {
 	}
 }
 
-
-static std::uint32_t	_playerIdCounter = 0;
 void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 	if (!req["username"].isString()) {
 		resp = json::makeObject {
@@ -81,7 +82,6 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 
 	std::string	username(req["username"].to<std::string>());
 	if (!Server::instance().isConnected(username)) {
-		this->_status.id = ++_playerIdCounter;
 		this->_status.username = username;
 		this->_status.logged = true;
 		resp["status"] = true;

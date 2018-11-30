@@ -11,8 +11,7 @@
 namespace rtype { namespace session {
 
 void	Game::init() {
-	_ecs = ecs::Ecs::get();
-
+	_ecs = &ecs::Ecs::get();
 	//init all Components
 }
 
@@ -21,7 +20,7 @@ void	Game::_initSystems() {
 }
 
 void	Game::update() {
-	_ecs.update();
+	_ecs->update();
 }
 
 void	Game::onKeyPress(ID player, proto::KeyPress &packet) {

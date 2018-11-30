@@ -15,6 +15,7 @@ conan_basic_setup()
 include_directories(Client/)
 include_directories(Common/GameEngine)
 include_directories(Client/src/game)
+include_directories(Client/includes)
 
 
 set(COMMONS_SRCS
@@ -130,6 +131,14 @@ add_executable(rtype
 	Client/src/game/component/Parallax.hpp
 	Client/src/game/system/Parallaxs.hpp
 	Client/src/game/system/Parallaxs.cpp
+
+	Client/includes/ServerConnection.hpp
+	Client/src/ServerConnection.cpp
+
+	Client/includes/MessageBox.hpp
+
+	Client/includes/Game.hpp
+	Client/src/Game.cpp
 
 	Client/src/Main.cpp
 )

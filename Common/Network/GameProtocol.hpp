@@ -28,6 +28,7 @@ namespace proto {
 
 enum class Type: std::uint8_t {
 	BASE,
+	PING,
 	UDP_REGISTER,
 	UDP_CONFIRM,
 	MOVE,
@@ -41,6 +42,7 @@ template<typename T, auto toNet, auto toHost>
 DECORATED_STRUCT(IntBase, {
 	using	ValueType = T;
 
+	IntBase() = default;
 	IntBase(ValueType	nbr): _nbr(toNet(nbr)) {}
 
 	IntBase		&operator=(ValueType nbr) { _nbr = toNet(nbr); }
@@ -60,6 +62,10 @@ DECORATED_STRUCT(PacketBase, {
 	PROTO_BASE(Type::BASE)
 private:
 	PacketBase() = default;
+});
+
+DECORATED_STRUCT(Ping, {
+	PROTO_BASE(Type::PING)
 });
 
 DECORATED_STRUCT(UdpRegister, {

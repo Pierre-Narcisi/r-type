@@ -22,7 +22,7 @@ Session::Session(Manager *parent, std::uint32_t id, std::string const &name, int
 		_playerMax(playerMax) {
 	_thread = std::unique_ptr<std::thread>(new std::thread(&Session::_entryPoint, this)); // Force start after mutex init
 
-	evt::Manager::get()["onPlayerDisconnect"]->addHandler<void, ClientConnection&>([this] (ClientConnection &clt) {
+	_collector << evt::Manager::get()["onPlayerDisconnect"]->addHandler<void, ClientConnection&>([this] (ClientConnection &clt) {
 		for (auto it = _players.begin(); it != _players.end(); ++it) {
 			if (it->player == &clt) {
 				_rmPlayer(it);
@@ -55,8 +55,9 @@ void	Session::_entryPoint() {
 				}
 			}
 
-			if (nextPacket != nullptr) {
-				auto			packet = nextPacket();
+			auto	packet = nextPacket();
+
+			if (packet != nullptr) {
 				auto			playerId = packet->playerId();
 				PlayerContainer	*cont = nullptr;
 

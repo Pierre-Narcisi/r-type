@@ -119,11 +119,7 @@ void	Server::createSession(ClientConnection *me, json::Entity &req, json::Entity
 		resp["status"] = true;
 		resp["id"] = session.getId();
 	} catch (std::exception &e) {
-		resp = json::makeObject {
-			{ "error", json::makeObject {
-				{ "message", e.what() }
-			}}
-		};
+		ERROR(e.what());
 	}
 }
 
