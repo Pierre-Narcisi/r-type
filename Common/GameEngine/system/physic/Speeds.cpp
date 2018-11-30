@@ -6,7 +6,10 @@
 */
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
+#include "component/Types.hpp"
+#define NOSPRITE
 #include <component/physic/Hitbox.hpp>
+#undef NOSPRITE
 #include "ecs/Ecs.hpp"
 #include "Speeds.hpp"
 
@@ -23,7 +26,7 @@ namespace ecs {namespace system {
 		bool comeX = false;
 
 		for (auto id : ids) {
-			if (ecs::Ecs::idHasComponents<component::Hitbox>(id)) {
+		if (ecs::Ecs::idHasComponents<component::Hitbox>(id)) {
 				tmpPos = position[id];
 				position[id].x += speed[id].x;
 				position[id].y += speed[id].y;
@@ -42,14 +45,28 @@ namespace ecs {namespace system {
 								box1.func(id, od);
 							if (box2.collidable) {
 								if ((pos2.x - box2.width >= tmpPos.x + box1.width) ||
-								    (pos2.x + box2.width <= tmpPos.x - box1.width))
+								    (pos2.x + box2.width <= tmpPos.x - box1.width)) {
+									if (box1.forceDeplacement)
+										pos2.x += speed[id].x;
+									if (box2.forceDeplacement)
+										pos1.x += speed[od].x;
 									comeX = true;
+								}
 								if ((pos2.y - box2.height >= tmpPos.y + box1.height) ||
-								    (pos2.y + box2.height <= tmpPos.y - box1.height))
+								    (pos2.y + box2.height <= tmpPos.y - box1.height)) {
+									if (box1.forceDeplacement)
+										pos2.y += speed[id].y;
+									if (box2.forceDeplacement)
+										pos1.y += speed[od].y;
 									comeY = true;
+								}
 							}
 						}
 					}
+				}
+				if (box1.forceDeplacement) {
+					position[id].x += speed[id].x;
+					position[id].y += speed[id].y;
 				}
 				if (box1.collidable) {
 					if (comeX)

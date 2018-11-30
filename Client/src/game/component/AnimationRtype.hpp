@@ -1,4 +1,4 @@
-#include "../game_engine/component/graphical/Sprite.hpp"
+#include "component/graphical/Sprite.hpp"
 #include <boost/filesystem.hpp>
 #include <chrono>
 

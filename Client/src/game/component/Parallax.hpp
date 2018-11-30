@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../game_engine/component/graphical/Sprite.hpp"
+#pragma once
+
+#include "component/graphical/Sprite.hpp"
 
 namespace game {
     struct Parallax {

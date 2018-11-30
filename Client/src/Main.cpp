@@ -34,6 +34,11 @@
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
+<<<<<<< HEAD
+=======
+#include "game/component/Parallax.hpp"
+#include "game/component/Types.hpp"
+>>>>>>> 9039475ccc174b3acb740d82c68820a86c9655fa
 #include "game/component/Firerate.hpp"
 #include "game/component/AnimationRtype.hpp"
 
@@ -96,11 +101,13 @@ int main() {
 	ecs::Ecs::addComponent<game::Firerate>(ship, 100);
 	ecs::Ecs::addComponent<ecs::component::Position>(ship, 1280/2, 720/2);
 	ecs::Ecs::addComponent<ecs::component::Speed>(ship);
+	ecs::Ecs::addComponent<game::component::Type>(ship, game::component::Type::Types::SHIP);
 	ecs::Ecs::addComponent<ecs::component::Drawable>(ship, 0, true);
 	ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(ship, 500.f);
 	ecs::Ecs::addComponent<ecs::component::Sprite>(ship, "assets/Sprite/Ship/BlueShip/BlueShip3.png", ecs::core::Vector2<float>(64, 32));
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ship, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(ship, ship, true, false);
 	ecs::Ecs::addComponent<ecs::component::Keyboard>(ship);
+
 
 	auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[ship].keyMap;
 	keymap[KeyKeyboard::ESCAPE] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {rtype._window->close();});
@@ -111,20 +118,21 @@ int main() {
 			ID bullet = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, 10, 0);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
+			ecs::Ecs::addComponent<game::component::Type>(bullet, game::component::Type::Types::BULLET_SHIP);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].x + 100, ecs::Ecs::getComponentMap<ecs::component::Position>()[parent].y);
 			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, bullet, false, [parent](ID self, ID other){
-				if (other != parent) {
-					TimedEventAdmin t;
-					ID explosion = ecs::entity::Entity::getId();
-					ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
-					ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
-					ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
-					if (!ecs::Ecs::idHasComponents<game::component::wall>(other))
-               					ecs::Ecs::deleteId(other);
-               				ecs::Ecs::deleteId(self);
-					t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
-				}
+				game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
+			if (type._type == game::component::Type::Types::BULLET_ENEMY || type._type == game::component::Type::Types::ENEMY) {
+				TimedEventAdmin t;
+				ID explosion = ecs::entity::Entity::getId();
+				ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
+				ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
+				ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
+               	ecs::Ecs::deleteId(other);
+               	ecs::Ecs::deleteId(self);
+				t.addEvent(500, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
+			}
         		});
 			m.addEvent(2, Time::Seconds, [bullet](){ecs::Ecs::deleteId(bullet);});
 			ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();

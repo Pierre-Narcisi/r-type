@@ -19,8 +19,8 @@ namespace ecs {namespace component {
 			this->x = x;
 			this->y = y;
 		}
-		float x;
-		float y;
+		float x = 0;
+		float y = 0;
 		Position &operator=(Position const &equal) {
 			this->x = equal.x;
 			this->y = equal.y;

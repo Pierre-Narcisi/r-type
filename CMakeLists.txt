@@ -13,8 +13,9 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 include_directories(Client/)
-include_directories(Client/src/game_engine)
+include_directories(Common/GameEngine)
 include_directories(Client/src/game)
+
 
 set(COMMONS_SRCS
 	Common/WindowsCtor.cpp
@@ -51,10 +52,63 @@ set(COMMONS_SRCS
 	Common/Event/HdlCollector.hpp
 	Common/Event/src/Event.cpp
 	Common/Event/src/HdlCollector.cpp
-	)
+)
+
+set(ECS_GRAPHICS
+	Common/GameEngine/component/graphical/AnimatedSprite.hpp
+	Common/GameEngine/component/graphical/AnimatedSpriteMap.hpp
+	Common/GameEngine/component/graphical/Sprite.hpp
+	Common/GameEngine/system/graphical/Graphicals.cpp
+	Common/GameEngine/system/graphical/Graphicals.hpp
+	Common/GameEngine/component/graphical/Drawable.hpp
+)
+
+set(ECS_PHYSIC
+	Common/GameEngine/component/physic/Position.hpp
+	Common/GameEngine/component/physic/Speed.hpp
+	Common/GameEngine/component/physic/Acceleration.hpp
+	Common/GameEngine/system/physic/Speeds.cpp
+	Common/GameEngine/system/physic/Speeds.hpp
+	Common/GameEngine/system/physic/Acceleration.cpp
+	Common/GameEngine/system/physic/Acceleration.hpp
+	Common/GameEngine/component/physic/Hitbox.hpp
+)
+
+set(ECS_CORE
+	Common/GameEngine/ecs/Ecs.hpp
+	Common/GameEngine/ecs/Entity.cpp
+	Common/GameEngine/ecs/Entity.hpp
+	Common/GameEngine/ecs/ListComponent.hpp
+	Common/GameEngine/ecs/DataBank.hpp
+
+	Common/GameEngine/core/CoreVector.hpp
+	Common/GameEngine/core/Time.cpp
+	Common/GameEngine/core/Time.hpp
+)
+
+set(ECS_SFML
+	Common/GameEngine/sfml/Graphic.cpp
+	Common/GameEngine/sfml/Graphic.hpp
+
+	Common/GameEngine/component/audio/Sound.hpp
+
+	Common/GameEngine/component/control/Keyboard.hpp
+	Common/GameEngine/component/control/Mouse.hpp
+	Common/GameEngine/component/control/Controller.hpp
+	Common/GameEngine/system/control/Controls.hpp
+	Common/GameEngine/system/control/Controls.cpp
+	Common/GameEngine/component/control/DeplacementKeyBoard.hpp
+	Common/GameEngine/component/control/DeplacementMouse.hpp
+)
+
 
 add_executable(rtype
 	${COMMONS_SRCS}
+
+	${ECS_GRAPHICS}
+	${ECS_PHYSIC}
+	${ECS_CORE}
+	${ECS_SFML}
 
 	Client/lib/TimedEvent/TimedEvent.cpp
 	Client/lib/TimedEvent/TimedEvent.hpp
@@ -66,51 +120,24 @@ add_executable(rtype
 	Client/src/game/enemy/enemy1/enemy1.cpp
 	Client/src/game/enemy/enemy2/enemy2.hpp
 	Client/src/game/enemy/enemy2/enemy2.cpp
+	Client/src/game/enemy/enemy3/enemy3.hpp
+	Client/src/game/enemy/enemy3/enemy3.cpp
 	Client/src/game/system/ai.cpp
 	Client/src/game/system/walls.cpp
 	Client/src/game/system/gen.cpp
 	Client/src/game/system/ai.hpp
 	Client/src/game/enemy/enemy.hpp
 
-	Client/src/game_engine/ecs/Ecs.hpp
-	Client/src/game_engine/ecs/Entity.cpp
-	Client/src/game_engine/ecs/Entity.hpp
-	Client/src/game_engine/ecs/ListComponent.hpp
-	Client/src/game_engine/core/CoreVector.hpp
-	Client/src/game_engine/component/graphical/AnimatedSprite.hpp
-	Client/src/game_engine/component/graphical/AnimatedSpriteMap.hpp
-	Client/src/game_engine/core/Time.cpp
-	Client/src/game_engine/core/Time.hpp
-	Client/src/game_engine/sfml/Graphic.cpp
-	Client/src/game_engine/sfml/Graphic.hpp
-	Client/src/game_engine/component/control/Keyboard.hpp
-	Client/src/game_engine/component/control/Mouse.hpp
-	Client/src/game_engine/component/control/Controller.hpp
-	Client/src/game_engine/system/control/Controls.hpp
-	Client/src/game_engine/system/control/Controls.cpp Client/src/Main.cpp
-	Client/src/game_engine/component/graphical/Sprite.hpp
-	Client/src/game_engine/system/graphical/Graphicals.cpp
-	Client/src/game_engine/system/graphical/Graphicals.hpp
-	Client/src/game_engine/component/physic/Position.hpp
-	Client/src/game_engine/component/control/DeplacementKeyBoard.hpp
-	Client/src/game_engine/component/physic/Speed.hpp
-	Client/src/game_engine/component/physic/Acceleration.hpp
-	Client/src/game_engine/system/physic/Speeds.cpp
-	Client/src/game_engine/system/physic/Speeds.hpp
-	Client/src/game_engine/system/physic/Acceleration.cpp
-	Client/src/game_engine/system/physic/Acceleration.hpp
-	Client/src/game_engine/component/physic/Hitbox.hpp
-	Client/src/game_engine/component/graphical/Drawable.hpp
-	Client/src/game_engine/ecs/DataBank.hpp
-	Client/src/game_engine/component/audio/Sound.hpp
-	Client/src/game_engine/component/control/DeplacementMouse.hpp
-
 	Client/src/game/component/Parallax.hpp
 	Client/src/game/system/Parallaxs.hpp
 	Client/src/game/system/Parallaxs.cpp
 
+<<<<<<< HEAD
 	Client/src/game/menu/Menu.hpp
 
+=======
+	Client/src/Main.cpp
+>>>>>>> 9039475ccc174b3acb740d82c68820a86c9655fa
 )
 
 find_package (Threads)
@@ -129,6 +156,9 @@ include_directories(Common)
 
 add_executable(server
 	${COMMONS_SRCS}
+
+	${ECS_PHYSIC}
+	${ECS_CORE}
 
 	Server/src/Main.cpp
 
