@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "component/graphical/Sprite.hpp"
 
 namespace game {

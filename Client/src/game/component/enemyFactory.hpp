@@ -25,10 +25,21 @@ namespace game {namespace component {
 			std::uniform_int_distribution<int> distribution(180,600);
 			y = distribution(generator);
 			for (int i = 0; i < nb; i++) {
-				TimedEvent::get().addEvent(0.25 * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, this));
+				TimedEvent::get().addEvent(2 * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, this));
 			}
 			distribution.reset();
 		}
-		int y;
+		enemyFactory(int nb, float freq) {
+			TimedEventAdmin admin;
+
+			std::random_device generator;
+			std::uniform_int_distribution<int> distribution(180,600);
+			y = distribution(generator);
+			for (int i = 0; i < nb; i++) {
+				TimedEvent::get().addEvent(freq * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, this));
+			}
+			distribution.reset();
+		}
+		int y = 400;
 	};
 }}

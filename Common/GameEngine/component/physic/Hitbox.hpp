@@ -128,10 +128,10 @@ namespace ecs {namespace component {
 				this->func = function;
 				this->collidable = collidable;
 			}
-			float				height;
-			float				width;
+			float				height = 0;
+			float				width = 0;
 			std::function<void(ID, ID)>	func;
-			bool 				collidable;
-			bool				forceDeplacement;
+			bool 				collidable = false;
+			bool				forceDeplacement = false;
 		};
 	}}
