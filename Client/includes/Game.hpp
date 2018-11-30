@@ -17,6 +17,10 @@ public:
 	Game() = default;
 
 	void	start(ServerConnection &srv);
+private:
+	void	_onReceiveMove(proto::Move &packet);
+	void	_onReceiveCreate(proto::Create &packet);
+	void	_onReceiveDelete(proto::Delete &packet);
 };
 
 }

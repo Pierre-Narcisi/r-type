@@ -31,6 +31,8 @@ enum class Type: std::uint8_t {
 	PING,
 	UDP_REGISTER,
 	UDP_CONFIRM,
+	CREATE,
+	DELETE,
 	MOVE,
 	KEYPRESS,
 	KEYRELEASE
@@ -83,6 +85,21 @@ DECORATED_STRUCT(Move, {
 
 	Int32	x;
 	Int32	y;
+});
+
+DECORATED_STRUCT(Create, {
+	PROTO_BASE(Type::CREATE)
+
+	Int32	id;
+	Int32	x;
+	Int32	y;
+	Int32	spriteID;
+});
+
+DECORATED_STRUCT(Delete, {
+	PROTO_BASE(Type::DELETE)
+
+	Int32	id;
 });
 
 DECORATED_STRUCT(KeyPress, {

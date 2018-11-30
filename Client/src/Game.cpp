@@ -132,7 +132,18 @@ void	Game::start(ServerConnection &srv) {
 		auto list = srv.getAvailablePackets();
 
 		for (auto &packet: list) {
-			
+			switch (packet->type) {
+				case (proto::Type::MOVE):
+					_onReceiveMove(reinterpret_cast<proto::Move&>(*packet));
+					break;
+				case (proto::Type::CREATE):
+					_onReceiveCreate(reinterpret_cast<proto::Create&>(*packet));
+					break;
+				case (proto::Type::DELETE):
+					_onReceiveDelete(reinterpret_cast<proto::Delete&>(*packet));
+					break;
+				default: break;
+			}
 		}
 
 		game.update();
@@ -142,6 +153,18 @@ void	Game::start(ServerConnection &srv) {
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}
+}
+
+void	Game::_onReceiveMove(proto::Move &packet) {
+	//Do something;
+}
+
+void	Game::_onReceiveCreate(proto::Create &packet) {
+	//Do something;
+}
+
+void	Game::_onReceiveDelete(proto::Delete &packet) {
+	//Do something;
 }
 
 }
