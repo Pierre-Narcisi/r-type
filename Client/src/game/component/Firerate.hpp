@@ -7,6 +7,8 @@
 #include <chrono>
 #include <ctime>
 
+#pragma once
+
 namespace game {
     struct Firerate {
         Firerate() {}

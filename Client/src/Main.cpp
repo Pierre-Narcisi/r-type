@@ -38,6 +38,10 @@
 #include "game/component/Types.hpp"
 #include "game/component/Firerate.hpp"
 #include "game/component/AnimationRtype.hpp"
+
+#include "game/menu/Menu.hpp"
+#include "game/menu/Selection.hpp"
+
 #include "game/system/Parallaxs.hpp"
 #include "WindowsCtor.hpp"
 #include "game/system/Fire.hpp"
@@ -46,6 +50,17 @@
 
 int main() {
 	initWSA(); //Need by Windows
+	{
+		rtype::Menu menu;
+
+		menu.run();
+	}
+
+	{
+		rtype::Selection selection;
+
+		selection.run();
+	}
 
 	std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
@@ -62,18 +77,18 @@ int main() {
 		return buffer;
 	};
 
-	/*ID limitTop = ecs::entity::Entity::getId();
+	ID limitTop = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitTop, 1280/2, 0);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280.f, 1.f, true);
 	ID limitBottom = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitBottom, 1280/2, 720);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitBottom, 1280, 1, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitBottom, 1280.f, 1.f, true);
 	ID limitLeft = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitLeft, 0, 720/2);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1, 720, true);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1.f, 720.f, true);
 	ID limitRight = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Position>(limitRight, 1280, 720/2);
-	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1, 720, true);*/
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1.f, 720.f, true);
 
 
 	game::system::gen Gen;
@@ -122,3 +137,4 @@ int main() {
 
 	closeWSA();
 }
+
