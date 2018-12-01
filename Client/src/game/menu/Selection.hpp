@@ -56,10 +56,6 @@ namespace rtype {
                 bool    continue_ = true;
                 auto    &game = ecs::Ecs::get();
                 auto    &rtype = ecs::graphical::Graphic::get();
-
-                addRoom("salut", 1, 4, 2);
-                addRoom("salut2", 2, 4, 1);
-
                 
 
                 ID background = ecs::entity::Entity::getId();
@@ -123,27 +119,27 @@ namespace rtype {
                 ID name = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<ecs::component::Position>(name, 1280/4, 300);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(name, 10, true);
-                ecs::Ecs::addComponent<ecs::component::TextDisplay>(name, "assets/PressStart.ttf", "NAME", 1280/4, 230, false, sf::Color::Red, 30);
+                ecs::Ecs::addComponent<ecs::component::TextDisplay>(name, "assets/PressStart.ttf", "NAME", 1280/4, 230, false, sf::Color::Black, 30);
 
                 ID txt_current_nbr = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<ecs::component::Position>(txt_current_nbr, 1280/4, 720/2 - 60);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(txt_current_nbr, 10, true);
-                ecs::Ecs::addComponent<ecs::component::TextDisplay>(txt_current_nbr, "assets/PressStart.ttf", "Current player :", 1280/4, 720/2 - 60, false, sf::Color::Red, 25);
+                ecs::Ecs::addComponent<ecs::component::TextDisplay>(txt_current_nbr, "assets/PressStart.ttf", "Current player :", 1280/4, 720/2 - 60, false, sf::Color::Black, 25);
 
                 ID actual_nbr = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<ecs::component::Position>(actual_nbr, 1280/4, 720/2 - 30);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(actual_nbr, 10, true);
-                ecs::Ecs::addComponent<ecs::component::TextDisplay>(actual_nbr, "assets/PressStart.ttf", "1", 1280/4, 720/2 - 30, false, sf::Color::Red, 25);
+                ecs::Ecs::addComponent<ecs::component::TextDisplay>(actual_nbr, "assets/PressStart.ttf", "1", 1280/4, 720/2 - 30, false, sf::Color::Black, 25);
 
                 ID txt_max_nbr = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<ecs::component::Position>(txt_max_nbr, 1280/4, 720/2 + 30);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(txt_max_nbr, 10, true);
-                ecs::Ecs::addComponent<ecs::component::TextDisplay>(txt_max_nbr, "assets/PressStart.ttf", "Max player :", 1280/4, 720/2 + 30, false, sf::Color::Red, 25);
+                ecs::Ecs::addComponent<ecs::component::TextDisplay>(txt_max_nbr, "assets/PressStart.ttf", "Max player :", 1280/4, 720/2 + 30, false, sf::Color::Black, 25);
 
                 ID max_nbr = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<ecs::component::Position>(max_nbr, 1280/4, 720/2 + 60);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(max_nbr, 10, true);
-                ecs::Ecs::addComponent<ecs::component::TextDisplay>(max_nbr, "assets/PressStart.ttf", "4", 1280/4, 720/2 + 60, false, sf::Color::Red, 25);
+                ecs::Ecs::addComponent<ecs::component::TextDisplay>(max_nbr, "assets/PressStart.ttf", "4", 1280/4, 720/2 + 60, false, sf::Color::Black, 25);
 
                 ID back = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<ecs::component::Position>(back, 1280/4, 720/2);
@@ -166,17 +162,17 @@ namespace rtype {
                 ecs::Ecs::addComponent<ecs::component::Position>(buttonJoin, 1280/4, 640);
                 ecs::Ecs::addComponent<ecs::component::Speed>(buttonJoin);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(buttonJoin, 0, true);
-                ecs::Ecs::addComponent<ecs::component::Sprite>(buttonJoin, "assets/css-buttons.png");
+                ecs::Ecs::addComponent<ecs::component::Sprite>(buttonJoin, "assets/buttonJoin.png");
                 ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonJoin, buttonJoin, false, [&continue_](ID self, ID other){
                     if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
                         continue_ = false;
                 });
 
                 ID buttonCreate = ecs::entity::Entity::getId();
-                ecs::Ecs::addComponent<ecs::component::Position>(buttonCreate, 1280 - 1280/ 4, 500);
+                ecs::Ecs::addComponent<ecs::component::Position>(buttonCreate, 1280 - 1280/ 4, 530);
                 ecs::Ecs::addComponent<ecs::component::Speed>(buttonCreate);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(buttonCreate, 0, true);
-                ecs::Ecs::addComponent<ecs::component::Sprite>(buttonCreate, "assets/css-buttons.png");
+                ecs::Ecs::addComponent<ecs::component::Sprite>(buttonCreate, "assets/buttonCreateAndJoin.png");
                 ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonCreate, buttonCreate, false, [&continue_](ID self, ID other){
                     if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
                         continue_ = false;
@@ -185,7 +181,7 @@ namespace rtype {
                 _componentsId = { background, buttonJoin, mouse, text, back, max_nbr, actual_nbr, txt_current_nbr, txt_max_nbr, name, buttonPrev, buttonNext, buttonCreate, buttonJoin, inputCreation, txtCreation };
 
 
-                game.addUpdate(100, [this, name, actual_nbr, max_nbr](){
+                game.addUpdate(100, [this, name, actual_nbr, max_nbr, txt_current_nbr, txt_max_nbr](){
                     if (_rooms.size() > 0){
                         auto ids = ecs::Ecs::filter<ecs::component::TextDisplay>();
                         auto &txt = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>();
@@ -201,6 +197,19 @@ namespace rtype {
                             if (id == max_nbr)
                             {
                                 txt[id]._str = std::to_string(_rooms[_index].maxNbr);
+                            }
+                        }
+                    }
+                    else {
+                        auto ids = ecs::Ecs::filter<ecs::component::TextDisplay>();
+                        auto &txt = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>();
+                         for (auto id : ids) {
+                            if (id == name || id == actual_nbr || id == max_nbr || id == txt_max_nbr){
+                                txt[id]._str = "";
+                            }
+                            else if (id == txt_current_nbr)
+                            {
+                                txt[id]._str = "No Rooms";
                             }
                         }
                     }
