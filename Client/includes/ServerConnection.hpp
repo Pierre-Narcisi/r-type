@@ -18,6 +18,8 @@
 
 namespace rtype {
 
+class Game;
+
 class ServerConnection: private common::JsonBuilder {
 public:
 	ServerConnection(): JsonBuilder(_tcpSock) {}
@@ -55,10 +57,13 @@ private:
 
 	bool			_isStarted = false;
 	long			_id;
+	long			_sessionId = 1; //TODO: CHANGE!!!!!
 	std::string		_username;
 
 	void			*_threadPtr = nullptr;
 	bool			_continue = true;
+
+	friend			Game;
 };
 
 }

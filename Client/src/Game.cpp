@@ -158,6 +158,7 @@ void	Game::start(ServerConnection &srv) {
 
 void	Game::_onReceiveMove(proto::Move &packet) {
 	//Do something;
+	
 }
 
 void	Game::_onReceiveCreate(proto::Create &packet) {
