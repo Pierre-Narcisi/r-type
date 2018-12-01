@@ -23,9 +23,9 @@ namespace ecs {namespace graphical {
 
 			if (_event.type == sf::Event::EventType::TextEntered)
 				ecs::component::TextInput(_event);
-			system::Controls::UpdateKeyboardsEvent(_event);
-			system::Controls::UpdateMousesEvents(_event);
-			system::Controls::UpdateControllers(_event);
+			system::ControlsSFML::UpdateKeyboardsEvent(_event);
+			system::ControlsSFML::UpdateMousesEvents(_event);
+			system::ControlsSFML::UpdateControllers(_event);
 		}
 
 		ecs::system::Graphicals::UpdateGraphicals();

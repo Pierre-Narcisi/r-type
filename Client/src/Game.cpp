@@ -5,46 +5,12 @@
 ** Game.cpp
 */
 
-#include "component/ai.hpp"
-#include "system/gen.hpp"
-#include "enemy/enemy1/enemy1.hpp"
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include "game/system/walls.hpp"
-#include "system/ai.hpp"
-#include <zconf.h>
-#include <ecs/Entity.hpp>
-#include <ecs/Ecs.hpp>
-#include <component/graphical/Sprite.hpp>
-#include <system/graphical/Graphicals.hpp>
-#include <component/physic/Position.hpp>
-#include <component/control/DeplacementKeyBoard.hpp>
-#include <component/physic/Speed.hpp>
-#include <system/physic/Speeds.hpp>
-#include <component/physic/Hitbox.hpp>
-#include <component/graphical/AnimatedSprite.hpp>
-#include <component/graphical/AnimatedSpriteMap.hpp>
-#include <component/graphical/Drawable.hpp>
-#include <ecs/DataBank.hpp>
-#include <component/audio/Sound.hpp>
-#include <component/control/DeplacementMouse.hpp>
-#include <component/online/OnlineComponent.hpp>
-#include "sfml/Graphic.hpp"
-#include "core/Time.hpp"
-#include "../lib/TimedEvent/TimedEventAdmin.hpp"
-#include "game/component/Parallax.hpp"
-#include "game/component/Firerate.hpp"
-#include "game/component/AnimationRtype.hpp"
-#include "game/system/Parallaxs.hpp"
-
-#include "game/menu/Menu.hpp"
+#include "Game.hpp"
+#include "ecs/Ecs.hpp"
+#include "src/game/menu/Menu.hpp"
+#include "system/control/Controls.hpp"
+#include "component/online/OnlineComponent.hpp"
 #include "game/menu/Selection.hpp"
-
-#include "game/system/Fire.hpp"
-#include "component/Bonuses.hpp"
-#include "system/Bonuses.hpp"
-
 #include "Game.hpp"
 
 namespace rtype {
@@ -190,7 +156,6 @@ void	Game::start(ServerConnection &srv) {
 	_keyboardFactory<KeyKeyboard::KEY_D>(keyboard, srv);
 	_keyboardFactory<KeyKeyboard::SPACE>(keyboard, srv);
 
-	std::cout << "in front of the door" << std::endl;
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		auto list = srv.getAvailablePackets();
@@ -198,12 +163,15 @@ void	Game::start(ServerConnection &srv) {
 		for (auto &packet: list) {
 			switch (packet->type) {
 				case (proto::Type::MOVE):
+					std::cout << "MOVE" << std::endl;
 					_onReceiveMove(reinterpret_cast<proto::Move&>(*packet));
 					break;
 				case (proto::Type::CREATE):
+					std::cout << "CREATE" << std::endl;
 					_onReceiveCreate(reinterpret_cast<proto::Create&>(*packet));
 					break;
 				case (proto::Type::DELETE):
+					std::cout << "DELETE" << std::endl;
 					_onReceiveDelete(reinterpret_cast<proto::Delete&>(*packet));
 					break;
 				default: break;
@@ -211,8 +179,6 @@ void	Game::start(ServerConnection &srv) {
 		}
 
 		game.update();
-
-		//std::cout << ecs::Ecs::get()._deleteIds.size() << std::endl;
 
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
@@ -235,7 +201,7 @@ void	Game::_onReceiveMove(proto::Move &packet) {
 
 void	Game::_onReceiveCreate(proto::Create &packet) {
 	ID id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id);
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 3, true);
 	ecs::Ecs::addComponent<ecs::component::Position>(id, packet.x(), packet.y());
 	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, packet.componentId(), packet.spriteID());
 	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "assets/Sprite/Ship/BlueShip/BlueShip3.png");

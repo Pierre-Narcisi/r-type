@@ -93,16 +93,19 @@ set(ECS_SFML
 	Common/GameEngine/sfml/Graphic.hpp
 
 	Common/GameEngine/component/audio/Sound.hpp
+	Common/GameEngine/system/control/ControlsSFML.hpp
+	Common/GameEngine/system/control/ControlsSFML.cpp
+)
 
+set(ECS_CONTROLS
 	Common/GameEngine/component/control/Keyboard.hpp
 	Common/GameEngine/component/control/Mouse.hpp
 	Common/GameEngine/component/control/Controller.hpp
-	Common/GameEngine/system/control/Controls.hpp
-	Common/GameEngine/system/control/Controls.cpp
 	Common/GameEngine/component/control/LazyDeplacementMouse.hpp
 	Common/GameEngine/component/control/DeplacementKeyBoard.hpp
 	Common/GameEngine/component/control/DeplacementMouse.hpp
-)
+	Common/GameEngine/system/control/Controls.cpp
+	Common/GameEngine/system/control/Controls.hpp)
 
 
 add_executable(rtype
@@ -112,6 +115,7 @@ add_executable(rtype
 	${ECS_PHYSIC}
 	${ECS_CORE}
 	${ECS_SFML}
+	${ECS_CONTROLS}
 
 	Client/lib/TimedEvent/TimedEvent.cpp
 	Client/lib/TimedEvent/TimedEvent.hpp
@@ -169,6 +173,7 @@ add_executable(server
 
 	${ECS_PHYSIC}
 	${ECS_CORE}
+	${ECS_CONTROLS}
 
 	Server/src/Main.cpp
 

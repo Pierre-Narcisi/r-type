@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <iostream>
 #include "core/CoreVector.hpp"
-#include "system/control/Controls.hpp"
+#include "system/control/ControlsSFML.hpp"
 
 namespace ecs {namespace graphical {
 

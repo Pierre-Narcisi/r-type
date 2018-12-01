@@ -10,6 +10,7 @@
 #include <component/graphical/Drawable.hpp>
 #include <component/physic/Hitbox.hpp>
 #include <component/online/OnlineComponent.hpp>
+#include <component/control/DeplacementKeyBoard.hpp>
 #include "Event/Manager.hpp"
 #include "GameEngine/ecs/Ecs.hpp"
 #include "GameEngine/core/Time.hpp"
@@ -100,10 +101,8 @@ void	Session::_entryPoint() {
 					}
 				}
 
-				std::cout << "test1" << " id = " << playerId << std::endl;
-				
+
 				if (cont != nullptr) {
-					std::cout << "test2" << std::endl;
 					switch (packet->type) {
 						case proto::Type::KEYPRESS:
 							_game.onKeyPress(playerId, cont->ecsId, *reinterpret_cast<proto::KeyPress*>(packet.get()));
@@ -118,6 +117,7 @@ void	Session::_entryPoint() {
 			}
 		}
 		_game.update();
+
 
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
@@ -152,6 +152,8 @@ void	Session::addPlayer(ClientConnection &player) {
 		ecs::Ecs::addComponent<ecs::component::Position>(id, 50, 50);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100.f, 100.f);
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, 1);
+		ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
+		ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id);
 
 		cont->ecsId = id;
 

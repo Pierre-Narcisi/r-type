@@ -13,6 +13,7 @@
 #include <ecs/DataBank.hpp>
 #include <component/audio/Sound.hpp>
 #include <component/control/DeplacementMouse.hpp>
+#include <system/control/Controls.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../game/component/Parallax.hpp"
