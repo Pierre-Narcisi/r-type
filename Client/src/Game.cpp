@@ -124,6 +124,7 @@ void	Game::start(ServerConnection &srv) {
 	game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
 	game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
 	game.addUpdate(9, &game::system::ai::updateAi);
+	game.addUpdate(8, &game::system::Bonuses::UpdateBonuses);
 	game.addUpdate(8, [&Walls](){Walls.updateWalls();});
 	game.addUpdate(9, [&Gen](){Gen.updateGen();});
 
