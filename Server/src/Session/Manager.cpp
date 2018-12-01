@@ -68,7 +68,7 @@ void	Manager::_entryPoint() {
 				}
 			}
 
-		
+			ep = nw::UdpEndpoint();
 			recvBuffer.len = sizeof(buf);
 		}
 		end = std::chrono::high_resolution_clock::now();

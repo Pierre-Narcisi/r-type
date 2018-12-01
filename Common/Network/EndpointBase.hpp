@@ -33,14 +33,16 @@ public:
 
 	static inline auto getIp(sockaddr const &addr);
 
-	std::uint16_t	getPort() const { return ntohs(this->_port); }
+	std::uint16_t	getPort() const {
+		return ntohs(this->_port || reinterpret_cast<sockaddr_in*>(_ai[0].get())->sin_port);
+	}
 protected:
 	inline void	_fromIpPort(std::string const ip, std::uint16_t port);
 	inline void	_fromAddr(struct sockaddr_in addr);
 
 	std::vector<std::shared_ptr<sockaddr>>	_ai;
 
-	std::uint16_t	_port;
+	std::uint16_t	_port = 0;
 	int				_family;
 	int				_socktype;
 	int				_protocol;
