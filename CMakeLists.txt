@@ -97,6 +97,7 @@ set(ECS_SFML
 	Common/GameEngine/component/control/Controller.hpp
 	Common/GameEngine/system/control/Controls.hpp
 	Common/GameEngine/system/control/Controls.cpp
+	Common/GameEngine/component/control/LazyDeplacementMouse.hpp
 	Common/GameEngine/component/control/DeplacementKeyBoard.hpp
 	Common/GameEngine/component/control/DeplacementMouse.hpp
 )
@@ -123,14 +124,19 @@ add_executable(rtype
 	Client/src/game/enemy/enemy3/enemy3.hpp
 	Client/src/game/enemy/enemy3/enemy3.cpp
 	Client/src/game/system/ai.cpp
+	Client/src/game/system/ai.hpp
+	Client/src/game/system/Fire.cpp
+	Client/src/game/system/Fire.hpp
+	Client/src/game/system/Bonuses.cpp
 	Client/src/game/system/walls.cpp
 	Client/src/game/system/gen.cpp
-	Client/src/game/system/ai.hpp
 	Client/src/game/enemy/enemy.hpp
 
 	Client/src/game/component/Parallax.hpp
 	Client/src/game/system/Parallaxs.hpp
 	Client/src/game/system/Parallaxs.cpp
+
+	Client/src/game/menu/Menu.hpp
 
 	Client/src/Main.cpp
 )

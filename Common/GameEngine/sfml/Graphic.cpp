@@ -6,6 +6,7 @@
 */
 
 #include <system/graphical/Graphicals.hpp>
+#include <menu/TextDisplay.hpp>
 #include "Graphic.hpp"
 
 namespace ecs {namespace graphical {
@@ -20,13 +21,11 @@ namespace ecs {namespace graphical {
 			if (_event.type == sf::Event::Closed)
 				_window->close();
 
+			if (_event.type == sf::Event::EventType::TextEntered)
+				ecs::component::TextInput(_event);
 			system::Controls::UpdateKeyboards(_event);
 			system::Controls::UpdateMouses(_event);
-			if (_event.type == sf::Event::EventType::JoystickButtonPressed ||
-				   _event.type == sf::Event::EventType::JoystickButtonReleased ||
-				   _event.type == sf::Event::EventType::JoystickMoved) {
-				system::Controls::UpdateControllers(_event);
-			}
+			system::Controls::UpdateControllers(_event);
 		}
 
 		ecs::system::Graphicals::UpdateGraphicals();

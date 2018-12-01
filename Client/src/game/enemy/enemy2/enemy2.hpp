@@ -14,6 +14,7 @@
 #include "core/Time.hpp"
 #include "lib/TimedEvent/TimedEventAdmin.hpp"
 #include <ecs/Ecs.hpp>
+#include "component/Bonuses.hpp"
 #include <ecs/DataBank.hpp>
 #include "system/walls.hpp"
 
