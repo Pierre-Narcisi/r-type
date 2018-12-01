@@ -78,7 +78,7 @@ namespace rtype {
                         if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
                         {
                             this->_index += 1;
-                            if (_index > _rooms.size() - 1)
+                            if (_index > (int) _rooms.size() - 1)
                                 this->_index = 0;
                         }
                         ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();
