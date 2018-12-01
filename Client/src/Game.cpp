@@ -190,9 +190,6 @@ void	Game::start(ServerConnection &srv) {
 	_keyboardFactory<KeyKeyboard::KEY_D>(keyboard, srv);
 	_keyboardFactory<KeyKeyboard::SPACE>(keyboard, srv);
 
-
-	std::this_thread::sleep_for(std::chrono::milliseconds(250));
-	while (!rtype.isOpen());
 	std::cout << "in front of the door" << std::endl;
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);

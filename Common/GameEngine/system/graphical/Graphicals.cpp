@@ -27,11 +27,11 @@ namespace ecs {namespace system {
 
 		auto window = graphical::Graphic::getWindow();
 
-		for (auto id = drawableIds.begin(); id != drawableIds.end(); id++) {
+		for (auto id = drawableIds.begin(); id != drawableIds.end();) {
 			if (!drawables[*id].visible) {
-				drawableIds.erase(id);
-				if (id != drawableIds.begin())
-					id--;
+				id = drawableIds.erase(id);
+			} else {
+				id++;
 			}
 		}
 		std::sort (drawableIds.begin(), drawableIds.end(), [](ID one, ID two){ return (
