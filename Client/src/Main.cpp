@@ -47,16 +47,6 @@ int main(int ac, char **av) {
 		
 		return (84);
 	}
-	auto loginRes = srv.login("ben");
-	if (loginRes["status"] == false) {
-		rtype::MsgBox::show("Login failed", "(!) " + loginRes["error"]["message"].to<std::string>());
-		return (0); //TODO: change this !!
-	}
-	auto createRes = srv.makeSession("session1", 8);
-	if (createRes["status"] == false) {
-		rtype::MsgBox::show("Session create failed", "(!) " + createRes["error"]["message"].to<std::string>());
-	}
-	std::cout << srv.getSessions() << std::endl;
 	
 	srv.run();
 
@@ -66,3 +56,4 @@ int main(int ac, char **av) {
 
 	closeWSA();
 }
+

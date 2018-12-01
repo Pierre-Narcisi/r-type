@@ -9,6 +9,7 @@
 #include <component/graphical/Drawable.hpp>
 #include "component/graphical/Sprite.hpp"
 #include "component/physic/Position.hpp"
+#include "../game/menu/TextDisplay.hpp"
 #include "ecs/Ecs.hpp"
 #include "core/Time.hpp"
 #include "Graphicals.hpp"
@@ -22,6 +23,7 @@ namespace ecs {namespace system {
 		auto &positions = Ecs::getComponentMap<component::Position>();
 		auto &animateds = Ecs::getComponentMap<component::AnimatedSprite>();
 		auto &animatedmaps = Ecs::getComponentMap<component::AnimatedSpriteMap>();
+		auto &texts = Ecs::getComponentMap<component::TextDisplay>();
 
 		auto window = graphical::Graphic::getWindow();
 
@@ -50,6 +52,12 @@ namespace ecs {namespace system {
 				UpdateAnimatedSprite(animatedmaps[id].animatedSprites[animatedmaps[id].pos]);
 				animatedmaps[id].animatedSprites[animatedmaps[id].pos].animation[animatedmaps[id].animatedSprites[animatedmaps[id].pos].frame].sprite->setPosition(positions[id].x, positions[id].y);
 				window->draw(*animatedmaps[id].animatedSprites[animatedmaps[id].pos].animation[animatedmaps[id].animatedSprites[animatedmaps[id].pos].frame].sprite);
+			}
+			if (Ecs::idHasComponents<component::TextDisplay>(id)) {
+				texts[id]._text->setString(texts[id]._str);
+				texts[id]._text->setPosition(texts[id]._pos.x, texts[id]._pos.y);
+				texts[id]._text->setOrigin(texts[id]._text->getLocalBounds().width/2, texts[id]._text->getLocalBounds().height/2);
+				window->draw(*texts[id]._text);
 			}
 		}
 	}

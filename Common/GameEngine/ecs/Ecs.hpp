@@ -69,6 +69,10 @@ namespace ecs{
     	    updates.emplace(priority, function);
     	}
 
+		void clearUpdates() {
+			updates.clear();
+		}
+
 	    void update () {
    	    	for (auto &func : updates) {
    		     	func.second();

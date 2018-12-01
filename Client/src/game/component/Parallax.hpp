@@ -1,3 +1,6 @@
+#pragma once
+
+#pragma once
 
 #include "component/graphical/Sprite.hpp"
 

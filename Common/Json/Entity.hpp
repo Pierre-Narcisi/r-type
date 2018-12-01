@@ -96,15 +96,39 @@ namespace json
 		T	to() const;
 		
 		template<typename T>
-		T	&getData()
-		{
-			return *(static_cast<T*>(_data.get()));
+		T	&getData() {
+			return *(reinterpret_cast<T*>(_data.get()));
+		}
+
+		template<typename T>
+		const T	&getData() const {
+			return *(reinterpret_cast<T*>(_data.get()));
+		}
+
+		template<typename T>
+		auto	&value() {
+			return (reinterpret_cast<T*>(_data.get()))->get();
+		}
+
+		template<typename T>
+		const auto	&value() const {
+			return (reinterpret_cast<T*>(_data.get()))->get();
+		}
+
+		template<typename T, typename U>
+		U	value() {
+			return (reinterpret_cast<T*>(_data.get()))->get();
+		}
+
+		template<typename T, typename U>
+		U	value() const {
+			return (reinterpret_cast<T*>(_data.get()))->get();
 		}
 
 		template<typename T>
 		const T	&constGetData() const
 		{
-			return *(static_cast<T*>(_data.get()));
+			return *(reinterpret_cast<T*>(_data.get()));
 		}
 
 		static inline Entity	newObject()
