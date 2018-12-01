@@ -111,7 +111,7 @@ namespace ecs {namespace system {
 		}
 	}
 
-	void Controls::UpdateKeyboards(sf::Event &event) {
+	void Controls::UpdateKeyboardsEvent(sf::Event &event) {
 		auto &keyboards = ecs::Ecs::getComponentMap<component::Keyboard>();
 
 		for (auto &keyboard : keyboards) {
@@ -121,13 +121,22 @@ namespace ecs {namespace system {
 				} else {
 					keyboard.second.keyMap[it->first].first = false;
 				}
-				if (keyboard.second.keyMap[it->first].first && keyboard.second.keyMap[it->first].second)
+			}
+		}
+	}
+
+	void Controls::UpdateKeyboards() {
+		auto &keyboards = ecs::Ecs::getComponentMap<component::Keyboard>();
+
+		for (auto &keyboard : keyboards) {
+			for (auto it = keyboard.second.keyMap.begin(); it != keyboard.second.keyMap.end(); it++) {
+				if (keyboard.second.keyMap[it->first].second)
 					keyboard.second.keyMap[it->first].second(keyboard.first);
 			}
 		}
 	}
 
-	void Controls::UpdateMouses(sf::Event &event) {
+	void Controls::UpdateMousesEvents(sf::Event &event) {
 		auto &mouses = ecs::Ecs::getComponentMap<component::Mouse>();
 
 		for (auto &mouse : mouses) {
@@ -143,6 +152,17 @@ namespace ecs {namespace system {
 			if (event.type == sf::Event::EventType::MouseMoved) {
 				mouse.second.position.x = event.mouseMove.x;
 				mouse.second.position.y = event.mouseMove.y;
+			}
+		}
+	}
+
+	void Controls::UpdateMouses() {
+		auto &mouses = ecs::Ecs::getComponentMap<component::Mouse>();
+
+		for (auto &mouse : mouses) {
+			for (auto it = mouse.second.mouseMap.begin(); it != mouse.second.mouseMap.end(); it++) {
+				if (mouse.second.mouseMap[it->first].second)
+					mouse.second.mouseMap[it->first].second(mouse.first);
 			}
 		}
 	}

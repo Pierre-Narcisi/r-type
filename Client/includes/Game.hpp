@@ -8,6 +8,7 @@
 #if !defined(_GAMECLIENT_HPP)
 #define _GAMECLIENT_HPP
 
+#include "component/control/Keyboard.hpp"
 #include "ServerConnection.hpp"
 
 namespace rtype {
@@ -21,6 +22,9 @@ private:
 	void	_onReceiveMove(proto::Move &packet);
 	void	_onReceiveCreate(proto::Create &packet);
 	void	_onReceiveDelete(proto::Delete &packet);
+
+	template <KeyKeyboard KEY>
+	void 	_keyboardFactory(ID keyboard, ServerConnection &srv);
 };
 
 }

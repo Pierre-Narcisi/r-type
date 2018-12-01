@@ -20,7 +20,6 @@
 #include <system/graphical/Graphicals.hpp>
 #include <component/physic/Position.hpp>
 #include <component/control/DeplacementKeyBoard.hpp>
-#include <component/control/Keyboard.hpp>
 #include <component/physic/Speed.hpp>
 #include <system/physic/Speeds.hpp>
 #include <component/physic/Hitbox.hpp>
@@ -30,6 +29,7 @@
 #include <ecs/DataBank.hpp>
 #include <component/audio/Sound.hpp>
 #include <component/control/DeplacementMouse.hpp>
+#include <component/online/OnlineComponent.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../lib/TimedEvent/TimedEventAdmin.hpp"
@@ -49,6 +49,28 @@
 
 namespace rtype {
 
+template <KeyKeyboard KEY>
+void 	Game::_keyboardFactory(ID keyboard, ServerConnection &srv) {
+	auto &map = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[keyboard].keyMap;
+
+	map[KEY] = std::pair<bool, std::function<void(ID)>>(false, [&srv](ID id){
+		static bool key = false;
+		if (ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[id].keyMap[KEY].first && !key) {
+			std::cout << "send press Z" << std::endl;
+			proto::KeyPress	buf{proto::Type::KEYPRESS, srv._sessionId, srv._id, (uint8_t) KEY };
+			nw::UdpBuffer 	wbuf{reinterpret_cast<char*>(&buf), sizeof(buf)};
+			srv._udpSock.sendTo(wbuf, srv._serverEp);
+			key = true;
+		} else if (!ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[id].keyMap[KEY].first && key) {
+			std::cout << "send release Z" << std::endl;
+			proto::KeyRelease	buf{proto::Type::KEYRELEASE, srv._sessionId, srv._id, (uint8_t) KEY };
+			nw::UdpBuffer		wbuf{reinterpret_cast<char*>(&buf), sizeof(buf)};
+			srv._udpSock.sendTo(wbuf, srv._serverEp);
+			key = false;
+		}
+	});
+}
+
 void	Game::start(ServerConnection &srv) {
 	{
 		rtype::Menu menu;
@@ -64,10 +86,13 @@ void	Game::start(ServerConnection &srv) {
 	{
 		rtype::Selection selection;
 
-		selection.run(std::bind(&ServerConnection::getSessions, &srv));
+		std::cout << "TEST" << std::endl;
+		selection.run(srv);
+		std::cout << "TEST" << std::endl;
 	}
 
-	std::srand(std::time(nullptr));
+
+	/*std::srand(std::time(nullptr));
 	auto &rtype = ecs::graphical::Graphic::get();
 	ecs::DataBank<std::string, sf::SoundBuffer>::get().creator = [](std::string path){
 		sf::SoundBuffer buffer;
@@ -116,18 +141,59 @@ void	Game::start(ServerConnection &srv) {
 	auto &keymap = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[ship].keyMap;
 	keymap[KeyKeyboard::ESCAPE] = std::pair<bool, std::function<void(ID)>>(false, [&rtype](ID parent) {rtype._window->close();});
 	keymap[KeyKeyboard::SPACE] = std::pair<bool, std::function<void(ID)>>(false, &game::system::Fire::shoot);
-	
-	auto &game = ecs::Ecs::get();
+	keymap[KeyKeyboard::KEY_Z] = std::pair<bool, std::function<void(ID)>>(false, [](){
+		proto::KeyPress	buf{proto::Type::KEYPRESS, srv._sessionId, srv._id, (uint8_t) KeyKeyboard::KEY_Z };
+		nw::UdpBuffer 	wbuf{reinterpret_cast<char*>(&buf), sizeof(buf)};
 
-	game.addUpdate(100, [&rtype](){rtype.update();});
-	game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
-	game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
+		srv._udpSock.sendTo(wbuf, srv._serverEp);
+	});
+
+
 	game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
 	game.addUpdate(9, &game::system::ai::updateAi);
 	game.addUpdate(8, &game::system::Bonuses::UpdateBonuses);
 	game.addUpdate(8, [&Walls](){Walls.updateWalls();});
 	game.addUpdate(9, [&Gen](){Gen.updateGen();});
+	 */
+	auto &game = ecs::Ecs::get();
 
+	auto &rtype = ecs::graphical::Graphic::get();
+	game.addUpdate(100, [&rtype](){rtype.update();});
+	game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
+	game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
+	game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
+	game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
+
+	ID keyboard = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Keyboard>(keyboard);
+	/*auto &map = ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[keyboard].keyMap;
+	map[KeyKeyboard::KEY_Z] = std::pair<bool, std::function<void(ID)>>(false, [&srv](ID id){
+		static bool key = false;
+		if (ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::KEY_Z].first && !key) {
+			std::cout << "send press Z" << std::endl;
+			proto::KeyPress	buf{proto::Type::KEYPRESS, srv._sessionId, srv._id, (uint8_t) KeyKeyboard::KEY_Z };
+			nw::UdpBuffer 	wbuf{reinterpret_cast<char*>(&buf), sizeof(buf)};
+			srv._udpSock.sendTo(wbuf, srv._serverEp);
+			key = true;
+		} else if (!ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::KEY_Z].first && key) {
+			std::cout << "send release Z" << std::endl;
+			proto::KeyRelease	buf{proto::Type::KEYRELEASE, srv._sessionId, srv._id, (uint8_t) KeyKeyboard::KEY_Z };
+			nw::UdpBuffer		wbuf{reinterpret_cast<char*>(&buf), sizeof(buf)};
+			srv._udpSock.sendTo(wbuf, srv._serverEp);
+			key = false;
+		}
+	});*/
+
+	_keyboardFactory<KeyKeyboard::KEY_Z>(keyboard, srv);
+	_keyboardFactory<KeyKeyboard::KEY_Q>(keyboard, srv);
+	_keyboardFactory<KeyKeyboard::KEY_S>(keyboard, srv);
+	_keyboardFactory<KeyKeyboard::KEY_D>(keyboard, srv);
+	_keyboardFactory<KeyKeyboard::SPACE>(keyboard, srv);
+
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(250));
+	while (!rtype.isOpen());
+	std::cout << "in front of the door" << std::endl;
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		auto list = srv.getAvailablePackets();
@@ -157,16 +223,37 @@ void	Game::start(ServerConnection &srv) {
 }
 
 void	Game::_onReceiveMove(proto::Move &packet) {
-	//Do something;
-	
+	auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::OnlineComponent>();
+	auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
+
+	for (auto id : ids) {
+		if (online[id].onlineId == packet.componentId()) {
+			pos[id].x = packet.x();
+			pos[id].y = packet.y();
+			break;
+		}
+	}
 }
 
 void	Game::_onReceiveCreate(proto::Create &packet) {
-	//Do something;
+	ID id = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id);
+	ecs::Ecs::addComponent<ecs::component::Position>(id, packet.x(), packet.y());
+	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, packet.componentId(), packet.spriteID());
+	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "assets/Sprite/Ship/BlueShip/BlueShip3.png");
 }
 
 void	Game::_onReceiveDelete(proto::Delete &packet) {
-	//Do something;
+	auto ids = ecs::Ecs::filter<ecs::component::OnlineComponent>();
+	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
+
+	for (auto id : ids) {
+		if (online[id].onlineId == packet.componentId()) {
+			ecs::Ecs::deleteId(id);
+			break;
+		}
+	}
 }
 
 }

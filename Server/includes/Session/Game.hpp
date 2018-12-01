@@ -5,34 +5,38 @@
 ** Game.hpp
 */
 
+#if !defined(_RTYPE_SERVER_GAME_HPP)
+#define _RTYPE_SERVER_GAME_HPP
+
 #include <list>
 #include "GameEngine/ecs/Ecs.hpp"
 #include "GameEngine/component/control/Keyboard.hpp"
 #include "Network/GameProtocol.hpp"
-
-#if !defined(_RTYPE_SERVER_GAME_HPP)
-#define _RTYPE_SERVER_GAME_HPP
+#include "Session.hpp"
 
 namespace rtype { namespace session {
 
 class Manager;
-class Session;
 
 class	Game {
 public:
-	Game(): _ecs(nullptr) {}
-	
+	Game(Session &parent): _parent(&parent), _ecs(nullptr) {}
+
 	void	init();
 
 	void	update();
 
-	void	onKeyPress(ID player, proto::KeyPress&);
-	void	onKeyRelease(ID player, proto::KeyRelease&);
+	void	onKeyPress(int internPlayerId, ID playerId, proto::KeyPress&);
+	void	onKeyRelease(int internPlayerId, ID playerId, proto::KeyRelease&);
+
+	auto	&getEcs() { return *_ecs; }
 private:
 	void	_initSystems();
-	
-	ecs::Ecs		*_ecs;
+
+	Session		*_parent;
+	ecs::Ecs	*_ecs;
 	std::list<ID>	_collector;
+
 
 	// friend Manager;
 	// friend Session;

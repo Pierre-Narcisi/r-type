@@ -26,14 +26,12 @@ class Manager;
 
 class Session {
 private:
-	void			_entryPoint();
-
 	Manager			*_parent;
-	std::uint32_t	_id;
+	std::uint32_t		_id;
 	std::string		_name;
-	int				_playerMax;
+	int			_playerMax;
 
-	bool								_continue = true;
+	bool					_continue = true;
 	std::unique_ptr<std::thread>		_thread;
 	std::deque<std::function<std::shared_ptr<proto::PacketBase>()>>
 										_pool;
@@ -50,7 +48,11 @@ public:
 	void	addTask(decltype(_pool)::value_type const &task);
 
 	auto	getId() { return _id; }
+
+	void 	sendToPlayers(proto::PacketBase const &packet, std::size_t size);
+	void 	sendToPlayer(ClientConnection *player, proto::PacketBase const &packet, std::size_t size);
 private:
+	void	_entryPoint();
 
 	struct PlayerContainer {
 		ClientConnection	*player;
@@ -63,6 +65,7 @@ private:
 	void	_rmPlayer(decltype(_players)::iterator player);
 
 	friend Manager;
+	friend Game;
 	friend ::rtype::Server;
 };
 

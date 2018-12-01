@@ -16,13 +16,7 @@
 namespace rtype {
 
 ServerConnection::~ServerConnection() {
-	if (_threadPtr) {
-		auto *t = reinterpret_cast<std::thread*>(_threadPtr);
-
-		_continue = false;
-		t->join();
-		delete t;
-	}
+	stop();
 }
 
 void	ServerConnection::stop() {
@@ -36,6 +30,8 @@ void	ServerConnection::stop() {
 #else
 		pthread_kill(t->native_handle(), SIGINT);
 #endif
+		t->join();
+		delete t;
 	}
 }
 
@@ -66,6 +62,8 @@ bool	ServerConnection::connect(std::string const &host, std::uint16_t port) {
 
 	if (_tcpSock.isConnected()) {
 		auto resp = _getJson();
+
+		_id = resp["id"].to<int>();
 
 		std::cout << "[" << host << "]: " << resp["message"].to<std::string>() << std::endl;
 		_serverEp = nw::UdpEndpoint(host, resp["sessionsPort"].to<int>());
@@ -113,7 +111,7 @@ json::Entity	ServerConnection::getSessions() {
 json::Entity	ServerConnection::joinSession(int sessionId) {
 	_sendJson(json::makeObject {
 		{ "path", "session:join" },
-		{ "id", sessionId }
+		{ "sessionId", sessionId }
 	});
 
 	return _getJson();
@@ -122,7 +120,7 @@ json::Entity	ServerConnection::joinSession(int sessionId) {
 json::Entity	ServerConnection::quitSession(int sessionId) {
 	_sendJson(json::makeObject {
 		{ "path", "session:quit" },
-		{ "id", sessionId }
+		{ "sessionId", sessionId }
 	});
 
 	return _getJson();
@@ -145,6 +143,7 @@ void	ServerConnection::_entryPoint() {
 		if (p->type == proto::Type::PING) {
 			std::cout << "[server] PING" << std::endl;
 		} else {
+			std::cout << "[server] " << (int) p->type << std::endl;
 			auto sharedPtr = std::shared_ptr<proto::PacketBase>(
 				reinterpret_cast<proto::PacketBase*>(::operator new(wbuf.len))
 			);

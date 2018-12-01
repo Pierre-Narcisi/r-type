@@ -148,7 +148,7 @@ add_executable(rtype
 	Client/src/game/menu/Menu.hpp
 
 	Client/src/Main.cpp
-)
+	Common/GameEngine/component/online/OnlineComponent.hpp)
 
 find_package (Threads)
 target_link_libraries(rtype ${CONAN_LIBS})

@@ -97,7 +97,8 @@ class Menu
             ecs::Ecs::addComponent<ecs::component::Keyboard>(key);
             ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[key].keyMap[KeyKeyboard::ENTER] =
             std::pair<bool, std::function<void(ID)>>(false, [&continue_, &srv, input] (ID parent) {
-                Menu::tryToConnect(continue_, srv, input);
+            	if (ecs::Ecs::idHasComponents<ecs::component::Keyboard>(parent) && ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[parent].keyMap[KeyKeyboard::ENTER].first)
+                	Menu::tryToConnect(continue_, srv, input);
             });
 
             componentsId = { background, title, buttonPlay, mouse, input, text, key };
@@ -105,8 +106,10 @@ class Menu
             game.addUpdate(100, [&rtype](){ rtype.update(); });
             game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
             //game.addUpdate(1, ecs::component::UpdateTextDisplay);
-	        game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
-	        game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+	    game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
+	    game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+            game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
+            game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
 
             while (continue_ && ecs::graphical::Graphic::get().isOpen()) {
                 long time = ecs::core::Time::get(TimeUnit::MicroSeconds);

@@ -83,6 +83,7 @@ DECORATED_STRUCT(UdpConfirm, {
 DECORATED_STRUCT(Move, {
 	PROTO_BASE(Type::MOVE)
 
+	Int32	componentId;
 	Int32	x;
 	Int32	y;
 });
@@ -90,7 +91,9 @@ DECORATED_STRUCT(Move, {
 DECORATED_STRUCT(Create, {
 	PROTO_BASE(Type::CREATE)
 
-	Int32	id;
+	Int32	componentId;
+	Int32 	w;
+	Int32 	h;
 	Int32	x;
 	Int32	y;
 	Int32	spriteID;
@@ -99,7 +102,7 @@ DECORATED_STRUCT(Create, {
 DECORATED_STRUCT(Delete, {
 	PROTO_BASE(Type::DELETE)
 
-	Int32	id;
+	Int32	componentId;
 });
 
 DECORATED_STRUCT(KeyPress, {

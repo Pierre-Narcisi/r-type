@@ -100,8 +100,11 @@ namespace ecs {namespace system {
 		}
 
 		static void UpdateControllers(sf::Event &event);
-		static void UpdateKeyboards(sf::Event &event);
-		static void UpdateMouses(sf::Event &event);
+//		static void UpdateControllers();
+		static void UpdateKeyboards();
+		static void UpdateKeyboardsEvent(sf::Event &event);
+		static void UpdateMouses();
+		static void UpdateMousesEvents(sf::Event &event);
 		static void UpdateDeplacement();
 
 	private:

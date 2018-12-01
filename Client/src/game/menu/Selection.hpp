@@ -53,12 +53,12 @@ namespace rtype {
                 _rooms.push_back(rm);
             }
 
-            void    run(std::function<json::Entity()> const &updateSessions) {
+            void    run(ServerConnection &srv) {
                 bool    continue_ = true;
                 auto    &game = ecs::Ecs::get();
                 auto    &rtype = ecs::graphical::Graphic::get();
 
-                auto sessions = updateSessions();
+                auto sessions = srv.getSessions();
                 if (sessions["status"] == false) {
                     return;
                 }
@@ -84,9 +84,17 @@ namespace rtype {
                 ecs::Ecs::addComponent<ecs::component::Speed>(buttonPlay);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(buttonPlay, 0, true);
                 ecs::Ecs::addComponent<ecs::component::Sprite>(buttonPlay, "assets/css-buttons.png");
-                ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonPlay, buttonPlay, false, [&continue_](ID self, ID other){
-                    if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
-                        continue_ = false;
+                ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonPlay, buttonPlay, false, [this, &continue_, &srv](ID self, ID other) {
+			if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first) {
+				auto res = srv.joinSession(this->_rooms[this->_index].id);
+
+				if (res["status"] == true) {
+					continue_ = false;
+				} else {
+					rtype::MsgBox::show("Session create failed", "(!) " + res["error"]["message"].to<std::string>());
+					continue_ = false; // RM THIS SHIT LATER
+				}
+			}
                 });
 
                 ID buttonNext = ecs::entity::Entity::getId();
@@ -95,7 +103,7 @@ namespace rtype {
                 ecs::Ecs::addComponent<ecs::component::Speed>(buttonNext);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(buttonNext, 0, true);
                 ecs::Ecs::addComponent<ecs::component::Sprite>(buttonNext, "assets/ButtonNext.png");
-                ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonNext, buttonNext, false, [&continue_, this](ID parent, ID other){
+                ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonNext, buttonNext, false, [this, &continue_](ID parent, ID other){
                     if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire).count() > ecs::Ecs::getComponentMap<game::Firerate>()[parent]._firerate)
                     {
                         if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
@@ -113,7 +121,7 @@ namespace rtype {
                 ecs::Ecs::addComponent<ecs::component::Speed>(buttonPrev);
                 ecs::Ecs::addComponent<ecs::component::Drawable>(buttonPrev, 0, true);
                 ecs::Ecs::addComponent<ecs::component::Sprite>(buttonPrev, "assets/ButtonPrev.png");
-                ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonPrev, buttonPrev, false, [&continue_, this](ID parent, ID other){
+                ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonPrev, buttonPrev, false, [this, &continue_](ID parent, ID other){
                     if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire).count() > ecs::Ecs::getComponentMap<game::Firerate>()[parent]._firerate)
                     {
                         if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
@@ -195,6 +203,8 @@ namespace rtype {
                 // /game.addUpdate(1, ecs::component::UpdateTextDisplay);
                 game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
                 game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+		game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
+		game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
 
                 while (continue_ && ecs::graphical::Graphic::get().isOpen()) {
                     long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
@@ -203,7 +213,9 @@ namespace rtype {
                     auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
                     std::this_thread::sleep_for(std::chrono::microseconds(x));
                 }
+                std::cout << "clear ids" << std::endl;
                 game.clearUpdates();
+		std::cout << "clear ids done" << std::endl;
             }
 
         private:

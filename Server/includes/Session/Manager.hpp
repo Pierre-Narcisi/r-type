@@ -28,6 +28,7 @@ public:
 
 	auto	&getSessions() { return _sessions; }
 	auto	getListeningPort() { return _port; }
+	auto	&getUdpSocket() { return _sock; }
 private:
 	static std::uint32_t	_generateId();
 	
