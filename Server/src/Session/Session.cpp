@@ -11,6 +11,7 @@
 #include <component/physic/Hitbox.hpp>
 #include <component/online/OnlineComponent.hpp>
 #include <component/control/DeplacementKeyBoard.hpp>
+#include <component/physic/Speed.hpp>
 #include "Event/Manager.hpp"
 #include "GameEngine/ecs/Ecs.hpp"
 #include "GameEngine/core/Time.hpp"
@@ -150,6 +151,7 @@ void	Session::addPlayer(ClientConnection &player) {
 		ID id = ecs::entity::Entity::getId();
 
 		ecs::Ecs::addComponent<ecs::component::Position>(id, 50, 50);
+		ecs::Ecs::addComponent<ecs::component::Speed>(id);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100.f, 100.f);
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, 1);
 		ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
