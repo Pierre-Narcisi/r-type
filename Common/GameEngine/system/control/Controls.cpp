@@ -118,10 +118,11 @@ namespace ecs {namespace system {
 			for (auto it = keyboard.second.keyMap.begin(); it != keyboard.second.keyMap.end(); it++) {
 				if (sf::Keyboard::isKeyPressed(Controls::getKeyBoard()[it->first])) {
 					keyboard.second.keyMap[it->first].first = true;
-					if (keyboard.second.keyMap[it->first].second)
-						keyboard.second.keyMap[it->first].second(keyboard.first);
-				} else
+				} else {
 					keyboard.second.keyMap[it->first].first = false;
+				}
+				if (keyboard.second.keyMap[it->first].first && keyboard.second.keyMap[it->first].second)
+					keyboard.second.keyMap[it->first].second(keyboard.first);
 			}
 		}
 	}
@@ -133,10 +134,11 @@ namespace ecs {namespace system {
 			for (auto it = mouse.second.mouseMap.begin(); it != mouse.second.mouseMap.end(); it++) {
 				if (sf::Mouse::isButtonPressed(Controls::getMouse()[it->first])) {
 					mouse.second.mouseMap[it->first].first = true;
-					if (mouse.second.mouseMap[it->first].second)
-						mouse.second.mouseMap[it->first].second(mouse.first);
-				} else
+				} else {
 					mouse.second.mouseMap[it->first].first = false;
+				}
+				if (mouse.second.mouseMap[it->first].first && mouse.second.mouseMap[it->first].second)
+					mouse.second.mouseMap[it->first].second(mouse.first);
 			}
 			if (event.type == sf::Event::EventType::MouseMoved) {
 				mouse.second.position.x = event.mouseMove.x;
