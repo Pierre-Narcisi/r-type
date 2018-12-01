@@ -1,3 +1,7 @@
+//
+// Created by pierre on 20/11/2018.
+//
+
 #include "component/graphical/Sprite.hpp"
 #include <boost/filesystem.hpp>
 #include <chrono>

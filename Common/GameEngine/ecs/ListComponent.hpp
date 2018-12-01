@@ -35,7 +35,7 @@ namespace hidden {
         		if (function(*map.second))
         			ids.push_back(*map.first);
         	}
-		return ids;
+			return ids;
         }
 
         std::unordered_map<ID, T> &getComponentMap() {

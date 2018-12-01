@@ -17,6 +17,7 @@
 #include <ecs/Ecs.hpp>
 #include <ecs/DataBank.hpp>
 #include "system/walls.hpp"
+#include "component/Bonuses.hpp"
 
 namespace game {
 	class enemy3: public game::enemy {

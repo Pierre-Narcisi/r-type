@@ -126,9 +126,12 @@ add_executable(rtype
 	Client/src/game/enemy/enemy3/enemy3.hpp
 	Client/src/game/enemy/enemy3/enemy3.cpp
 	Client/src/game/system/ai.cpp
+	Client/src/game/system/ai.hpp
+	Client/src/game/system/Fire.cpp
+	Client/src/game/system/Fire.hpp
+	Client/src/game/system/Bonuses.cpp
 	Client/src/game/system/walls.cpp
 	Client/src/game/system/gen.cpp
-	Client/src/game/system/ai.hpp
 	Client/src/game/enemy/enemy.hpp
 
 	Client/src/game/component/Parallax.hpp

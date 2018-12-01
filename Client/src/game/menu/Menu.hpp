@@ -36,8 +36,11 @@ class Menu
         };
 
         static void    tryToConnect(bool &continue_, ServerConnection &srv, ID input) {
+            if (!continue_)
+                return;
             auto name = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>()[input]._str;
             auto loginRes = srv.login(name);
+            std::cout << loginRes << std::endl;
             if (loginRes["status"] == false) {
                 rtype::MsgBox::show("Login failed", "(!) " + loginRes["error"]["message"].to<std::string>());
             } else {
