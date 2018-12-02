@@ -205,6 +205,8 @@ add_executable(server
 	Server/src/Session/systems/ai.hpp
 	Server/src/Session/systems/Fire.cpp
 	Server/src/Session/systems/Fire.hpp
+	Server/src/Session/systems/walls.cpp
+	Server/src/Session/systems/walls.hpp
 	Server/src/Session/systems/gen.cpp
 	Server/src/Session/enemy/enemy.hpp
 	
