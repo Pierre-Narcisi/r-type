@@ -23,6 +23,7 @@
 #include "Network/GameProtocol.hpp"
 #include "Session/Manager.hpp"
 #include "Session/Session.hpp"
+#include "Session/TimedEvent/TimedEventAdmin.hpp"
 #undef NOSPRITE
 
 namespace rtype { namespace session {
@@ -184,11 +185,18 @@ void	Session::addPlayer(ClientConnection &player) {
 
 		proto::Create	pack{proto::Type::CREATE, _id, 0, id, 64, 32, 150, 720 / 2, spriteId};
 
+		TimedEventAdmin t;
 		ecs::Ecs::addComponent<ecs::component::Position>(id, pack.x(), pack.y());
 		ecs::Ecs::addComponent<ecs::component::Speed>(id);
 		ecs::Ecs::addComponent<game::Firerate>(id, 200);
 		ecs::Ecs::addComponent<game::component::Type>(id, game::component::Type::Types::SHIP);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, pack.w(), pack.h(), true);
+
+		float w = pack.w();
+		float h = pack.h();
+		t.addEvent(3, Time::Seconds, [id, w, h]{ 
+			ecs::Ecs::addComponent<ecs::component::Hitbox>(id, w, h, true);
+		});
+
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, pack.spriteID);
 		ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
 		ecs::Ecs::addComponent<game::component::Inventory>(id);
