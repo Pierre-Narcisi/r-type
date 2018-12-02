@@ -73,7 +73,7 @@ void	Manager::_entryPoint() {
 		}
 		end = std::chrono::high_resolution_clock::now();
 		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-		
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime - elapsed));
 		if (std::chrono::duration_cast<std::chrono::seconds>(end - pingCounterStart).count() > 10) {
 			pingCounterStart = end;
@@ -83,6 +83,14 @@ void	Manager::_entryPoint() {
 			for (auto &clt: Server::instance().getUsers()) {
 				if (clt._status.udpIsSetup)
 					_sock.sendTo({reinterpret_cast<char*>(&pingPacket), sizeof(pingPacket)}, clt._udpEndpoint);
+			}
+
+			for (auto it = _sessions.begin(); it != _sessions.end();) {
+				if (it->_players.size() == 0) {
+					it = _sessions.erase(it);
+				} else {
+					it++;
+				}
 			}
 		}
 

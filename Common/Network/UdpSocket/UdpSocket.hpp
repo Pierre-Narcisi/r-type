@@ -8,6 +8,7 @@
 #if !defined(_UDP_SOCKET_HPP)
 #define _UDP_SOCKET_HPP
 
+#include <mutex>
 #include "../EndpointBase.hpp"
 
 namespace nw {
@@ -55,8 +56,9 @@ public:
 	int				setNonBlocking(bool isNonBlocking = true);
 	std::uint16_t	makeMeAsListener(std::uint16_t port = 0); // if port = 0, port is auto generated
 private:
-	Socket	_sock;
-	bool	_isListener = false;
+	Socket		_sock;
+	bool		_isListener = false;
+	std::mutex	_udpMutex;
 };
 
 }

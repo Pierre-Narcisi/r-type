@@ -17,6 +17,7 @@ UdpSocket::~UdpSocket() {
 }
 
 UdpEndpoint	UdpSocket::sendTo(UdpBuffer const &buffer, UdpEndpoint const &ep) {
+	std::lock_guard<std::mutex>	_guard(_udpMutex);
 	if (ep._ai.size() > 0) {
 		auto		*curAddr = reinterpret_cast<sockaddr_in*>(ep._ai[0].get());
 		auto		newAddr = *curAddr;
@@ -38,6 +39,7 @@ long	UdpSocket::recvFrom(UdpBuffer &buffer, UdpEndpoint &ep) {
 		}
 	}
 	if (ep._ai.size() > 0) {
+		std::lock_guard<std::mutex>	_guard(_udpMutex);
 		auto		*curAddr = reinterpret_cast<sockaddr_in*>(ep._ai[0].get());
 		socklen_t	len = sizeof(*curAddr);
 

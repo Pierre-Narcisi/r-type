@@ -186,6 +186,7 @@ namespace rtype {
                         auto res = srv.joinSession(this->_rooms[this->_index].id);
 
                         if (res["status"] == true) {
+                            srv.setSessionId(this->_rooms[this->_index].id);
                             continue_ = false;
                         } else {
                             rtype::MsgBox::show("Session join failed", "(!) " + res["error"]["message"].to<std::string>());
@@ -202,9 +203,11 @@ namespace rtype {
                     if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first) {
                         auto name = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>()[inputCreation]._str;
                         auto createRes = srv.makeSession(name, 8);
+
                         if (createRes["status"] == false) {
                             rtype::MsgBox::show("Session create failed", "(!) " + createRes["error"]["message"].to<std::string>());
                         } else {
+                            srv.setSessionId(createRes["id"].to<int>());
                             continue_ = false;
                         }
                     }
@@ -253,8 +256,8 @@ namespace rtype {
                 // /game.addUpdate(1, ecs::component::UpdateTextDisplay);
                 game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
                 game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
-		game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
-		game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
+                game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
+                game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
 
                 while (continue_ && ecs::graphical::Graphic::get().isOpen()) {
                     long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
