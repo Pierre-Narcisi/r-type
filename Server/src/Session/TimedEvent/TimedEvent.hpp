@@ -9,7 +9,6 @@
 #include <mutex>
 #include <thread>
 
-
 enum class Time {
 	Hours,
 	Minutes,
