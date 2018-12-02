@@ -122,22 +122,6 @@ add_executable(rtype
 	Client/lib/TimedEvent/TimedEventAdmin.cpp
 	Client/lib/TimedEvent/TimedEventAdmin.hpp
 
-	Client/src/game/component/ai.hpp
-	Client/src/game/enemy/enemy1/enemy1.hpp
-	Client/src/game/enemy/enemy1/enemy1.cpp
-	Client/src/game/enemy/enemy2/enemy2.hpp
-	Client/src/game/enemy/enemy2/enemy2.cpp
-	Client/src/game/enemy/enemy3/enemy3.hpp
-	Client/src/game/enemy/enemy3/enemy3.cpp
-	Client/src/game/system/ai.cpp
-	Client/src/game/system/ai.hpp
-	Client/src/game/system/Fire.cpp
-	Client/src/game/system/Fire.hpp
-	Client/src/game/system/Bonuses.cpp
-	Client/src/game/system/walls.cpp
-	Client/src/game/system/gen.cpp
-	Client/src/game/enemy/enemy.hpp
-
 	Client/includes/ServerConnection.hpp
 	Client/src/ServerConnection.cpp
 
