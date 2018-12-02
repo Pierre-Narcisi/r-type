@@ -138,14 +138,14 @@ add_executable(rtype
 	Client/src/game/system/gen.cpp
 	Client/src/game/enemy/enemy.hpp
 
-	Client/src/game/component/Parallax.hpp
-	Client/src/game/system/Parallaxs.hpp
-	Client/src/game/system/Parallaxs.cpp
-
 	Client/includes/ServerConnection.hpp
 	Client/src/ServerConnection.cpp
 
 	Client/includes/MessageBox.hpp
+
+	Client/src/game/component/Parallax.hpp
+	Client/src/game/system/Parallaxs.hpp
+	Client/src/game/system/Parallaxs.cpp
 
 	Client/includes/Game.hpp
 	Client/src/Game.cpp
@@ -165,6 +165,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 include_directories(Server)
+include_directories(Server/src)
 include_directories(Server/includes)
 include_directories(Common)
 
@@ -196,6 +197,19 @@ add_executable(server
 	Server/src/Session/Session.cpp
 	Server/includes/Session/Game.hpp
 	Server/src/Session/Game.cpp
+
+	Server/src/Session/components/ai.hpp
+	Server/src/Session/enemy/enemy1/enemy1.hpp
+	Server/src/Session/enemy/enemy1/enemy1.cpp
+	Server/src/Session/systems/ai.cpp
+	Server/src/Session/systems/ai.hpp
+	Server/src/Session/systems/gen.cpp
+	Server/src/Session/enemy/enemy.hpp
+	
+	Server/src/Session/TimedEvent/TimedEvent.cpp
+	Server/src/Session/TimedEvent/TimedEvent.hpp
+	Server/src/Session/TimedEvent/TimedEventAdmin.cpp
+	Server/src/Session/TimedEvent/TimedEventAdmin.hpp
 )
 
 target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})

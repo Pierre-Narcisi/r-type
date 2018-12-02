@@ -5,12 +5,18 @@
 ** Game.cpp
 */
 
+#define NOSPRITE
 #include <iostream>
-#include <system/physic/Speeds.hpp>
-#include <component/physic/Position.hpp>
+#include "system/physic/Speeds.hpp"
+#include "component/physic/Position.hpp"
+#include "component/online/OnlineComponent.hpp"
+#include "component/physic/Hitbox.hpp"
 #include "system/control/Controls.hpp"
 #include "Session/Session.hpp"
+#include "Session/systems/gen.hpp"
+#include "Session/systems/ai.hpp"
 #include "Session/Game.hpp"
+#undef NOSPRITE
 
 namespace rtype { namespace session {
 
@@ -18,14 +24,16 @@ void	Game::init() {
 	_ecs = &ecs::Ecs::get();
 	//init all Components
 
-	auto	comp1 = ecs::entity::Entity::getId();
-	//Do something
-
+	std::shared_ptr<game::system::gen>	gen(new game::system::gen());
 
 	_ecs->addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateMouses);
 	_ecs->addUpdate(2, &ecs::system::Speeds::UpdateSpeeds);
+	_ecs->addUpdate(9, &game::system::ai::updateAi);
+	_ecs->addUpdate(9, [this, gen]{
+		gen->updateGen(*_parent);
+	});
 	_ecs->addUpdate(15, [this] () {
 		auto ids = ecs::Ecs::filter<ecs::component::Position>();
 		auto pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
@@ -35,8 +43,20 @@ void	Game::init() {
 		}
 	});
 
-	proto::Create	pack{proto::Type::CREATE, _parent->_id, 0, comp1, 50, 50, 1};
-	_parent->sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+	auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
+	auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+	auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();
+	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
+	for (auto id: ids) {
+		proto::Create	pack{
+			proto::Type::CREATE, _parent->_id, 0, id,
+			hitbox[id].width, hitbox[id].height,
+			pos[id].x, pos[id].y,
+			online[id].spriteId
+		};
+
+		_parent->sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+	}
 }
 
 void	Game::_initSystems() {

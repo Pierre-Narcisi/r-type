@@ -49,6 +49,8 @@ public:
 
 	auto	getId() { return _id; }
 
+	void	sendCreate(ID id);
+
 	void 	sendToPlayers(proto::PacketBase const &packet, std::size_t size);
 	void 	sendToPlayer(ClientConnection *player, proto::PacketBase const &packet, std::size_t size);
 private:

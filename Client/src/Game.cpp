@@ -5,12 +5,14 @@
 ** Game.cpp
 */
 
+#include <boost/filesystem.hpp>
 #include "Game.hpp"
 #include "ecs/Ecs.hpp"
 #include "src/game/menu/Menu.hpp"
 #include "system/control/Controls.hpp"
 #include "component/online/OnlineComponent.hpp"
 #include "game/menu/Selection.hpp"
+#include "SpriteMap.hpp"
 #include "Game.hpp"
 
 namespace rtype {
@@ -89,8 +91,7 @@ void	Game::start(ServerConnection &srv) {
 	game::system::gen Gen;
 	game::system::walls Walls;
 
-	ID background = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
+	
 
 	ID ship = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<game::Firerate>(ship, 100);
@@ -122,6 +123,9 @@ void	Game::start(ServerConnection &srv) {
 	game.addUpdate(9, [&Gen](){Gen.updateGen();});
 	 */
 	auto &game = ecs::Ecs::get();
+
+	ID background = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<game::Parallax>(background, Sprites[proto::SpriteId::BACKGROUND], 100.f);
 
 	auto &rtype = ecs::graphical::Graphic::get();
 	game.addUpdate(100, [&rtype](){rtype.update();});
@@ -203,8 +207,22 @@ void	Game::_onReceiveCreate(proto::Create &packet) {
 	ID id = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 3, true);
 	ecs::Ecs::addComponent<ecs::component::Position>(id, packet.x(), packet.y());
-	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, packet.componentId(), packet.spriteID());
-	ecs::Ecs::addComponent<ecs::component::Sprite>(id, "assets/Sprite/Ship/BlueShip/BlueShip3.png");
+	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, packet.componentId(), packet.spriteID);
+	
+	auto &path = rtype::Sprites[packet.spriteID];
+	if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path))
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(
+			id,
+			path,
+			4,
+			ecs::core::Vector2<float> { packet.w(), packet.h() }
+		);
+	else
+		ecs::Ecs::addComponent<ecs::component::Sprite>(
+			id,
+			path,
+			ecs::core::Vector2<float> { packet.w(), packet.h() }
+		);
 }
 
 void	Game::_onReceiveDelete(proto::Delete &packet) {

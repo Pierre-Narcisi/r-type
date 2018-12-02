@@ -38,6 +38,45 @@ enum class Type: std::uint8_t {
 	KEYRELEASE
 };
 
+enum class SpriteId: std::uint8_t {
+	PLAYER1, //"assets/Sprite/Ship/BlueShip/BlueShip3.png"
+	PLAYER2, //"assets/Sprite/Ship/GreenShip/GreenShip3.png"
+	PLAYER3, //"assets/Sprite/Ship/PurpleShip/PurpleShip3.png"
+	PLAYER4, //"assets/Sprite/Ship/RedShip/RedShip3.png"
+
+	BACKGROUND, //"assets/space.png"
+
+	WALL1, //"assets/Sprite/Walls/Wall1.png"
+	WALL2, //"assets/Sprite/Walls/Wall2.png"
+	WALL3, //"assets/Sprite/Walls/Wall3.png"
+	WALL4, //"assets/Sprite/Walls/Wall4.png"
+	WALL5, //"assets/Sprite/Walls/Wall5.png"
+	WALL6, //"assets/Sprite/Walls/Wall6.png"
+	WALL7, //"assets/Sprite/Walls/Wall7.png"
+	WALL8, //"assets/Sprite/Walls/Wall8.png"
+	WALL_ROTATE1, //"assets/Sprite/WallsRotate/Wall1.png"
+	WALL_ROTATE2, //"assets/Sprite/WallsRotate/Wall2.png"
+	WALL_ROTATE3, //"assets/Sprite/WallsRotate/Wall3.png"
+	WALL_ROTATE4, //"assets/Sprite/WallsRotate/Wall4.png"
+	WALL_ROTATE5, //"assets/Sprite/WallsRotate/Wall5.png"
+	WALL_ROTATE6, //"assets/Sprite/WallsRotate/Wall6.png"
+	WALL_ROTATE7, //"assets/Sprite/WallsRotate/Wall7.png"
+	WALL_ROTATE8, //"assets/Sprite/WallsRotate/Wall8.png"
+
+	BONUS, //"assets/Sprite/Bonuses/bonuses1.png"
+
+	EXPLOSION, //"assets/Sprite/Explosion"
+	BIG_EXPLOSION, //"assets/Sprite/BigExplosion"
+
+	BULLET1, //"assets/Sprite/ClassicBullet/ClassicBullet1.png"
+	BULLET2, //"assets/Sprite/ClassicBullet/ClassicBullet2.png"
+	BULLET3, //"assets/Sprite/ClassicBullet/ClassicBullet3.png"
+
+	ENEMY1, //"assets/Sprite/Enemy1"
+	ENEMY2,	//"assets/Sprite/Enemy2/Enemy2walk"
+	ENEMY3	//"assets/Sprite/Enemy3"
+};
+
 #pragma pack(push, 4) //MSVC compatibility :$
 
 template<typename T, auto toNet, auto toHost>
@@ -91,12 +130,12 @@ DECORATED_STRUCT(Move, {
 DECORATED_STRUCT(Create, {
 	PROTO_BASE(Type::CREATE)
 
-	Int32	componentId;
-	Int32 	w;
-	Int32 	h;
-	Int32	x;
-	Int32	y;
-	Int32	spriteID;
+	Int32		componentId;
+	Int32		w;
+	Int32		h;
+	Int32		x;
+	Int32		y;
+	SpriteId	spriteID;
 });
 
 DECORATED_STRUCT(Delete, {

@@ -7,15 +7,16 @@
 
 #define NOSPRITE
 #include <functional>
-#include <component/graphical/Drawable.hpp>
-#include <component/physic/Hitbox.hpp>
-#include <component/online/OnlineComponent.hpp>
-#include <component/control/DeplacementKeyBoard.hpp>
-#include <component/physic/Speed.hpp>
+#include "component/graphical/Drawable.hpp"
+#include "component/physic/Hitbox.hpp"
+#include "component/online/OnlineComponent.hpp"
+#include "component/control/DeplacementKeyBoard.hpp"
+#include "component/physic/Speed.hpp"
 #include "Event/Manager.hpp"
 #include "GameEngine/ecs/Ecs.hpp"
 #include "GameEngine/core/Time.hpp"
 #include "GameEngine/component/physic/Position.hpp"
+#include "Session/components/Types.hpp"
 #include "Network/GameProtocol.hpp"
 #include "Session/Manager.hpp"
 #include "Session/Session.hpp"
@@ -49,20 +50,25 @@ Session::~Session() {
 
 void 	Session::sendToPlayers(proto::PacketBase const &packet, std::size_t size) {
 	nw::UdpBuffer	wbuf{const_cast<char*>(reinterpret_cast<const char*>(&packet)), size};
+	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
-		auto &ep = playerW.player->_udpEndpoint;
+		auto	&ep = playerW.player->_udpEndpoint;
 
 		_parent->getUdpSocket().sendTo(wbuf, ep);
 	}
 }
 
 void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &packet, std::size_t size) {
-	nw::UdpBuffer	wbuf{const_cast<char*>(reinterpret_cast<const char*>(&packet)), size};
+	nw::UdpBuffer				wbuf{
+		const_cast<char*>(reinterpret_cast<const char*>(&packet)),
+		size
+	};
+	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
 		if (playerW.player == player) {
-			auto &ep = playerW.player->_udpEndpoint;
+			auto	&ep = playerW.player->_udpEndpoint;
 
 			_parent->getUdpSocket().sendTo(wbuf, ep);
 			return;
@@ -125,6 +131,23 @@ void	Session::_entryPoint() {
 	}
 }
 
+void	Session::sendCreate(ID id) {
+	auto	&ecs = ecs::Ecs::get();
+
+	auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
+	auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+	auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();
+	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
+
+	proto::Create	pack{
+		proto::Type::CREATE, _id, 0, id,
+		hitbox[id].width * 2, hitbox[id].height * 2,
+		pos[id].x, pos[id].y,
+		online[id].spriteId
+	};
+	sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+}
+
 void	Session::addPlayer(ClientConnection &player) {
 	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
@@ -140,7 +163,7 @@ void	Session::addPlayer(ClientConnection &player) {
 		for (auto id: ids) {
 			proto::Create	pack{
 				proto::Type::CREATE, _id, 0, id,
-				hitbox[id].width, hitbox[id].height,
+				hitbox[id].width * 2, hitbox[id].height * 2,
 				pos[id].x, pos[id].y,
 				online[id].spriteId
 			};
@@ -150,16 +173,26 @@ void	Session::addPlayer(ClientConnection &player) {
 
 		ID id = ecs::entity::Entity::getId();
 
-		ecs::Ecs::addComponent<ecs::component::Position>(id, 50, 50);
+		proto::SpriteId	spriteId;
+		switch (_players.size() % 4) {
+			case 0: spriteId = proto::SpriteId::PLAYER1; break;
+			case 1: spriteId = proto::SpriteId::PLAYER2; break;
+			case 2: spriteId = proto::SpriteId::PLAYER3; break;
+			case 3: spriteId = proto::SpriteId::PLAYER4; break;
+		}
+
+		proto::Create	pack{proto::Type::CREATE, _id, 0, id, 32, 16, 150, 720 / 2, spriteId};
+
+		ecs::Ecs::addComponent<ecs::component::Position>(id, pack.x(), pack.y());
 		ecs::Ecs::addComponent<ecs::component::Speed>(id);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, 100.f, 100.f);
-		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, 1);
+		ecs::Ecs::addComponent<game::component::Type>(id, game::component::Type::Types::SHIP);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, pack.w(), pack.h());
+		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, pack.spriteID);
 		ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
 		ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id);
 
 		cont->ecsId = id;
 
-		proto::Create	pack{proto::Type::CREATE, _id, 0, id, 100, 100, 50, 50, 1};
 		sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 
 		return std::shared_ptr<proto::PacketBase>(nullptr);
@@ -169,9 +202,13 @@ void	Session::addPlayer(ClientConnection &player) {
 void	Session::_rmPlayer(decltype(_players)::iterator player) {
 	addTask([this, player] () {
 		std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+		auto	ecsId = player->ecsId;
 
-		ecs::Ecs::deleteId(player->ecsId);
+		ecs::Ecs::deleteId(ecsId);
 		_players.erase(player);
+
+		proto::Delete	pack{proto::Type::DELETE, _id, 0, ecsId};
+		sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 		return std::shared_ptr<proto::PacketBase>(nullptr);
 	});
 }
