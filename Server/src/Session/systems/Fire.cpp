@@ -4,15 +4,15 @@
 #define NOSPRITE
 #include <math.h>
 #include "component/online/OnlineComponent.hpp"
-#include "component/Inventory.hpp"
+#include "Session/components/Inventory.hpp"
 #include "ecs/Ecs.hpp"
 #include "component/physic/Position.hpp"
 #include "component/physic/Speed.hpp"
 #include "component/physic/Hitbox.hpp"
 #include "core/Time.hpp"
 #include "lib/TimedEvent/TimedEventAdmin.hpp"
-#include "component/Types.hpp"
-#include "component/Firerate.hpp"
+#include "Session/components/Types.hpp"
+#include "Session/components/Firerate.hpp"
 #include "ecs/DataBank.hpp"
 #include "Fire.hpp"
 #undef NOSPRITE
@@ -26,7 +26,7 @@ void Fire::shootFire(ID id, float spX, float spY, rtype::session::Session &sessi
 	//ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 	ecs::Ecs::addComponent<game::component::Type>(bullet, game::component::Type::Types::BULLET_SHIP);
 	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(bullet, bullet, proto::SpriteId::BULLET3);
-	ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].x + 100, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].y);
+	ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].x + 1, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].y);
 	//ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 15.f, 15.f, false, [id, &session](ID self, ID other) {
 		game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
