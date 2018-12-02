@@ -6,7 +6,6 @@
 */
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
-#include "component/Types.hpp"
 #define NOSPRITE
 #include <component/physic/Hitbox.hpp>
 #undef NOSPRITE

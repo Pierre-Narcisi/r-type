@@ -33,14 +33,15 @@ namespace game { namespace component{
 				//ecs::Ecs::addComponent<ecs::component::Drawable>(bonus, 0, true);
 				//ecs::Ecs::addComponent<ecs::component::Sprite>(bonus, "assets/Sprite/Becs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);onuses/bonuses1.png", ecs::core::Vector2<float>(64, 32));
 				ecs::Ecs::addComponent<ecs::component::OnlineComponent>(bonus, bonus, proto::SpriteId::BONUS);
-				ecs::Ecs::addComponent<ecs::component::Hitbox>(bonus, 64.f, 32.f, false, [this, bonus](ID self, ID other){
+				auto sessionPtr = _session;
+				ecs::Ecs::addComponent<ecs::component::Hitbox>(bonus, 64.f, 32.f, false, [sessionPtr, bonus](ID self, ID other){
 					game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
 					if (type._type == game::component::Type::Types::SHIP) {
-						proto::Delete	pack{proto::Type::DELETE, _session->getId(), 0, self};
+						proto::Delete	pack{proto::Type::DELETE, sessionPtr->getId(), 0, self};
 
 						ecs::Ecs::getComponentMap<game::component::Inventory>()[other]._fire++;
 						ecs::Ecs::deleteId(self);	
-						_session->sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+						sessionPtr->sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 					}
 				});
 				_session->sendCreate(bonus);

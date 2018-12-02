@@ -179,8 +179,8 @@ namespace rtype {
                 ecs::Ecs::addComponent<ecs::component::Sprite>(buttonJoin, "assets/buttonJoin.png");
                 ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonJoin, buttonJoin, false, [this, &srv, &continue_](ID self, ID other){
                     if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first) {
-                        if (!this->_index) {
-                            rtype::MsgBox::show("Session join failed", "(!) Select a session please!");
+                        if (_rooms.size() == 0) {
+                            rtype::MsgBox::show("Session join failed", "(!) No session available!");
                             return;
                         }
                         auto res = srv.joinSession(this->_rooms[this->_index].id);
@@ -263,9 +263,7 @@ namespace rtype {
                     auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
                     std::this_thread::sleep_for(std::chrono::microseconds(x));
                 }
-                std::cout << "clear ids" << std::endl;
                 game.clearUpdates();
-		std::cout << "clear ids done" << std::endl;
             }
 
         private:
