@@ -33,7 +33,7 @@ TimedEvent::~TimedEvent() {
 }
 
 TimedEvent& TimedEvent::get() {
-	static TimedEvent event;
+	thread_local static TimedEvent event;
 
 	return event;
 }

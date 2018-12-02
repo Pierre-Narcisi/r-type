@@ -85,6 +85,10 @@ void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &p
 
 void	Session::_entryPoint() {
 	_game.init();
+
+	void	*ptr = (void*) &ecs::Ecs::get();
+
+	std::cout << "ECS_PTR = " << ptr << std::endl;
 	while (_continue) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		decltype(_pool)::value_type	nextPacket;
@@ -226,6 +230,7 @@ void	Session::_rmPlayer(decltype(_players)::iterator player) {
 
 		proto::Delete	pack{proto::Type::DELETE, _id, 0, ecsId};
 		sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+
 		return std::shared_ptr<proto::PacketBase>(nullptr);
 	});
 }

@@ -36,6 +36,11 @@ public:
 		auto *_window = new sf::RenderWindow(mode, title, sf::Style::Resize | sf::Style::Close);
 		sf::Event _event;
 
+		_window->setPosition(	{
+			(int) (sf::VideoMode::getDesktopMode().width - mode.width) / 2,
+  			(int) (sf::VideoMode::getDesktopMode().height - mode.height) / 2
+		});
+
 		text.setPosition((mode.width - s.width) / 2.f, 5.f);
 
 		while (_window->isOpen()) {

@@ -11,7 +11,7 @@
 
 namespace ecs {namespace graphical {
 	Graphic& Graphic::get() {
-		static Graphic graphic;
+		thread_local static Graphic graphic;
 
 		return graphic;
 	}

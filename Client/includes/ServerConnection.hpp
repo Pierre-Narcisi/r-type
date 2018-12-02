@@ -40,6 +40,7 @@ public:
 	auto			isStarted() { return _isStarted; }
 	std::list<std::shared_ptr<proto::PacketBase>>
 					getAvailablePackets();
+	void			setSessionId(long id) { _sessionId = id; }
 private:
 	void			_sendJson(json::Entity const &obj);
 	json::Entity	_getJson();
@@ -57,7 +58,7 @@ private:
 
 	bool			_isStarted = false;
 	long			_id;
-	long			_sessionId = 1; //TODO: CHANGE!!!!!
+	long			_sessionId;
 	std::string		_username;
 
 	void			*_threadPtr = nullptr;

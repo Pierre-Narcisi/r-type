@@ -86,7 +86,7 @@ namespace ecs {namespace system {
 		}
 
 		static ControlsSFML &get() {
-			static ControlsSFML controls;
+			thread_local static ControlsSFML controls;
 
 			return controls;
 		}

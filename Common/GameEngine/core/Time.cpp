@@ -9,7 +9,7 @@
 
 namespace ecs {namespace core {
 	long Time::get(TimeUnit unit) {
-		static Time time;
+		thread_local static Time time;
 
 		return time.got(unit);
 	}
