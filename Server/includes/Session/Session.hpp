@@ -58,6 +58,7 @@ private:
 
 	struct PlayerContainer {
 		ClientConnection	*player;
+		bool				isDeleted = false;
 		ID					ecsId;
 	};
 

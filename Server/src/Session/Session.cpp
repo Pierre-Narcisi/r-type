@@ -55,7 +55,8 @@ void 	Session::sendToPlayers(proto::PacketBase const &packet, std::size_t size) 
 	for (auto &playerW: _players) {
 		auto	&ep = playerW.player->_udpEndpoint;
 
-		_parent->getUdpSocket().sendTo(wbuf, ep);
+		if (playerW.isDeleted == false)
+			_parent->getUdpSocket().sendTo(wbuf, ep);
 	}
 }
 
@@ -70,7 +71,8 @@ void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &p
 		if (playerW.player == player) {
 			auto	&ep = playerW.player->_udpEndpoint;
 
-			_parent->getUdpSocket().sendTo(wbuf, ep);
+			if (playerW.isDeleted == false)
+				_parent->getUdpSocket().sendTo(wbuf, ep);
 			return;
 		}
 	}
@@ -200,6 +202,7 @@ void	Session::addPlayer(ClientConnection &player) {
 }
 
 void	Session::_rmPlayer(decltype(_players)::iterator player) {
+	player->isDeleted = true;
 	addTask([this, player] () {
 		std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 		auto	ecsId = player->ecsId;
