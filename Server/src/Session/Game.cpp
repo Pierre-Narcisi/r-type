@@ -26,7 +26,7 @@ void	Game::init() {
 	_ecs = &ecs::Ecs::get();
 	//init all Components
 
-	std::shared_ptr<game::system::gen>	gen(new game::system::gen());
+	std::shared_ptr<game::system::gen>		gen(new game::system::gen());
 	std::shared_ptr<game::system::walls>	walls(new game::system::walls());
 
 	ID limitTop = ecs::entity::Entity::getId();
