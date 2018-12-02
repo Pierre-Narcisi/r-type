@@ -42,6 +42,15 @@ namespace game {
 				ecs::Ecs::deleteId(other);
 				ecs::Ecs::deleteId(self);
 
+				auto onDestroy = [explosion, &session](){
+					ecs::Ecs::deleteId(explosion);
+
+						proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
+
+						session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+					
+				};
+				
 				proto::Delete	packo{proto::Type::DELETE, session.getId(), 0, other};
 				proto::Delete	packs{proto::Type::DELETE, session.getId(), 0, self};
 
@@ -49,24 +58,21 @@ namespace game {
 				session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(packs), sizeof(packs));
 
 				session.sendCreate(explosion);
-				t.addEvent(1000, Time::MilliSeconds, [explosion, &session](){
-					ecs::Ecs::deleteId(explosion);
-
-					proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
-
-					session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
-				});
+				t.addEvent(500, Time::MilliSeconds, [onDestroy]{ onDestroy(); });
 			}
 		}));
 	}
 
-	void enemy1::update(ID _id) {
+	void enemy1::update(ID _id, rtype::session::Session &session) {
 		auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
 		auto &speed = ecs::Ecs::getComponentMap<ecs::component::Speed>();
 
 		speed[_id].y = sin(pos[_id].x / 70);
 		if (pos[_id].x < 0) {
 			ecs::Ecs::deleteId(_id);
+
+			proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, _id};
+			session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 		}
 	}
 }

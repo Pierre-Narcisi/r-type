@@ -8,7 +8,7 @@
 #define NOSPRITE
 #include <functional>
 #include <Server/src/Session/components/Firerate.hpp>
-#include "src/game/component/Inventory.hpp"
+#include "Session/components/Inventory.hpp"
 #include "Session/systems/Fire.hpp"
 #include "component/graphical/Drawable.hpp"
 #include "component/physic/Hitbox.hpp"

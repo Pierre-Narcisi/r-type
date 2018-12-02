@@ -30,7 +30,7 @@ void	Game::init() {
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateMouses);
 	_ecs->addUpdate(2, &ecs::system::Speeds::UpdateSpeeds);
-	_ecs->addUpdate(9, &game::system::ai::updateAi);
+	_ecs->addUpdate(9, std::bind(&game::system::ai::updateAi, std::ref(*_parent)));
 	_ecs->addUpdate(9, [this, gen]{
 		gen->updateGen(*_parent);
 	});

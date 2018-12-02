@@ -8,12 +8,12 @@
 #include "Session/enemy/enemy.hpp"
 
 namespace game {
-	class enemy1: public game::enemy {
+	class enemy3: public game::enemy {
 		public:
-			enemy1() = default;
-			~enemy1() = default;
+			enemy3() = default;
+			~enemy3() = default;
 			void init(ID _id, int posx, int posy, rtype::session::Session &session);
 			void update(ID _id, rtype::session::Session &session);
-			long _time;
+			int _time;
 	};
 }

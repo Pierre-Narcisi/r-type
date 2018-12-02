@@ -7,13 +7,12 @@
 
 namespace game {namespace system {
 	void Fire::shootFire(ID id, float spX, float spY) {
-		
 			TimedEventAdmin m;
 			ID bullet = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, spX, spY);
 			ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<game::component::Type>(bullet, game::component::Type::Types::BULLET_SHIP);
-			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].x + 100, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].y);
+			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].x + 65, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].y);
 			ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, bullet, false, [id](ID self, ID other) {
 				game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
