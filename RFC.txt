@@ -1,0 +1,116 @@
+Network Working Group                                         P. Narcisi
+Request for Comments: 9546				      B. Viguier
+							      S. Le Gall
+								 L. Mury
+Category: Rtype network protocol		    Epitech, Montpellier
+                                                           December 2018
+
+
+          Client and Server communication for the Rtype Game
+
+Status of this Memo
+
+This RFC specifies how the server and the client should communicate in a
+R-Type game.  Distribution of this memo is unlimited.
+
+
+Table of Contents
+
+   1.  CONNECTION .................................................    2
+      1.1  Ping ...................................................    2
+      1.2  Client To Server .......................................    2
+         1.2.1  UDP Register ......................................    2
+      1.3  Server To Client .......................................    2
+         1.3.1  UDP Confirm .......................................    2
+   2.  GAME .......................................................    3
+      2.1  Server To Client .......................................    3
+         2.1.1  Move ..............................................    3
+         2.1.2  Create ............................................    3
+         2.1.3  Delete ............................................    3
+      2.2  Client To Server .......................................    4
+         2.2.1  Key Press .........................................    4
+         2.2.2  Key Release .......................................    4
+
+
+
+Narcisi, et al	     	   Rtype network protocol	        [Page 2]
+
+RFC 9546 	     Communication for the Rtype Game	   November 2018
+
+1    Connection
+	
+1.1  Ping
+
+	   Command: PING
+	Parameters: None
+
+	Keep the UDP socket open.
+
+1.2  Client To Server
+
+1.2.1 UDP Register
+
+	   Command: UDPREGISTER
+	Parameters: <type, sessionID, playerID>
+
+	Create the UDP connection.
+
+1.3  Server To Client
+
+1.3.1 UDP Confirm
+
+	   Command: UDPCONFIRM
+	Parameters: <type, sessionID, playerID>
+
+	Confirm the UDP connection.
+	
+Narcisi, et al	     	   Rtype network protocol	        [Page 3]
+
+RFC 9546 	     Communication for the Rtype Game	   November 2018
+
+	
+2    GAME
+      
+2.1  Server To Client
+
+2.1.1  Move
+
+	   Command: MOVE
+	Parameters: <type, sessionID, playerID, entityID, width, height, x, y>
+
+	Move "entityID" to the position x and y.
+
+2.1.2  Create
+
+	   Command: CREATE
+	Parameters: <type, sessionID, playerID, entityID, width, height, x, y, spriteID>
+
+	Create "entityID" to the position x and y whit the sprite "spriteID".
+
+2.1.3  Delete
+
+	   Command: DELETE
+	Parameters: <type, sessionID, playerID, entityID>
+
+	Delete "entityID".
+
+Narcisi, et al	     	   Rtype network protocol	        [Page 4]
+
+RFC 9546 	     Communication for the Rtype Game	   November 2018
+
+
+2.2  Client To Server
+
+2.2.1  Key Press
+
+	   Command: KEYPRESS
+	Parameters: <type, sessionID, playerID, Keycode>
+
+	Send to the server that the key "Keycode" have been pressed.
+
+2.2.2  Key Release
+
+	   Command: KEYRELEASE
+	Parameters: <type, sessionID, playerID, Keycode>
+
+	Send to the server that the key "Keycode" have been released.
