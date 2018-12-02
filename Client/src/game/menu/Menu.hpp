@@ -13,11 +13,14 @@
 #include <ecs/DataBank.hpp>
 #include <component/audio/Sound.hpp>
 #include <component/control/DeplacementMouse.hpp>
+#include <system/control/Controls.hpp>
 #include "sfml/Graphic.hpp"
 #include "core/Time.hpp"
 #include "../game/component/Parallax.hpp"
 #include "../game/system/Parallaxs.hpp"
 #include "TextDisplay.hpp"
+#include "ServerConnection.hpp"
+#include "MessageBox.hpp"
 
 #pragma once
 
@@ -33,7 +36,20 @@ class Menu
             }
         };
 
-        void    run() {
+        static void    tryToConnect(bool &continue_, ServerConnection &srv, ID input) {
+            if (!continue_)
+                return;
+            auto name = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>()[input]._str;
+            auto loginRes = srv.login(name);
+            std::cout << loginRes << std::endl;
+            if (loginRes["status"] == false) {
+                rtype::MsgBox::show("Login failed", "(!) " + loginRes["error"]["message"].to<std::string>());
+            } else {
+                continue_ = false;
+            }
+        }
+
+        void    run(ServerConnection &srv) {
             bool    continue_ = true;
             auto    &game = ecs::Ecs::get();
             auto    &rtype = ecs::graphical::Graphic::get();
@@ -78,15 +94,20 @@ class Menu
             ID key = ecs::entity::Entity::getId();
             ecs::Ecs::addComponent<ecs::component::Keyboard>(key);
             ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[key].keyMap[KeyKeyboard::ENTER] =
-            std::pair<bool, std::function<void(ID)>>(false, [&continue_](ID parent) {continue_ = false;});
+            std::pair<bool, std::function<void(ID)>>(false, [&continue_, &srv, input] (ID parent) {
+            	if (ecs::Ecs::idHasComponents<ecs::component::Keyboard>(parent) && ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[parent].keyMap[KeyKeyboard::ENTER].first)
+                	Menu::tryToConnect(continue_, srv, input);
+            });
 
             componentsId = { background, title, buttonPlay, mouse, input, text, key };
 
             game.addUpdate(100, [&rtype](){ rtype.update(); });
             game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
             //game.addUpdate(1, ecs::component::UpdateTextDisplay);
-	        game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
-	        game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+	    game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
+	    game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
+            game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
+            game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
 
             while (continue_ && ecs::graphical::Graphic::get().isOpen()) {
                 long time = ecs::core::Time::get(TimeUnit::MicroSeconds);

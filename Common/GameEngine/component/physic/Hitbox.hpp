@@ -121,6 +121,12 @@ namespace ecs {namespace component {
 				this->height = height / 2;
 				this->collidable = collidable;
 			}
+			Hitbox(float width, float height, bool collidable, bool forceDeplacement) {
+				this->forceDeplacement = forceDeplacement;
+				this->width = width / 2;
+				this->height = height / 2;
+				this->collidable = collidable;
+			}
 			Hitbox(float width, float height, bool collidable, std::function<void(ID, ID)> function) {
 				this->forceDeplacement = false;
 				this->width = width / 2;

@@ -19,7 +19,8 @@ namespace ecs{
         Ecs() {}
 
         static Ecs &get() {
-        	static Ecs ecs;
+			// thread_local /!\ important
+        	thread_local static Ecs ecs;
 
         	return ecs;
         }

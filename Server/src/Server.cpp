@@ -110,6 +110,11 @@ void	Server::createSession(ClientConnection *me, json::Entity &req, json::Entity
 			#define __MAX std::max
 			#define __MIN std::min
 		#endif
+
+		if (req["name"].to<std::string>().length() == 0) {
+			ERROR("Cannot use empty session name");
+		}
+
 		auto &session = Server::instance().getSessionManager().create(
 			req["name"].to<std::string>(),
 			__MIN(__MAX(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)
@@ -119,11 +124,7 @@ void	Server::createSession(ClientConnection *me, json::Entity &req, json::Entity
 		resp["status"] = true;
 		resp["id"] = session.getId();
 	} catch (std::exception &e) {
-		resp = json::makeObject {
-			{ "error", json::makeObject {
-				{ "message", e.what() }
-			}}
-		};
+		ERROR(e.what());
 	}
 }
 
@@ -149,7 +150,7 @@ void	Server::joinSession(ClientConnection *me, json::Entity &req, json::Entity &
 	for (auto &session: Server::instance().getSessionManager().getSessions()) {
 		if (session._id == id) {
 			for (auto &client: session._players) {
-				if (client->_status.username == me->_status.username)
+				if (client.player->_status.username == me->_status.username)
 					ERROR("You are already in");
 			}
 			session.addPlayer(*me);
@@ -169,7 +170,7 @@ void	Server::quitSession(ClientConnection *me, json::Entity &req, json::Entity &
 			auto it = session._players.begin();
 
 			for (; it != session._players.end(); ++it) {
-				if ((*it)->_status.username == me->_status.username) {
+				if (it->player->_status.username == me->_status.username) {
 					session._rmPlayer(it);
 					resp["status"] = true;
 					return;

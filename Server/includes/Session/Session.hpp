@@ -14,51 +14,61 @@
 #include <deque>
 #include <mutex>
 #include <thread>
+#include "GameEngine/ecs/Entity.hpp"
 #include "Event/HdlCollector.hpp"
+#include "Network/GameProtocol.hpp"
 #include "ClientConnection.hpp"
+#include "Game.hpp"
 
 namespace rtype { namespace session {
 
 class Manager;
 
 class Session {
+private:
+	Manager			*_parent;
+	std::uint32_t		_id;
+	std::string		_name;
+	int			_playerMax;
+
+	bool					_continue = true;
+	std::unique_ptr<std::thread>		_thread;
+	std::deque<std::function<std::shared_ptr<proto::PacketBase>()>>
+										_pool;
+	std::mutex							_pickLock;
+
+	evt::HdlCollector				_collector;
+	std::mutex						_addPlayerMutex;
 public:
 	explicit Session(Manager *parent, std::uint32_t id, std::string const &name, int playerMax);
 	~Session();
 
 	void	addPlayer(ClientConnection &player);
 
-	void	addTask(std::function<void()> const &task);
+	void	addTask(decltype(_pool)::value_type const &task);
 
 	auto	getId() { return _id; }
+
+	void	sendCreate(ID id);
+
+	void 	sendToPlayers(proto::PacketBase const &packet, std::size_t size);
+	void 	sendToPlayer(ClientConnection *player, proto::PacketBase const &packet, std::size_t size);
 private:
-	void			_entryPoint();
+	void	_entryPoint();
 
-	Manager			*_parent;
-	std::uint32_t	_id;
-	std::string		_name;
-	int				_playerMax;
+	struct PlayerContainer {
+		ClientConnection	*player;
+		bool				isDeleted = false;
+		ID					ecsId;
+	};
 
-	bool								_continue = true;
-	std::unique_ptr<std::thread>		_thread;
-	std::deque<std::function<void()>>	_pool;
-	std::mutex							_poolLock;
-	std::mutex							_pickLock;
-
-	evt::HdlCollector				_collector;
-	std::mutex						_addPlayerMutex;
-
-	// struct DestContainer {
-	// 	ClientConnection		*player;
-	// 	evt::Event::EvtHdlDestr	dest;
-	// };
-
-	std::list<ClientConnection*>	_players;
-
+	std::list<PlayerContainer>	_players;
+	Game						_game;
 
 	void	_rmPlayer(decltype(_players)::iterator player);
 
 	friend Manager;
+	friend Game;
 	friend ::rtype::Server;
 };
 

@@ -15,7 +15,7 @@ namespace hidden {
     class ListComponent {
     public:
         static ListComponent<T> &get() {
-            static ListComponent<T> listComponent;
+            thread_local static ListComponent<T> listComponent;
 
             return listComponent;
         }

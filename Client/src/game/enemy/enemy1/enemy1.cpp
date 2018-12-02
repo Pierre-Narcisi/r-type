@@ -22,8 +22,8 @@ namespace game {
 				ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 				ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
 				ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/BigExplosion", 10, ecs::core::Vector2<float>(70,70));
-               			ecs::Ecs::deleteId(other);
-               			ecs::Ecs::deleteId(self);
+				ecs::Ecs::deleteId(other);
+				ecs::Ecs::deleteId(self);
 				t.addEvent(1000, Time::MilliSeconds, [explosion](){ecs::Ecs::deleteId(explosion);});
 			}
 		}));

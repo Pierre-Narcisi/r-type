@@ -22,6 +22,7 @@ inline void ClientConnection::_sendJson(json::Entity const &resp) {
 	_sock.write(resultStr.c_str(), resultStr.size());
 }
 
+static std::uint32_t	_playerIdCounter = 0;
 ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAddr const &addr):
 		TcpListenerSlave(socketFd, addr),
 		JsonBuilder(_sock) {
@@ -35,9 +36,11 @@ ClientConnection::ClientConnection(int socketFd, nw::TcpListenerSlave::NativeAdd
 		});
 	};
 
+	this->_status.id = ++_playerIdCounter;
 	_routerInit();
 	_sendJson(json::makeObject {
 		{ "message", "Welcome to the r-type server!" },
+		{ "id", (int) this->_status.id },
 		{ "sessionsPort", (int) Server::instance().getSessionManager().getListeningPort() }
 	});
 }
@@ -66,8 +69,6 @@ void	ClientConnection::onDataAvailable(std::size_t available) {
 	}
 }
 
-
-static int _playerIdCounter = 0;
 void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 	if (!req["username"].isString()) {
 		resp = json::makeObject {
@@ -79,12 +80,22 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 		return;
 	}
 
+	if (req["username"].to<std::string>().length() == 0) {
+		resp = json::makeObject {
+			{"error", json::makeObject {
+				{"message", "Cannot use empty username"}
+			}},
+			{ "status", false }
+		};
+		return;
+	}
+
 	std::string	username(req["username"].to<std::string>());
 	if (!Server::instance().isConnected(username)) {
 		this->_status.username = username;
 		this->_status.logged = true;
 		resp["status"] = true;
-		resp["id"] = ++_playerIdCounter;
+		resp["id"] = this->_status.id;
 	} else {
 		resp = json::makeObject {
 			{"error", json::makeObject {
@@ -100,13 +111,18 @@ void	ClientConnection::_routerInit() {
 	std::shared_ptr<Router>	sessionRouter(new Router());
 	
 	sessionRouter->use([this] (json::Entity &req, json::Entity &resp, std::function<void()> &next) {
-		if (this->_status.logged) {
+		if (this->_status.logged && this->_status.udpIsSetup) {
 			next();
 		} else {
 			resp["error"] = json::makeObject {
-				{ "message", "Not logged in" }
+				{ "message", json::Entity(json::Entity::ARR) }
 			};
 			resp["status"] = false;
+
+			if (this->_status.logged == false)
+				resp["error"]["message"].push("Not logged in!");
+			if (this->_status.udpIsSetup == false)
+				resp["error"]["message"].push("You need to setup the UDP tunnel before!");
 		}
 	});
 

@@ -44,7 +44,7 @@ void	Router::resolve(std::istream &path, json::Entity &req, json::Entity &resp) 
 	auto job = _sub.find(p);
 	if (job == _sub.end()) {
 		resp["error"] = json::makeObject {
-			{ " message", "Route unknown" },
+			{ "message", "Bad route: unknown" },
 			{ "path", req["path"] }
 		};
 	} else {

@@ -8,7 +8,9 @@
 #include <functional>
 #include <mutex>
 #include <chrono>
+#include "Server.hpp"
 #include "Session/Manager.hpp"
+#include "Network/GameProtocol.hpp"
 
 namespace rtype { namespace session {
 
@@ -29,22 +31,61 @@ void	Manager::_entryPoint() {
 	char 			buf[2048];
 	nw::UdpBuffer 	recvBuffer(buf, sizeof(buf));
 	nw::UdpEndpoint	ep;
+	auto pingCounterStart = std::chrono::high_resolution_clock::now();
 
 	while (_continue) {
 		std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 		start = std::chrono::high_resolution_clock::now();
-		while (_sock.recvFrom(recvBuffer, ep) > 0) {
-			
-			// buf[recvBuffer.len] = 0;
-			// std::cout << buf << std::endl;
-			// Send to session;
 
-			recvBuffer.len = sizeof(buf); 
+		while (_sock.recvFrom(recvBuffer, ep) > 0) {
+			auto &b = *reinterpret_cast<proto::PacketBase*>(buf);
+			
+			if (b.type == proto::Type::UDP_REGISTER) {
+				auto 				playerId = reinterpret_cast<proto::UdpRegister*>(buf)->playerId();
+				proto::UdpConfirm	confirm{proto::Type::UDP_CONFIRM, 0, 0, false};
+				nw::UdpBuffer		resp{reinterpret_cast<char*>(&confirm), sizeof(confirm)};
+
+				for (auto &clt: Server::instance().getUsers()) {
+					if (clt._status.id == playerId) {
+						clt._udpEndpoint = ep;
+						clt._status.udpIsSetup = true;
+						confirm.status = true;
+						break;
+					}
+				}
+				_sock.sendTo(resp, ep);
+			} else {
+				for (auto &s: _sessions) {
+					if (s._id == b.sessionId()) {
+						auto	*packet = reinterpret_cast<proto::PacketBase*>(::operator new(recvBuffer.len));
+						memmove(packet, buf, recvBuffer.len);
+
+						s.addTask([packet] () {
+							return (std::shared_ptr<proto::PacketBase>(packet));
+						});
+						break;
+					}
+				}
+			}
+
+			ep = nw::UdpEndpoint();
+			recvBuffer.len = sizeof(buf);
 		}
 		end = std::chrono::high_resolution_clock::now();
 		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		
 		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime - elapsed));
+		if (std::chrono::duration_cast<std::chrono::seconds>(end - pingCounterStart).count() > 10) {
+			pingCounterStart = end;
+			proto::Ping pingPacket{proto::Type::PING, 0, 0};
+
+			//std::cout << "send ping" << std::endl;
+			for (auto &clt: Server::instance().getUsers()) {
+				if (clt._status.udpIsSetup)
+					_sock.sendTo({reinterpret_cast<char*>(&pingPacket), sizeof(pingPacket)}, clt._udpEndpoint);
+			}
+		}
+
 	}
 }
 

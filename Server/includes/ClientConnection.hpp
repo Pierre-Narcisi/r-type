@@ -9,6 +9,7 @@
 #define _CLIENTCONNECTION_HPP
 
 #include "Event/Event.hpp"
+#include "Network/UdpSocket/UdpSocket.hpp"
 #include "JsonBuilder/JsonBuilder.hpp"
 #include "TcpListenerSlave.hpp"
 #include "Event/Manager.hpp"
@@ -17,6 +18,10 @@
 namespace rtype {
 
 class Server;
+namespace session {
+	class Manager;
+	class Session;
+}
 
 class ClientConnection: public nw::TcpListenerSlave, public common::JsonBuilder {
 public:
@@ -37,13 +42,18 @@ private:
 	void	_createSession(json::Entity &req, json::Entity &resp);
 
 	struct {
-		bool		logged = false;
-		std::string	username;
-	}		_status;
+		std::uint32_t	id;
+		bool			logged = false;
+		bool			udpIsSetup = false;
+		std::string		username;
+	}				_status;
 
-	Router		_router;
+	Router			_router;
+	nw::UdpEndpoint	_udpEndpoint;
 
 	friend Server;
+	friend session::Manager;
+	friend session::Session;
 };
 
 }

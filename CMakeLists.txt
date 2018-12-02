@@ -15,6 +15,7 @@ conan_basic_setup()
 include_directories(Client/)
 include_directories(Common/GameEngine)
 include_directories(Client/src/game)
+include_directories(Client/includes)
 
 
 set(COMMONS_SRCS
@@ -22,6 +23,7 @@ set(COMMONS_SRCS
 	Common/WindowsCtor.hpp
 
 	Common/Network/EndpointBase.hpp
+	Common/Network/GameProtocol.hpp
 
 	Common/Network/TcpSocket/ATcpSocket.hpp
 	Common/Network/TcpSocket/TcpSocket.hpp
@@ -91,16 +93,19 @@ set(ECS_SFML
 	Common/GameEngine/sfml/Graphic.hpp
 
 	Common/GameEngine/component/audio/Sound.hpp
+	Common/GameEngine/system/control/ControlsSFML.hpp
+	Common/GameEngine/system/control/ControlsSFML.cpp
+)
 
+set(ECS_CONTROLS
 	Common/GameEngine/component/control/Keyboard.hpp
 	Common/GameEngine/component/control/Mouse.hpp
 	Common/GameEngine/component/control/Controller.hpp
-	Common/GameEngine/system/control/Controls.hpp
-	Common/GameEngine/system/control/Controls.cpp
 	Common/GameEngine/component/control/LazyDeplacementMouse.hpp
 	Common/GameEngine/component/control/DeplacementKeyBoard.hpp
 	Common/GameEngine/component/control/DeplacementMouse.hpp
-)
+	Common/GameEngine/system/control/Controls.cpp
+	Common/GameEngine/system/control/Controls.hpp)
 
 
 add_executable(rtype
@@ -110,6 +115,7 @@ add_executable(rtype
 	${ECS_PHYSIC}
 	${ECS_CORE}
 	${ECS_SFML}
+	${ECS_CONTROLS}
 
 	Client/lib/TimedEvent/TimedEvent.cpp
 	Client/lib/TimedEvent/TimedEvent.hpp
@@ -132,14 +138,21 @@ add_executable(rtype
 	Client/src/game/system/gen.cpp
 	Client/src/game/enemy/enemy.hpp
 
+	Client/includes/ServerConnection.hpp
+	Client/src/ServerConnection.cpp
+
+	Client/includes/MessageBox.hpp
+
 	Client/src/game/component/Parallax.hpp
 	Client/src/game/system/Parallaxs.hpp
 	Client/src/game/system/Parallaxs.cpp
 
+	Client/includes/Game.hpp
+	Client/src/Game.cpp
 	Client/src/game/menu/Menu.hpp
 
 	Client/src/Main.cpp
-)
+	Common/GameEngine/component/online/OnlineComponent.hpp)
 
 find_package (Threads)
 target_link_libraries(rtype ${CONAN_LIBS})
@@ -152,6 +165,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 include_directories(Server)
+include_directories(Server/src)
 include_directories(Server/includes)
 include_directories(Common)
 
@@ -160,6 +174,7 @@ add_executable(server
 
 	${ECS_PHYSIC}
 	${ECS_CORE}
+	${ECS_CONTROLS}
 
 	Server/src/Main.cpp
 
@@ -180,6 +195,36 @@ add_executable(server
 	Server/src/Session/Manager.cpp
 	Server/includes/Session/Session.hpp
 	Server/src/Session/Session.cpp
+	Server/includes/Session/Game.hpp
+	Server/src/Session/Game.cpp
+
+	Server/src/Session/components/ai.hpp
+	Server/src/Session/components/Bonuses.hpp
+	Server/src/Session/components/enemyFactory.hpp
+	Server/src/Session/components/Firerate.hpp
+	Server/src/Session/components/Inventory.hpp
+	Server/src/Session/components/Types.hpp
+	Server/src/Session/enemy/enemy1/enemy1.hpp
+	Server/src/Session/enemy/enemy1/enemy1.cpp
+	Server/src/Session/enemy/enemy2/enemy2.hpp
+	Server/src/Session/enemy/enemy2/enemy2.cpp
+	Server/src/Session/enemy/enemy3/enemy3.hpp
+	Server/src/Session/enemy/enemy3/enemy3.cpp
+	Server/src/Session/enemy/enemy.hpp
+	Server/src/Session/systems/ai.cpp
+	Server/src/Session/systems/ai.hpp
+	Server/src/Session/systems/Fire.cpp
+	Server/src/Session/systems/Fire.hpp
+	Server/src/Session/systems/walls.cpp
+	Server/src/Session/systems/walls.hpp
+	Server/src/Session/systems/Bonuses.cpp
+	Server/src/Session/systems/Bonuses.hpp
+	Server/src/Session/systems/gen.cpp
+	
+	Server/src/Session/TimedEvent/TimedEvent.cpp
+	Server/src/Session/TimedEvent/TimedEvent.hpp
+	Server/src/Session/TimedEvent/TimedEventAdmin.cpp
+	Server/src/Session/TimedEvent/TimedEventAdmin.hpp
 )
 
 target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})

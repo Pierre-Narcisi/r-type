@@ -12,6 +12,7 @@
 #include <time.h>
 #include "TcpListener.hpp"
 
+#include <iostream>
 namespace nw {
 
 template<typename T>
@@ -38,6 +39,9 @@ void	TcpListener<T>::init() {
 	if ((_socketFd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		throw std::runtime_error(TcpSocket::getLastNetError());
 	}
+	char opt = 1;
+	if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int)) < 0)
+    	throw std::runtime_error(TcpSocket::getLastNetError());
 	if (bind(_socketFd,
 	(struct sockaddr*)&serverAddr,
 	sizeof(serverAddr))) {
@@ -98,6 +102,7 @@ void	TcpListener<T>::run() {
 					if (onDataAvailable) onDataAvailable(slave, len);
 					slave.onDataAvailable(len);
 				} else {
+					std::cout << "Client disconnected" << std::endl;
 					_slaves.erase(slave.template getIterator<typename decltype(_slaves)::iterator>());
 				}
 			}

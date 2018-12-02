@@ -35,6 +35,7 @@ public:
 	bool	isConnected(std::string const username);
 
 	auto	&getSessionManager() { return _sessionManager; }
+	auto	&getUsers() { return _listener->getSlaves(); }
 	
 	void	listSessions(json::Entity &req, json::Entity &resp);
 	void	createSession(ClientConnection *me, json::Entity &req, json::Entity &resp);

@@ -17,7 +17,8 @@ std::list<json::Entity>	JsonBuilder::_extractJsonObjects(std::size_t available) 
 	auto pos = _buffer.size();
 
 	_buffer.resize(_buffer.size() + available);
-	_socket.read(&_buffer.front() + pos, available);
+	auto len = _socket.read(&_buffer.front() + pos, available);
+	_buffer.resize(pos + len);
 
 	//std::cout << (void*) &_buffer.front() << std::endl;
 
@@ -40,7 +41,10 @@ std::list<json::Entity>	JsonBuilder::_extractJsonObjects(std::size_t available) 
 			return (res);
 		}
 		auto	start = (std::uintptr_t) &_buffer.front() + lastPos;
+		auto 	end = (std::uintptr_t) &_buffer.back();
 		auto	len = (std::uintptr_t) &_buffer.back() - start;
+		if (end < start)
+			len = 0;
 
 		// std::cout << (std::uintptr_t) &_buffer.front() << " " <<
 		// 		(std::uintptr_t) &_buffer.back() << " " <<
