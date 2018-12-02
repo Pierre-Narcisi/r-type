@@ -40,6 +40,15 @@ void Fire::shootFire(ID id, float spX, float spY, rtype::session::Session &sessi
 			ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::EXPLOSION);
 			ecs::Ecs::deleteId(other);
 			ecs::Ecs::deleteId(self);
+			
+			auto onDestroy = [explosion, &session](){
+				ecs::Ecs::deleteId(explosion);
+
+					proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
+
+					session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+				
+			};
 
 			proto::Delete	packo{proto::Type::DELETE, session.getId(), 0, other};
 			proto::Delete	packs{proto::Type::DELETE, session.getId(), 0, self};
@@ -48,13 +57,8 @@ void Fire::shootFire(ID id, float spX, float spY, rtype::session::Session &sessi
 			session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(packs), sizeof(packs));
 
 			session.sendCreate(explosion);
-			t.addEvent(500, Time::MilliSeconds, [explosion, &session](){
-				ecs::Ecs::deleteId(explosion);
 
-				proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
-
-				session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
-			});
+			t.addEvent(500, Time::MilliSeconds, [onDestroy]{ onDestroy(); });
 		}
 	});
 	m.addEvent(2, Time::Seconds, [bullet, &session](){
