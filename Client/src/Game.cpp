@@ -54,9 +54,7 @@ void	Game::start(ServerConnection &srv) {
 	{
 		rtype::Selection selection;
 
-		std::cout << "TEST" << std::endl;
 		selection.run(srv);
-		std::cout << "TEST" << std::endl;
 	}
 
 
@@ -214,14 +212,14 @@ void	Game::_onReceiveCreate(proto::Create &packet) {
 		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(
 			id,
 			path,
-			4,
-			ecs::core::Vector2<float> { packet.w(), packet.h() }
+			8,
+			ecs::core::Vector2<float> { (float) packet.w(), (float) packet.h() }
 		);
 	else
 		ecs::Ecs::addComponent<ecs::component::Sprite>(
 			id,
 			path,
-			ecs::core::Vector2<float> { packet.w(), packet.h() }
+			ecs::core::Vector2<float> { (float) packet.w(), (float) packet.h() }
 		);
 }
 
