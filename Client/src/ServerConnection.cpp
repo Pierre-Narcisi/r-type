@@ -143,7 +143,7 @@ void	ServerConnection::_entryPoint() {
 		if (p->type == proto::Type::PING) {
 			std::cout << "[server] PING" << std::endl;
 		} else {
-			std::cout << "[server] " << (int) p->type << std::endl;
+			//std::cout << "[server] " << (int) p->type << std::endl;
 			auto sharedPtr = std::shared_ptr<proto::PacketBase>(
 				reinterpret_cast<proto::PacketBase*>(::operator new(wbuf.len))
 			);

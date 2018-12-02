@@ -29,6 +29,23 @@ void	Game::init() {
 	std::shared_ptr<game::system::gen>	gen(new game::system::gen());
 	std::shared_ptr<game::system::walls>	walls(new game::system::walls());
 
+	ID limitTop = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Speed>(limitTop, 0, 0);
+	ecs::Ecs::addComponent<ecs::component::Position>(limitTop, 1280/2, 0);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitTop, 1280.f, 1.f, true);
+	ID limitBottom = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Speed>(limitTop, 0, 0);
+	ecs::Ecs::addComponent<ecs::component::Position>(limitBottom, 1280/2, 720);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitBottom, 1280.f, 1.f, true);
+	ID limitLeft = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Speed>(limitTop, 0, 0);
+	ecs::Ecs::addComponent<ecs::component::Position>(limitLeft, 0, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitLeft, 1.f, 720.f, true);
+	ID limitRight = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Speed>(limitTop, 0, 0);
+	ecs::Ecs::addComponent<ecs::component::Position>(limitRight, 1280, 720/2);
+	ecs::Ecs::addComponent<ecs::component::Hitbox>(limitRight, 1.f, 720.f, true);
+
 	_ecs->addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateMouses);
