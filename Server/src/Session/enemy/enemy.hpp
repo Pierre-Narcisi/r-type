@@ -14,7 +14,7 @@ namespace game {
 			enemy() = default;
 			~enemy() = default;
 			virtual void init(ID _id, int posx, int posy, rtype::session::Session &session) = 0;
-			virtual void update(ID _id) = 0;
+			virtual void update(ID _id, rtype::session::Session &session) = 0;
 	};
 }
 
