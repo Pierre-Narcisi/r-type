@@ -79,7 +79,7 @@ void	Manager::_entryPoint() {
 			pingCounterStart = end;
 			proto::Ping pingPacket{proto::Type::PING, 0, 0};
 
-			std::cout << "send ping" << std::endl;
+			//std::cout << "send ping" << std::endl;
 			for (auto &clt: Server::instance().getUsers()) {
 				if (clt._status.udpIsSetup)
 					_sock.sendTo({reinterpret_cast<char*>(&pingPacket), sizeof(pingPacket)}, clt._udpEndpoint);

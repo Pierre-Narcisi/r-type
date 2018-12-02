@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ecs/Ecs.hpp>
-#include "component/Bonuses.hpp"
+#include "Session/components/Bonuses.hpp"
 
 namespace game {namespace system {
 	class Bonuses {

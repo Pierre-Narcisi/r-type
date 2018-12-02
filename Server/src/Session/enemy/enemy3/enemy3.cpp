@@ -14,7 +14,7 @@
 #include "core/Time.hpp"
 #include "Session/TimedEvent/TimedEventAdmin.hpp"
 #include "ecs/Ecs.hpp"
-//#include "component/Bonuses.hpp"
+#include "Session/components/Bonuses.hpp"
 #include "ecs/DataBank.hpp"
 #include "Session/components/Types.hpp"
 //#include "system/walls.hpp"
@@ -29,7 +29,7 @@ namespace game {
 		//ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
 		//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy3/", 8, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
-		//ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id);
+		ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id, std::ref(session));
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -1.f, 0.f);
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_id, _id, proto::SpriteId::ENEMY3);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 40.f, 40.f, false, static_cast<std::function<void(ID, ID)>>([&session](ID self, ID other){

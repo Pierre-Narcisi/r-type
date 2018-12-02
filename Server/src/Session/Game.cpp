@@ -15,6 +15,7 @@
 #include "Session/Session.hpp"
 #include "Session/systems/gen.hpp"
 #include "Session/systems/ai.hpp"
+#include "Session/systems/Bonuses.hpp"
 #include "Session/Game.hpp"
 #undef NOSPRITE
 
@@ -30,6 +31,7 @@ void	Game::init() {
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateMouses);
 	_ecs->addUpdate(2, &ecs::system::Speeds::UpdateSpeeds);
+	_ecs->addUpdate(8, &game::system::Bonuses::UpdateBonuses);
 	_ecs->addUpdate(9, std::bind(&game::system::ai::updateAi, std::ref(*_parent)));
 	_ecs->addUpdate(9, [this, gen]{
 		gen->updateGen(*_parent);
@@ -68,12 +70,10 @@ void	Game::update() {
 }
 
 void	Game::onKeyPress(int internPlayerId, ID playerId, proto::KeyPress &packet) {
-	std::cout << "Press " << packet.keyCode << std::endl;
 	ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[playerId].keyMap[static_cast<KeyKeyboard>(packet.keyCode)].first = true;
 }
 
 void	Game::onKeyRelease(int internPlayerId, ID playerId, proto::KeyRelease &packet) {
-	std::cout << "Release " << packet.keyCode << std::endl;
 	ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[playerId].keyMap[static_cast<KeyKeyboard>(packet.keyCode)].first = false;
 }
 

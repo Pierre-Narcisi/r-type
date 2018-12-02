@@ -199,18 +199,25 @@ add_executable(server
 	Server/src/Session/Game.cpp
 
 	Server/src/Session/components/ai.hpp
+	Server/src/Session/components/Bonuses.hpp
+	Server/src/Session/components/enemyFactory.hpp
+	Server/src/Session/components/Firerate.hpp
+	Server/src/Session/components/Inventory.hpp
+	Server/src/Session/components/Types.hpp
 	Server/src/Session/enemy/enemy1/enemy1.hpp
 	Server/src/Session/enemy/enemy1/enemy1.cpp
 	Server/src/Session/enemy/enemy2/enemy2.hpp
 	Server/src/Session/enemy/enemy2/enemy2.cpp
 	Server/src/Session/enemy/enemy3/enemy3.hpp
 	Server/src/Session/enemy/enemy3/enemy3.cpp
+	Server/src/Session/enemy/enemy.hpp
 	Server/src/Session/systems/ai.cpp
 	Server/src/Session/systems/ai.hpp
 	Server/src/Session/systems/Fire.cpp
 	Server/src/Session/systems/Fire.hpp
+	Server/src/Session/systems/Bonuses.cpp
+	Server/src/Session/systems/Bonuses.hpp
 	Server/src/Session/systems/gen.cpp
-	Server/src/Session/enemy/enemy.hpp
 	
 	Server/src/Session/TimedEvent/TimedEvent.cpp
 	Server/src/Session/TimedEvent/TimedEvent.hpp
