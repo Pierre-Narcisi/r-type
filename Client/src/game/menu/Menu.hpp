@@ -69,20 +69,17 @@ class Menu
             ecs::Ecs::addComponent<ecs::component::TextDisplay>(text, "assets/PressStart.ttf", "PLEASE ENTER YOUR LOGIN", 1280/2, 360);
 
             ID input = ecs::entity::Entity::getId();
-            ecs::Ecs::addComponent<ecs::component::Position>(input, 1280/2, 420);
+            ecs::Ecs::addComponent<ecs::component::Position>(input, 1280/2, 460);
             ecs::Ecs::addComponent<ecs::component::Drawable>(input, 0, true);
-            ecs::Ecs::addComponent<ecs::component::TextDisplay>(input, "assets/PressStart.ttf", "", 1280/2, 420, true);
+            ecs::Ecs::addComponent<ecs::component::TextDisplay>(input, "assets/PressStart.ttf", "", 1280/2, 460, true);
             //ecs::Ecs::addComponent<ecs::component::Keyboard>(input);
 
             ID buttonPlay = ecs::entity::Entity::getId();
             ecs::Ecs::addComponent<ecs::component::Position>(buttonPlay, 1280/2, 600);
             ecs::Ecs::addComponent<ecs::component::Speed>(buttonPlay);
             ecs::Ecs::addComponent<ecs::component::Drawable>(buttonPlay, 0, true);
-            ecs::Ecs::addComponent<ecs::component::Sprite>(buttonPlay, "assets/css-buttons.png");
-            ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonPlay, buttonPlay, false, [&continue_, &srv, input](ID self, ID other){
-                if (ecs::Ecs::idHasComponents<ecs::component::Mouse>(other) && ecs::Ecs::getComponentMap<ecs::component::Mouse>()[other].mouseMap[KeyMouse::LCLICK].first)
-                    Menu::tryToConnect(continue_, srv, input);
-            });
+            ecs::Ecs::addComponent<ecs::component::Sprite>(buttonPlay, "assets/buttonPressEnter.png");
+            ecs::Ecs::addComponent<ecs::component::Hitbox>(buttonPlay, buttonPlay, false, [&continue_](ID self, ID other){});
 
             ID mouse = ecs::entity::Entity::getId();
             ecs::Ecs::addComponent<ecs::component::Position>(mouse);
