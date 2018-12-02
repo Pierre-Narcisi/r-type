@@ -13,6 +13,7 @@
 
 #include "Network/UdpSocket/UdpSocket.hpp"
 
+#undef ERROR
 #define ERROR(__text) { \
 	resp = json::makeObject { \
 		{ "error", json::makeObject { \

@@ -112,7 +112,7 @@ namespace rtype {
                         {
                             this->_index -= 1;
                             if (_index < 0)
-                                this->_index = _rooms.size() - 1;
+                                this->_index = (int) _rooms.size() - 1;
                         }
                         ecs::Ecs::getComponentMap<game::Firerate>()[parent]._lastfire = std::chrono::system_clock::now();
                     }

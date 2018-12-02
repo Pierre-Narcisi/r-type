@@ -26,6 +26,7 @@ namespace proto {
 	UInt32	sessionId; \
 	UInt32	playerId;
 
+#undef DELETE
 enum class Type: std::uint8_t {
 	BASE,
 	PING,
@@ -84,7 +85,9 @@ DECORATED_STRUCT(IntBase, {
 	using	ValueType = T;
 
 	IntBase() = default;
-	IntBase(ValueType	nbr): _nbr(toNet(nbr)) {}
+	IntBase(ValueType nbr): _nbr(toNet(nbr)) {}
+	template<typename U>
+	IntBase(U nbr): _nbr(toNet(static_cast<T>(nbr))) {}
 
 	IntBase		&operator=(ValueType nbr) { _nbr = toNet(nbr); }
 	ValueType	operator()() { return toHost(_nbr); }

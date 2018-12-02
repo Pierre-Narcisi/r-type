@@ -19,7 +19,7 @@ inline void ClientConnection::_sendJson(json::Entity const &resp) {
 
 	resp.print(strm, json::Entity::MINIFIED);
 	auto resultStr = strm.str();
-	_sock.write(resultStr.c_str(), resultStr.size());
+	_sock.write(resultStr.c_str(), (SOCK_BUFFER_LEN_TYPE) resultStr.size());
 }
 
 static std::uint32_t	_playerIdCounter = 0;

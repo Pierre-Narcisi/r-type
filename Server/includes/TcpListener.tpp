@@ -55,11 +55,11 @@ void	TcpListener<T>::init() {
 template<typename T>
 void	TcpListener<T>::_accept() {
 	int					err = 0;
-	int					clientFd = -1;
+	Socket				clientFd = -1;
 	struct sockaddr_in	clientAddr;
 	socklen_t			clientAddrLen = sizeof(clientAddr);
 
-	err = (clientFd = accept(
+	err = (int) (clientFd = accept(
 		_socketFd, (struct sockaddr*) &clientAddr, &clientAddrLen));
 	if (err == -1) {
 		throw std::runtime_error(TcpSocket::getLastNetError());

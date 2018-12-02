@@ -69,7 +69,7 @@ std::ostream	&operator<<(std::ostream &to, Opts::IValue const &me) {
 	int	len = 0;
 	if (me._helpName.empty() == false) {
 		to << me._helpName;
-		len = me._helpName.size();
+		len = (int) me._helpName.size();
 	}
 	for (int i = 0; i < (*me._biggestNamePtr - len) + 3; ++i)
 		to << ' ';

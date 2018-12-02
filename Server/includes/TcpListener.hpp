@@ -38,7 +38,7 @@ public:
 
 private:
 	std::uint16_t	_port;
-	int				_socketFd;
+	Socket			_socketFd;
 	bool			_continue;
 	std::list<T>	_slaves;
 };

@@ -19,6 +19,7 @@
 
  using ssize_t = int;
  using Socket = SOCKET;
+ #define SOCK_BUFFER_LEN_TYPE int
 #else
  #include <sys/socket.h>
  #include <sys/types.h>
@@ -31,6 +32,7 @@
 
  #define SOCKETCLOSE(fd) ::close((fd))
  #define SOCKETIOCTL(args...) ::ioctl(args)
+ #define SOCK_BUFFER_LEN_TYPE std::size_t
 
  using Socket = int;
 #endif

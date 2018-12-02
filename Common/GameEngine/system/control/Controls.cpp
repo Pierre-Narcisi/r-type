@@ -58,20 +58,20 @@ namespace ecs { namespace system {
 				deplacement.x = dep.speed;
 
 			if (keyB.keyMap[dep.forward].first && keyB.keyMap[dep.left].first) {
-				deplacement.y = -(dep.speed * 0.7071);
-				deplacement.x = -(dep.speed * 0.7071);
+				deplacement.y = static_cast<float>(-(dep.speed * 0.7071));
+				deplacement.x = static_cast<float>(-(dep.speed * 0.7071));
 			}
 			if (keyB.keyMap[dep.forward].first && keyB.keyMap[dep.right].first) {
-				deplacement.y = -(dep.speed * 0.7071);
-				deplacement.x = (dep.speed * 0.7071);
+				deplacement.y = static_cast<float>(-(dep.speed * 0.7071));
+				deplacement.x = static_cast<float>((dep.speed * 0.7071));
 			}
 			if (keyB.keyMap[dep.backward].first && keyB.keyMap[dep.left].first) {
-				deplacement.y = (dep.speed * 0.7071);
-				deplacement.x = -(dep.speed * 0.7071);
+				deplacement.y = static_cast<float>((dep.speed * 0.7071));
+				deplacement.x = static_cast<float>(-(dep.speed * 0.7071));
 			}
 			if (keyB.keyMap[dep.backward].first && keyB.keyMap[dep.right].first) {
-				deplacement.y = (dep.speed * 0.7071);
-				deplacement.x = (dep.speed * 0.7071);
+				deplacement.y = static_cast<float>((dep.speed * 0.7071));
+				deplacement.x = static_cast<float>((dep.speed * 0.7071));
 			}
 			time = static_cast<float>(ecs::core::Time::get(TimeUnit::MicroSeconds) - dep.lastMove);
 			ecs::Ecs::getComponentMap<component::Speed>()[tomove].x = time / 1000000.f * deplacement.x;
@@ -85,16 +85,16 @@ namespace ecs { namespace system {
 		auto &speedMap = ecs::Ecs::getComponentMap<component::Speed>();
 		auto &posMap = ecs::Ecs::getComponentMap<component::Position>();
 		for (auto mouse : mouses) {
-			mouseDepMap[mouse].lastPosition.x = posMap[mouse].x;
-			mouseDepMap[mouse].lastPosition.y = posMap[mouse].y;
+			mouseDepMap[mouse].lastPosition.x = (int)posMap[mouse].x;
+			mouseDepMap[mouse].lastPosition.y = (int)posMap[mouse].y;
 			if (!(mouseMap[mouse].position == mouseDepMap[mouse].lastPosition)) {
 				if (abs(mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) + abs(mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) < mouseDepMap[mouse].speed) {
-					speedMap[mouse].x = mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x;
-					speedMap[mouse].y = mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y;
+					speedMap[mouse].x = (float)mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x;
+					speedMap[mouse].y = (float)mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y;
 				} else {
 					auto total = abs(mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) + abs(mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y);
-					speedMap[mouse].x = mouseDepMap[mouse].speed * (mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) / total;
-					speedMap[mouse].y = mouseDepMap[mouse].speed * (mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) / total;
+					speedMap[mouse].x = (float)mouseDepMap[mouse].speed * (mouseMap[mouse].position.x - mouseDepMap[mouse].lastPosition.x) / total;
+					speedMap[mouse].y = (float)mouseDepMap[mouse].speed * (mouseMap[mouse].position.y - mouseDepMap[mouse].lastPosition.y) / total;
 				}
 			} else {
 				speedMap[mouse].x = 0.f;
@@ -109,8 +109,8 @@ namespace ecs { namespace system {
 		auto lazys = ecs::Ecs::filter<ecs::component::Speed, ecs::component::LazyDeplacementMouse, ecs::component::Mouse>();
 
 		for(auto id : lazys) {
-			posMap[id].x = mouseMap[id].position.x;
-			posMap[id].y = mouseMap[id].position.y;
+			posMap[id].x = (float)mouseMap[id].position.x;
+			posMap[id].y = (float)mouseMap[id].position.y;
 		}
 	}
 

@@ -108,9 +108,9 @@ void	Game::_onReceiveMove(proto::Move &packet) {
 	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
 
 	for (auto id : ids) {
-		if (online[id].onlineId == packet.componentId()) {
-			pos[id].x = packet.x();
-			pos[id].y = packet.y();
+		if (online[id].onlineId == (ID)packet.componentId()) {
+			pos[id].x = (float)packet.x();
+			pos[id].y = (float)packet.y();
 			break;
 		}
 	}
@@ -143,7 +143,7 @@ void	Game::_onReceiveDelete(proto::Delete &packet) {
 	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
 
 	for (auto id : ids) {
-		if (online[id].onlineId == packet.componentId()) {
+		if (online[id].onlineId == (ID)packet.componentId()) {
 			ecs::Ecs::deleteId(id);
 			break;
 		}

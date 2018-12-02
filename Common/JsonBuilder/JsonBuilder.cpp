@@ -17,7 +17,7 @@ std::list<json::Entity>	JsonBuilder::_extractJsonObjects(std::size_t available) 
 	auto pos = _buffer.size();
 
 	_buffer.resize(_buffer.size() + available);
-	auto len = _socket.read(&_buffer.front() + pos, available);
+	auto len = _socket.read(&_buffer.front() + pos, (SOCK_BUFFER_LEN_TYPE)available);
 	_buffer.resize(pos + len);
 
 	//std::cout << (void*) &_buffer.front() << std::endl;

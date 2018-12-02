@@ -94,7 +94,7 @@ namespace ecs {namespace graphical {
 				if (!tmp.loadFromFile(path))
 					return core::Vector2<float>();
 				auto size = tmp.getSize();
-				return core::Vector2<float>(size.x, size.y);
+				return core::Vector2<float>((float) size.x, (float) size.y);
 			}
 
 			sf::RenderWindow				*_window;

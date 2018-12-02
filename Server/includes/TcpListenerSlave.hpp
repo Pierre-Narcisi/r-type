@@ -17,9 +17,9 @@ namespace nw {
 class TcpListenerSlave {
 public:
 	using NativeAddr = sockaddr_in;
-	using NativeSocket = int;
+	using NativeSocket = Socket;
 
-	explicit TcpListenerSlave(int socketFd, NativeAddr const &addr):
+	explicit TcpListenerSlave(Socket socketFd, NativeAddr const &addr):
 		_nativeSock(socketFd), _addr(addr), _sock(socketFd, TcpEndpoint(addr)) {}
 
 	~TcpListenerSlave() {

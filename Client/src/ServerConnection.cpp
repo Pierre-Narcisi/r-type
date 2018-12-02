@@ -41,7 +41,7 @@ inline void	ServerConnection::_sendJson(json::Entity const &obj) {
 	obj.print(sstm, json::Entity::StringifyAttr::MINIFIED);
 	
 	std::string	buffer(sstm.str());
-	_tcpSock.write(buffer.c_str(), buffer.length());
+	_tcpSock.write(buffer.c_str(), SOCK_BUFFER_LEN_TYPE(buffer.length()));
 }
 
 inline json::Entity	ServerConnection::_getJson() {
@@ -55,6 +55,7 @@ inline json::Entity	ServerConnection::_getJson() {
 			return lData.front();
 		}
 	}
+	return json::Entity();
 }
 
 bool	ServerConnection::connect(std::string const &host, std::uint16_t port) {
@@ -68,7 +69,7 @@ bool	ServerConnection::connect(std::string const &host, std::uint16_t port) {
 		std::cout << "[" << host << "]: " << resp["message"].to<std::string>() << std::endl;
 		_serverEp = nw::UdpEndpoint(host, resp["sessionsPort"].to<int>());
 
-		proto::UdpRegister	reg{proto::Type::UDP_REGISTER, 0, resp["id"].to<int>()};
+		proto::UdpRegister	reg{proto::Type::UDP_REGISTER, 0, (std::int32_t)resp["id"].to<int>()};
 		proto::UdpConfirm	conf{};
 		nw::UdpBuffer		buf{reinterpret_cast<char*>(&conf), sizeof(conf)};
 
