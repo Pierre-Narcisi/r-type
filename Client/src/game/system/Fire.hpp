@@ -11,11 +11,10 @@
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
 #include <component/physic/Hitbox.hpp>
-#include <component/graphical/Drawable.hpp>
 #include "core/Time.hpp"
 #include "lib/TimedEvent/TimedEventAdmin.hpp"
-#include "component/Types.hpp"
-#include "component/Firerate.hpp"
+#include "Session/components/Types.hpp"
+#include "Session/components/Firerate.hpp"
 #include <ecs/DataBank.hpp>
 #include <math.h>
 

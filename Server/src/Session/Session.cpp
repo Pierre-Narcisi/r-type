@@ -7,6 +7,9 @@
 
 #define NOSPRITE
 #include <functional>
+#include <Server/src/Session/components/Firerate.hpp>
+#include "src/game/component/Inventory.hpp"
+#include "Session/systems/Fire.hpp"
 #include "component/graphical/Drawable.hpp"
 #include "component/physic/Hitbox.hpp"
 #include "component/online/OnlineComponent.hpp"
@@ -181,15 +184,22 @@ void	Session::addPlayer(ClientConnection &player) {
 			case 3: spriteId = proto::SpriteId::PLAYER4; break;
 		}
 
-		proto::Create	pack{proto::Type::CREATE, _id, 0, id, 32, 16, 150, 720 / 2, spriteId};
+		proto::Create	pack{proto::Type::CREATE, _id, 0, id, 64, 32, 150, 720 / 2, spriteId};
 
 		ecs::Ecs::addComponent<ecs::component::Position>(id, pack.x(), pack.y());
 		ecs::Ecs::addComponent<ecs::component::Speed>(id);
+		ecs::Ecs::addComponent<game::Firerate>(id, 20);
 		ecs::Ecs::addComponent<game::component::Type>(id, game::component::Type::Types::SHIP);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, pack.w(), pack.h());
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, pack.spriteID);
 		ecs::Ecs::addComponent<ecs::component::Keyboard>(id);
+		ecs::Ecs::addComponent<game::component::Inventory>(id);
 		ecs::Ecs::addComponent<ecs::component::DeplacementKeyBoard>(id);
+		ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::SPACE] =
+			std::pair<bool, std::function<void(ID)>>(false, [this](ID id) {
+				if (ecs::Ecs::getComponentMap<ecs::component::Keyboard>()[id].keyMap[KeyKeyboard::SPACE].first)
+					game::system::Fire::shoot(id, *this);
+			});
 
 		cont->ecsId = id;
 

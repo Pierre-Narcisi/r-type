@@ -2,6 +2,7 @@
 // Created by pierre on 20/11/2018.
 //
 
+#include "component/graphical/Drawable.hpp"
 #include "Fire.hpp"
 
 namespace game {namespace system {
