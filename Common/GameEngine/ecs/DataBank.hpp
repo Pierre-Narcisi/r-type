@@ -17,7 +17,7 @@ namespace ecs {
 	class DataBank {
 	public:
 		static DataBank<I, T> &get() {
-			static DataBank<I, T> bank;
+			thread_local static DataBank<I, T> bank;
 
 			return (bank);
 		}
