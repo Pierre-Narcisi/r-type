@@ -10,7 +10,7 @@
 #include "component/physic/Speed.hpp"
 #include "component/physic/Hitbox.hpp"
 #include "core/Time.hpp"
-#include "lib/TimedEvent/TimedEventAdmin.hpp"
+#include "Session/TimedEvent/TimedEventAdmin.hpp"
 #include "enemy1.hpp"
 #include "Network/GameProtocol.hpp"
 #include "math.h"
@@ -41,12 +41,10 @@ namespace game {
 				ecs::Ecs::deleteId(self);
 
 				auto onDestroy = [explosion, &session](){
-					ecs::Ecs::deleteId(explosion);
-
-						proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
-
-						session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+					proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 					
+					ecs::Ecs::deleteId(explosion);
+					session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 				};
 				
 				proto::Delete	packo{proto::Type::DELETE, session.getId(), 0, other};

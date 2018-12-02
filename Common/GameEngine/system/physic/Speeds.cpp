@@ -40,9 +40,13 @@ namespace ecs {namespace system {
 							(pos2.x + box2.width <= pos1.x - box1.width) ||
 							(pos2.y - box2.height >= pos1.y + box1.height) ||
 							(pos2.y + box2.height <= pos1.y - box1.height))) {
-							if (ecs::Ecs::idHasComponents<ecs::component::Hitbox>(id) && box1.func)
+							if (ecs::Ecs::idHasComponents<ecs::component::Hitbox>(od)
+							&& ecs::Ecs::idHasComponents<ecs::component::Hitbox>(id)
+							&& box1.func)
 								box1.func(id, od);
-							if (box2.collidable) {
+							if (ecs::Ecs::idHasComponents<ecs::component::Hitbox>(od)
+							&& ecs::Ecs::idHasComponents<ecs::component::Hitbox>(id)
+							&& box2.collidable) {
 								if ((pos2.x - box2.width >= tmpPos.x + box1.width) ||
 								    (pos2.x + box2.width <= tmpPos.x - box1.width)) {
 									if (box1.forceDeplacement)

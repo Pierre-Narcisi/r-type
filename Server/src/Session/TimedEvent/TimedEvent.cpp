@@ -19,10 +19,10 @@ TimedEvent::TimedEvent()
 			while (func != this->_timedFunctions.end()) {
 				if (func->time > this->_initialTime && func->time < time) {
 					func->func();
-					_timedFunctions.erase(func);
-					func--;
+					func = _timedFunctions.erase(func);
+				} else {
+					func++;
 				}
-				func++;
 			}
 		}
 	});
