@@ -190,7 +190,7 @@ void	Session::addPlayer(ClientConnection &player) {
 
 		ecs::Ecs::addComponent<ecs::component::Position>(id, pack.x(), pack.y());
 		ecs::Ecs::addComponent<ecs::component::Speed>(id);
-		ecs::Ecs::addComponent<game::Firerate>(id, 20);
+		ecs::Ecs::addComponent<game::Firerate>(id, 200);
 		ecs::Ecs::addComponent<game::component::Type>(id, game::component::Type::Types::SHIP);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(id, pack.w(), pack.h());
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, id, pack.spriteID);
