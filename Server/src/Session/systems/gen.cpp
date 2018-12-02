@@ -6,7 +6,7 @@
 #include "GameEngine/core/Time.hpp"
 #include "Session/enemy/enemy1/enemy1.hpp"
 #include "Session/enemy/enemy2/enemy2.hpp"
-// #include "enemy/enemy3/enemy3.hpp"
+#include "Session/enemy/enemy3/enemy3.hpp"
 #include "Session/components/enemyFactory.hpp"
 #include "gen.hpp"
 
@@ -17,7 +17,6 @@ namespace game {namespace system {
 	}
 
 	void gen::updateGen(rtype::session::Session &session) {
-		auto patate = new game::enemy2;
 		if (_time + _nb * 2 < ecs::core::Time::get(TimeUnit::Seconds)) {
 			TimedEventAdmin m;
 			ID enemy = ecs::entity::Entity::getId();
@@ -28,8 +27,7 @@ namespace game {namespace system {
 				session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 			});
 			std::random_device generator;
-			// std::uniform_int_distribution<int> distribution(1, 3);
-			std::uniform_int_distribution<int> distribution(1, 2);
+			std::uniform_int_distribution<int> distribution(1, 3);
 			int my_rand = distribution(generator); 
 			std::uniform_int_distribution<int> dist(3,10);
 			int my_nb_rand = dist(generator);
@@ -43,7 +41,7 @@ namespace game {namespace system {
 					dist.reset();
 					break;
 				case 3:
-					//ecs::Ecs::addComponent<game::component::enemyFactory<enemy3>>(enemy, my_nb_rand / 2, 3);
+					ecs::Ecs::addComponent<game::component::enemyFactory<enemy3>>(enemy, my_nb_rand / 2, 3, std::ref(session));
 					dist.reset();
 					break;
 				default:

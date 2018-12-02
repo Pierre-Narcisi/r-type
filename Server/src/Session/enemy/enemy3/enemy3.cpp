@@ -2,6 +2,9 @@
 // Created by pierre on 20/11/2018.
 //
 
+#include "enemy3.hpp"
+#include "math.h"
+
 #define NOSPRITE
 #include "component/physic/Position.hpp"
 #include "component/physic/Speed.hpp"
@@ -15,21 +18,21 @@
 #include "ecs/DataBank.hpp"
 #include "Session/components/Types.hpp"
 //#include "system/walls.hpp"
-#include "enemy2.hpp"
+#include "enemy3.hpp"
 #include "math.h"
 #undef NOSPRITE
 
 namespace game {
-	void enemy2::init(ID _id, int posx, int posy, rtype::session::Session &session) {
+	void enemy3::init(ID _id, int posx, int posy, rtype::session::Session &session) {
 		_time = ecs::core::Time::get(TimeUnit::Seconds);
-		//ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
 		ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::ENEMY);
-		//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy2/Enemy2walk/", 4, ecs::core::Vector2<float>(40, 40));
+		//ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
+		//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy3/", 8, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
 		//ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id);
-		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_id, _id, proto::SpriteId::ENEMY2);
-		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.1f, 1.f);
-		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 40.f, 40.f, true, static_cast<std::function<void(ID, ID)>>([&session](ID self, ID other){
+		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -1.f, 0.f);
+		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_id, _id, proto::SpriteId::ENEMY3);
+		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 40.f, 40.f, false, static_cast<std::function<void(ID, ID)>>([&session](ID self, ID other){
 			game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
 			if (type._type == game::component::Type::Types::SHIP) {
 				TimedEventAdmin t;
@@ -48,7 +51,6 @@ namespace game {
 						proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 
 						session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
-					
 				};
 
 				proto::Delete	packo{proto::Type::DELETE, session.getId(), 0, other};
@@ -63,15 +65,22 @@ namespace game {
 		}));
 	}
 
-	void enemy2::update(ID _id, rtype::session::Session &session) {
+	void enemy3::update(ID _id, rtype::session::Session &session) {
 		auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+		auto &speed = ecs::Ecs::getComponentMap<ecs::component::Speed>();
 		auto ship = ecs::Ecs::filter<ecs::component::Keyboard>();
 		float dist;
 		float res_dist = -1;
 		ID res;
 
-		if (pos[_id].x < -1) {
-			ecs::Ecs::deleteId(_id);
+		if (pos[_id].x < 1000) {
+			speed[_id].x = 0;
+			if (pos[_id].y > 600)
+				speed[_id].y = -0.5;
+			else if (pos[_id].y < 200)
+				speed[_id].y = 0.5;
+			else if (speed[_id].y == 0)
+				speed[_id].y = -0.5;
 		}
 
 		if (ecs::core::Time::get(TimeUnit::Seconds) > _time + 1 && ship.size() > 0) {
@@ -89,9 +98,10 @@ namespace game {
 			double angle = std::atan2(-v1, -v2);
 			ID bullet = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, sinf(angle) * 7, cosf(angle) * 7);
+			ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);
 			//ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[_id].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[_id].y);
-			//ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet2.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png", ecs::core::Vector2<float>(30,30));
+			//ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet2.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png", ecs::core::Vector2<float>(30, 30));
 			ecs::Ecs::addComponent<ecs::component::OnlineComponent>(bullet, bullet, proto::SpriteId::BULLET2);
 			ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 15.f, 15.f, false, [_id, &session](ID self, ID other){
@@ -115,7 +125,7 @@ namespace game {
 							session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 						
 					};
-					
+
 					proto::Delete	packo{proto::Type::DELETE, session.getId(), 0, other};
 					proto::Delete	packs{proto::Type::DELETE, session.getId(), 0, self};
 
@@ -123,7 +133,7 @@ namespace game {
 					session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(packs), sizeof(packs));
 
 					session.sendCreate(explosion);
-					t.addEvent(500, Time::MilliSeconds, [onDestroy]{ onDestroy(); });
+					t.addEvent(1000, Time::MilliSeconds, [onDestroy]{ onDestroy(); });
 				}
         	});
 			session.sendCreate(bullet);
