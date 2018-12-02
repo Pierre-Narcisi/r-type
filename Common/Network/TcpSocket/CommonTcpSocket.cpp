@@ -28,7 +28,7 @@ void	TcpSocket::connect(TcpEndpoint const &ep) {
 	_init = true;
 }
 
-void	TcpSocket::write(char const *buffer, std::size_t len) {
+void	TcpSocket::write(char const *buffer, SOCK_BUFFER_LEN_TYPE len) {
 	auto l = ::send(_sock, buffer, len, 0);
 	
 	/* if (isNonBloquant) */
@@ -38,7 +38,7 @@ void	TcpSocket::write(char const *buffer, std::size_t len) {
 	}
 }
 
-ssize_t TcpSocket::read(char *buffer, std::size_t len) {
+ssize_t TcpSocket::read(char *buffer, SOCK_BUFFER_LEN_TYPE len) {
 	auto l = ::recv(_sock, buffer, len, 0);
 	
 	/*TODO: if (isNonBloquant) */

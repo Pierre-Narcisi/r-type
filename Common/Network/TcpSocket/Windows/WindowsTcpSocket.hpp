@@ -22,8 +22,8 @@ public:
 	~TcpSocket() { this->close(); }
 
 	virtual void	connect(const TcpEndpoint &ep) final;
-	virtual void	write(char const *buffer, std::size_t len) final;
-	virtual ssize_t	read(char *buffer, std::size_t len) final;
+	virtual void	write(char const *buffer, SOCK_BUFFER_LEN_TYPE len) final;
+	virtual ssize_t	read(char *buffer, SOCK_BUFFER_LEN_TYPE len) final;
 	virtual bool	isConnected() final;
 	virtual void	close() final;
 

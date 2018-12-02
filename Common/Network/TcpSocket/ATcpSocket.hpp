@@ -57,8 +57,8 @@ public:
 		_sock(socket), _platform(p), _endpoint(ep), _init(true) {}  
 
 	virtual void	connect(const TcpEndpoint &ep) = 0;
-	virtual void	write(char const *buffer, std::size_t len) = 0;
-	virtual ssize_t	read(char *buffer, std::size_t len) = 0;
+	virtual void	write(char const *buffer, SOCK_BUFFER_LEN_TYPE len) = 0;
+	virtual ssize_t	read(char *buffer, SOCK_BUFFER_LEN_TYPE len) = 0;
 	virtual bool	isConnected() = 0;
 	virtual void	close() = 0;
 

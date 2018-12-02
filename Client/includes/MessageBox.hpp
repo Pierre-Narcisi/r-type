@@ -30,8 +30,8 @@ public:
 		auto s = text.getLocalBounds();
 
 		sf::VideoMode mode;
-		mode.width = s.width + 50;
-		mode.height = s.height + 25;
+		mode.width = (unsigned int) (s.width + 50);
+		mode.height = (unsigned int) (s.height + 25);
 		mode.bitsPerPixel = 32;
 		auto *_window = new sf::RenderWindow(mode, title, sf::Style::Resize | sf::Style::Close);
 		sf::Event _event;

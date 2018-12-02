@@ -137,8 +137,6 @@ void	Session::_entryPoint() {
 }
 
 void	Session::sendCreate(ID id) {
-	auto	&ecs = ecs::Ecs::get();
-
 	auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
 	auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
 	auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();
@@ -159,8 +157,6 @@ void	Session::addPlayer(ClientConnection &player) {
 
 	auto cont = _players.insert(_players.end(), {&player, (ID)0});
 	addTask([this, cont] () {
-		auto	&ecs = ecs::Ecs::get();
-
 		auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
 		auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
 		auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();

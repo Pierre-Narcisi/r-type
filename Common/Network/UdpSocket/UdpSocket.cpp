@@ -24,7 +24,7 @@ UdpEndpoint	UdpSocket::sendTo(UdpBuffer const &buffer, UdpEndpoint const &ep) {
 		if (!_isListener)
 			newAddr.sin_port = ep._port;
 
-		::sendto(_sock, buffer.buf, buffer.len, 0, (const sockaddr*)&newAddr, sizeof(newAddr));
+		::sendto(_sock, buffer.buf, (SOCK_BUFFER_LEN_TYPE)buffer.len, 0, (const sockaddr*)&newAddr, sizeof(newAddr));
 		return (newAddr);
 	} else {
 		throw std::runtime_error("Given endpoint contains zero remote addr");
@@ -41,7 +41,7 @@ long	UdpSocket::recvFrom(UdpBuffer &buffer, UdpEndpoint &ep) {
 		auto		*curAddr = reinterpret_cast<sockaddr_in*>(ep._ai[0].get());
 		socklen_t	len = sizeof(*curAddr);
 
-		auto res = ::recvfrom(_sock, buffer.buf, buffer.len, 0, (sockaddr*)curAddr, &len);
+		auto res = ::recvfrom(_sock, buffer.buf, (SOCK_BUFFER_LEN_TYPE)buffer.len, 0, (sockaddr*)curAddr, &len);
 		if (res >= 0)
 			buffer.len = res;
 		return res;

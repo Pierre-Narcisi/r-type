@@ -186,7 +186,7 @@ inline void	Opts::setOptions(std::initializer_list<OptionsCont> &&in) {
             _shortRef[i.sName] = i.value;
         }
                 if (strHelpName.size() > (std::size_t) _biggestName)
-            _biggestName = strHelpName.size();
+            _biggestName = (int) strHelpName.size();
         i.value->setHelpName(strHelpName);
         i.value->setBiggestNamePtr(&_biggestName);
         _vals.push_back(i.value);

@@ -41,7 +41,7 @@ namespace ecs {namespace component {
 				std::cout << "src/game_engine/component/graphical/AnimatedSprite: Directory must at least have 1 sprite" << std::endl;
 				exit(84);
 			}
-			interFrame = 1000000 / animation.size();
+			interFrame = (long) (1000000 / animation.size());
 			oldTime = core::Time::get(TimeUnit::MicroSeconds);
 			frame = 0;
 			boxSize = graphical::Graphic::getTextureSize(*sorted.begin());
@@ -69,7 +69,7 @@ namespace ecs {namespace component {
 				std::cout << "src/game_engine/component/graphical/AnimatedSprite: Directory must at least have 1 sprite" << std::endl;
 				exit(84);
 			}
-			interFrame = 1000000 / animation.size();
+			interFrame = (long) (1000000 / animation.size());
 			oldTime = core::Time::get(TimeUnit::MicroSeconds);
 			frame = 0;
 			boxSize = size;

@@ -2,7 +2,8 @@
 // Created by pierre on 20/11/2018.
 //
 #define NOSPRITE
-#include <math.h>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "component/online/OnlineComponent.hpp"
 #include "Session/components/Inventory.hpp"
 #include "ecs/Ecs.hpp"
@@ -77,23 +78,23 @@ void Fire::shoot(ID id, rtype::session::Session &session) {
 		if (ecs::Ecs::getComponentMap<game::component::Inventory>()[id]._fire == 0) {
 			shootFire(id, 10.f, 0.f, session);
 		} else if (ecs::Ecs::getComponentMap<game::component::Inventory>()[id]._fire == 1) {
-			shootFire(id, cosf(-2 * M_PI / 180) * 10, sinf(-2 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(2 * M_PI / 180) * 10, sinf(2 * M_PI / 180) * 10, session);
+			shootFire(id, cosf(-2.f * M_PI / 180.f) * 10.f, sinf(-2.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(2.f * M_PI / 180.f) * 10.f, sinf(2.f * M_PI / 180.f) * 10.f, session);
 		} else if (ecs::Ecs::getComponentMap<game::component::Inventory>()[id]._fire == 2) {
 			shootFire(id, 10, 0, session);
-			shootFire(id, cosf(-3 * M_PI / 180) * 10, sinf(-3 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(3 * M_PI / 180) * 10, sinf(3 * M_PI / 180) * 10, session);
+			shootFire(id, cosf(-3.f * M_PI / 180.f) * 10.f, sinf(-3.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(3.f * M_PI / 180.f) * 10.f, sinf(3.f * M_PI / 180.f) * 10.f, session);
 		} else if (ecs::Ecs::getComponentMap<game::component::Inventory>()[id]._fire == 3) {
-			shootFire(id, cosf(-4 * M_PI / 180) * 10, sinf(-4 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(4 * M_PI / 180) * 10, sinf(4 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(-2 * M_PI / 180) * 10, sinf(-2 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(2 * M_PI / 180) * 10, sinf(2 * M_PI / 180) * 10, session);
+			shootFire(id, cosf(-4.f * M_PI / 180.f) * 10.f, sinf(-4.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(4.f * M_PI / 180.f) * 10.f, sinf(4.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(-2.f * M_PI / 180.f) * 10.f, sinf(-2.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(2.f * M_PI / 180.f) * 10.f, sinf(2.f * M_PI / 180.f) * 10.f, session);
 		} else if (ecs::Ecs::getComponentMap<game::component::Inventory>()[id]._fire >= 4) {
 			shootFire(id, 10, 0, session);
-			shootFire(id, cosf(-3 * M_PI / 180) * 10, sinf(-3 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(3 * M_PI / 180) * 10, sinf(3 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(-5 * M_PI / 180) * 10, sinf(-5 * M_PI / 180) * 10, session);
-			shootFire(id, cosf(5 * M_PI / 180) * 10, sinf(5 * M_PI / 180) * 10, session);
+			shootFire(id, cosf(-3.f * M_PI / 180.f) * 10.f, sinf(-3.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(3.f * M_PI / 180.f) * 10.f, sinf(3.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(-5.f * M_PI / 180.f) * 10.f, sinf(-5.f * M_PI / 180.f) * 10.f, session);
+			shootFire(id, cosf(5.f * M_PI / 180.f) * 10.f, sinf(5.f * M_PI / 180.f) * 10.f, session);
 		}
 	}
 	}

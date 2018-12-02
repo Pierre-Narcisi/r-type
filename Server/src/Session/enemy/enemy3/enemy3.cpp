@@ -97,7 +97,7 @@ namespace game {
 			float v2 = (pos[_id].y - pos[res].y);
 			double angle = std::atan2(-v1, -v2);
 			ID bullet = ecs::entity::Entity::getId();
-			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, sinf(angle) * 7, cosf(angle) * 7);
+			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, (float) sinf(angle) * 7.f, (float) cosf(angle) * 7.f);
 			ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);
 			//ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[_id].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[_id].y);
