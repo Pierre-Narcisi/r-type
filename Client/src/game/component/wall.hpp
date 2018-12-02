@@ -2,7 +2,6 @@
 
 namespace game { namespace component{
     struct wall {
-        wall() {
-		}
+        wall() {}
     };
 }}

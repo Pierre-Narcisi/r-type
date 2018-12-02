@@ -4,15 +4,19 @@
 
 #pragma once
 
+#define NOSPRITE
+
 #include <component/physic/Position.hpp>
 #include <component/physic/Speed.hpp>
 #include "component/physic/Hitbox.hpp"
 #include "component/Types.hpp"
 #include <ecs/DataBank.hpp>
 #include <ecs/Ecs.hpp>
+#include "Server/includes/Session/Session.hpp"
 #include "component/wall.hpp"
 #include "Network/GameProtocol.hpp"
 
+#undef NOSPRITE
 
 namespace game {namespace system {
 	class walls {

@@ -7,6 +7,7 @@
 
 #define NOSPRITE
 #include <iostream>
+#include "Server/src/Session/systems/walls.hpp"
 #include "system/physic/Speeds.hpp"
 #include "component/physic/Position.hpp"
 #include "component/online/OnlineComponent.hpp"
@@ -25,6 +26,7 @@ void	Game::init() {
 	//init all Components
 
 	std::shared_ptr<game::system::gen>	gen(new game::system::gen());
+	std::shared_ptr<game::system::walls>	walls(new game::system::walls());
 
 	_ecs->addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
 	_ecs->addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
@@ -33,6 +35,9 @@ void	Game::init() {
 	_ecs->addUpdate(9, std::bind(&game::system::ai::updateAi, std::ref(*_parent)));
 	_ecs->addUpdate(9, [this, gen]{
 		gen->updateGen(*_parent);
+	});
+	_ecs->addUpdate(9, [this, walls]{
+		walls->updateWalls(*_parent);
 	});
 	_ecs->addUpdate(15, [this] () {
 		auto ids = ecs::Ecs::filter<ecs::component::Position>();
