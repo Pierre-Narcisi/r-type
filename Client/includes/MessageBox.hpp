@@ -25,7 +25,7 @@ public:
 		text.setFont(font);
 		text.setString(message);
 		text.setCharacterSize(24);
-		text.setColor(sf::Color::Black);
+		text.setFillColor(sf::Color::Black);
 		text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 		auto s = text.getLocalBounds();
 

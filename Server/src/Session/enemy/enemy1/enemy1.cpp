@@ -4,9 +4,8 @@
 
 #define NOSPRITE
 #include "Session/components/Types.hpp"
-//#include "component/Bonuses.hpp"
+#include "Session/components/Bonuses.hpp"
 #include "component/physic/Position.hpp"
-//#include "component/graphical/AnimatedSprite.hpp"
 #include "component/online/OnlineComponent.hpp"
 #include "component/physic/Speed.hpp"
 #include "component/physic/Hitbox.hpp"
@@ -20,14 +19,13 @@
 
 namespace game {
 	void enemy1::init(ID _id, int posx, int posy, rtype::session::Session &session) {
-		std::cout << "Create Enemy!!" << std::endl;
 		_time = ecs::core::Time::get(TimeUnit::Seconds);
 		//ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);
 		ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::ENEMY);
 		//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy1/", 4, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -3.f, 0.f);
-		//ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id);
+		ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id, std::ref(session));
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_id, _id, proto::SpriteId::ENEMY1);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 40, 40, false, static_cast<std::function<void(ID, ID)>>([&session](ID self, ID other){
 			game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];

@@ -110,6 +110,11 @@ void	Server::createSession(ClientConnection *me, json::Entity &req, json::Entity
 			#define __MAX std::max
 			#define __MIN std::min
 		#endif
+
+		if (req["name"].to<std::string>().length() == 0) {
+			ERROR("Cannot use empty session name");
+		}
+
 		auto &session = Server::instance().getSessionManager().create(
 			req["name"].to<std::string>(),
 			__MIN(__MAX(1, req["playerMax"].to<int>()), constant::maxSessionPlayer)

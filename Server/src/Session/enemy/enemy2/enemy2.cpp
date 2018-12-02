@@ -11,10 +11,10 @@
 #include "core/Time.hpp"
 #include "Session/TimedEvent/TimedEventAdmin.hpp"
 #include "ecs/Ecs.hpp"
-//#include "component/Bonuses.hpp"
+#include "Session/components/Bonuses.hpp"
 #include "ecs/DataBank.hpp"
 #include "Session/components/Types.hpp"
-//#include "system/walls.hpp"
+#include "Session/systems/walls.hpp"
 #include "enemy2.hpp"
 #include "math.h"
 #undef NOSPRITE
@@ -26,7 +26,7 @@ namespace game {
 		ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::ENEMY);
 		//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy2/Enemy2walk/", 4, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
-		//ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id);
+		ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id, std::ref(session));
 		ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_id, _id, proto::SpriteId::ENEMY2);
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -0.1f, 1.f);
 		ecs::Ecs::addComponent<ecs::component::Hitbox>(_id, 40.f, 40.f, true, static_cast<std::function<void(ID, ID)>>([&session](ID self, ID other){

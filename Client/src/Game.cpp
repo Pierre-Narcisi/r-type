@@ -46,10 +46,10 @@ void	Game::start(ServerConnection &srv) {
 		menu.run(srv);
 	}
 
-	auto createRes = srv.makeSession("session1", 8);
-	if (createRes["status"] == false) {
-		rtype::MsgBox::show("Session create failed", "(!) " + createRes["error"]["message"].to<std::string>());
-	}
+	// auto createRes = srv.makeSession("session1", 8);
+	// if (createRes["status"] == false) {
+	// 	rtype::MsgBox::show("Session create failed", "(!) " + createRes["error"]["message"].to<std::string>());
+	// }
 
 	{
 		rtype::Selection selection;

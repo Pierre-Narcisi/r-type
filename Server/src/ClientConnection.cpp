@@ -80,6 +80,16 @@ void	ClientConnection::_login(json::Entity &req, json::Entity &resp) {
 		return;
 	}
 
+	if (req["username"].to<std::string>().length() == 0) {
+		resp = json::makeObject {
+			{"error", json::makeObject {
+				{"message", "Cannot use empty username"}
+			}},
+			{ "status", false }
+		};
+		return;
+	}
+
 	std::string	username(req["username"].to<std::string>());
 	if (!Server::instance().isConnected(username)) {
 		this->_status.username = username;
