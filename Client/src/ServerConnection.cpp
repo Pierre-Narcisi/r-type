@@ -16,7 +16,7 @@
 namespace rtype {
 
 ServerConnection::~ServerConnection() {
-	stop();
+	//stop();
 }
 
 void	ServerConnection::stop() {
@@ -31,7 +31,6 @@ void	ServerConnection::stop() {
 		pthread_kill(t->native_handle(), SIGINT);
 #endif
 		t->join();
-		delete t;
 	}
 }
 
