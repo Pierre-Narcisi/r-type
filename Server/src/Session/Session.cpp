@@ -54,7 +54,7 @@ Session::~Session() {
 
 void 	Session::sendToPlayers(proto::PacketBase const &packet, std::size_t size) {
 	nw::UdpBuffer	wbuf{const_cast<char*>(reinterpret_cast<const char*>(&packet)), size};
-	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
 		if (playerW.isDeleted == false) {
@@ -70,7 +70,7 @@ void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &p
 		const_cast<char*>(reinterpret_cast<const char*>(&packet)),
 		size
 	};
-	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
 		if (playerW.player == player) {
@@ -141,7 +141,7 @@ void	Session::_entryPoint() {
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}
-	TimedEvent::get().clear();
+	//TimedEvent::get().clear();
 }
 
 void	Session::sendCreate(ID id) {
