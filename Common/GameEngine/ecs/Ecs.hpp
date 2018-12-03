@@ -37,10 +37,20 @@ namespace ecs{
 
         static void deleteId(ID id) {
         	for (auto &del : get()._deleteIds[id]) {
-            		del.second();
-            	}
-            	get()._deleteIds.erase(id);
+				del.second();
+			}
+			get()._deleteIds.erase(id);
         }
+
+		static void deleteLater(ID id) {
+        	get()._deleteLatersIds.push_back(id);
+        }
+
+		static void deleteNow() {
+			auto &ids = get()._deleteLatersIds;
+			for (auto id: ids)
+				deleteId(id);
+		}
 
         template <typename T>
         static void deleteComponentforId(ID id) {
@@ -82,6 +92,7 @@ namespace ecs{
         std::unordered_map<ID, std::unordered_map<std::string, std::function<void()>>>  _deleteIds;
     private:
         std::multimap<int, std::function<void()>>					updates;
+		std::vector<ID>	_deleteLatersIds;
 
         template <typename ...Ts>
         struct isIn {
