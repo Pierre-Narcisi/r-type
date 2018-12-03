@@ -50,6 +50,7 @@ namespace ecs{
 			auto &ids = get()._deleteLatersIds;
 			for (auto id: ids)
 				deleteId(id);
+			get()._deleteLatersIds.clear();
 		}
 
         template <typename T>

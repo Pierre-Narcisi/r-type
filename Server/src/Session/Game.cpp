@@ -89,6 +89,7 @@ void	Game::_initSystems() {
 
 void	Game::update() {
 	_ecs->update();
+	ecs::Ecs::deleteNow();
 }
 
 void	Game::onKeyPress(int internPlayerId, ID playerId, proto::KeyPress &packet) {

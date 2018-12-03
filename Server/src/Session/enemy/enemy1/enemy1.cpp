@@ -37,13 +37,13 @@ namespace game {
 				ecs::Ecs::addComponent<ecs::component::Hitbox>(explosion, 64, 64);
 				ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::BIG_EXPLOSION);
 				//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/BigExplosion", 10, ecs::core::Vector2<float>(70,70));
-				ecs::Ecs::deleteId(other);
-				ecs::Ecs::deleteId(self);
+				ecs::Ecs::deleteLater(other);
+				ecs::Ecs::deleteLater(self);
 
 				auto onDestroy = [explosion, &session](){
 					proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 					
-					ecs::Ecs::deleteId(explosion);
+					ecs::Ecs::deleteLater(explosion);
 					session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 				};
 				
@@ -65,7 +65,7 @@ namespace game {
 
 		speed[_id].y = sin(pos[_id].x / 70);
 		if (pos[_id].x < 0) {
-			ecs::Ecs::deleteId(_id);
+			ecs::Ecs::deleteLater(_id);
 
 			proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, _id};
 			session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));

@@ -39,11 +39,11 @@ void Fire::shootFire(ID id, float spX, float spY, rtype::session::Session &sessi
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(explosion, 64, 64);
 			//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
 			ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::EXPLOSION);
-			ecs::Ecs::deleteId(other);
-			ecs::Ecs::deleteId(self);
+			ecs::Ecs::deleteLater(other);
+			ecs::Ecs::deleteLater(self);
 			
 			auto onDestroy = [explosion, &session](){
-				ecs::Ecs::deleteId(explosion);
+				ecs::Ecs::deleteLater(explosion);
 
 					proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 
@@ -63,7 +63,7 @@ void Fire::shootFire(ID id, float spX, float spY, rtype::session::Session &sessi
 		}
 	});
 	m.addEvent(2, Time::Seconds, [bullet, &session](){
-		ecs::Ecs::deleteId(bullet);
+		ecs::Ecs::deleteLater(bullet);
 
 		proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, bullet};
 		session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));

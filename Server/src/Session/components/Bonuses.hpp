@@ -48,7 +48,7 @@ namespace game { namespace component{
 							proto::Delete	pack{proto::Type::DELETE, sessionPtr->getId(), 0, self};
 
 							ecs::Ecs::getComponentMap<game::component::Inventory>()[other]._fire++;
-							ecs::Ecs::deleteId(self);	
+							ecs::Ecs::deleteLater(self);	
 							sessionPtr->sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 						}
 					});

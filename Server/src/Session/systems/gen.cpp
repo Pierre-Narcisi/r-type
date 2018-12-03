@@ -23,7 +23,7 @@ namespace game {namespace system {
 			m.addEvent(10, Time::Seconds, [enemy, &session](){
 				proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, enemy};
 				
-				ecs::Ecs::deleteId(enemy);
+				ecs::Ecs::deleteLater(enemy);
 				session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 			});
 			std::random_device generator;

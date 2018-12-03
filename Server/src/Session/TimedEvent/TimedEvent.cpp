@@ -30,6 +30,11 @@ TimedEvent::TimedEvent()
 }
 
 TimedEvent::~TimedEvent() {
+	this->clear();
+}
+
+void	TimedEvent::clear() {
+	_timedFunctions.clear();
 }
 
 TimedEvent& TimedEvent::get() {

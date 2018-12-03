@@ -54,13 +54,14 @@ Session::~Session() {
 
 void 	Session::sendToPlayers(proto::PacketBase const &packet, std::size_t size) {
 	nw::UdpBuffer	wbuf{const_cast<char*>(reinterpret_cast<const char*>(&packet)), size};
-	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
-		auto	&ep = playerW.player->_udpEndpoint;
+		if (playerW.isDeleted == false) {
+			auto	&ep = playerW.player->_udpEndpoint;
 
-		if (playerW.isDeleted == false)
 			_parent->getUdpSocket().sendTo(wbuf, ep);
+		}
 	}
 }
 
@@ -69,14 +70,15 @@ void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &p
 		const_cast<char*>(reinterpret_cast<const char*>(&packet)),
 		size
 	};
-	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
+	std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
 		if (playerW.player == player) {
-			auto	&ep = playerW.player->_udpEndpoint;
+			if (playerW.isDeleted == false) {
+				auto	&ep = playerW.player->_udpEndpoint;
 
-			if (playerW.isDeleted == false)
 				_parent->getUdpSocket().sendTo(wbuf, ep);
+			}
 			return;
 		}
 	}
@@ -139,6 +141,7 @@ void	Session::_entryPoint() {
 		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
 		std::this_thread::sleep_for(std::chrono::microseconds(x));
 	}
+	TimedEvent::get().clear();
 }
 
 void	Session::sendCreate(ID id) {
@@ -225,7 +228,7 @@ void	Session::_rmPlayer(decltype(_players)::iterator player) {
 		std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 		auto	ecsId = player->ecsId;
 
-		ecs::Ecs::deleteId(ecsId);
+		ecs::Ecs::deleteLater(ecsId);
 		_players.erase(player);
 
 		proto::Delete	pack{proto::Type::DELETE, _id, 0, ecsId};

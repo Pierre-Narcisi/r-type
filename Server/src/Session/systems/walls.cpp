@@ -16,7 +16,7 @@ namespace game {namespace system {
 				ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_bindDown, _bindDown, proto::SpriteId::WALL1);
 				float x = _wallList[0].second.x;
 				float y = _wallList[0].second.y;
-				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}}*/);
+				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteLater(other);}}*/);
 				ecs::Ecs::addComponent<game::component::wall>(_bindDown);
 				ecs::Ecs::addComponent<ecs::component::Position>(_bindDown, 1280 + x / 2, 720 - y / 2);
 				ecs::Ecs::addComponent<ecs::component::Speed>(_bindDown, -0.5f, 0.f);
@@ -35,7 +35,7 @@ namespace game {namespace system {
 				//ecs::Ecs::addComponent<ecs::component::Sprite>(_bindDown, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[_wallList[nb].first], _wallList[nb].first, _wallList[nb].second);
 				float x = _wallList[nb].second.x;
 				float y = _wallList[nb].second.y;
-				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}}*/);
+				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindDown, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteLater(other);}}*/);
 				ecs::Ecs::addComponent<ecs::component::Position>(_bindDown, oldPosX + oldSizeX + x / 2, 720 - y / 2);
 				ecs::Ecs::addComponent<ecs::component::Speed>(_bindDown, -0.5f, 0.f);
 				ecs::Ecs::addComponent<ecs::component::OnlineComponent>(_bindDown, _bindDown, _wallList[nb].first);
@@ -52,7 +52,7 @@ namespace game {namespace system {
 				//ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/WallsRotate/Wall1.png"], "assets/Sprite/WallsRotate/Wall1.png", ecs::core::Vector2<float>(192, 96));
 				float x = _wallList[9].second.x;
 				float y = _wallList[9].second.y;
-				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}}*/);
+				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteLater(other);}}*/);
 				ecs::Ecs::addComponent<ecs::component::Position>(_bindUp, 1280 + x / 2, 0 + y / 2);
 				ecs::Ecs::addComponent<ecs::component::Speed>(_bindUp, -0.5f, 0.f);
 				session.sendCreate(_bindUp);
@@ -70,7 +70,7 @@ namespace game {namespace system {
 				//ecs::Ecs::addComponent<ecs::component::Sprite>(_bindUp, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()[_wallList[nb].first], _wallList[nb].first, _wallList[nb].second);
 				float x = _wallList[nb].second.x;
 				float y = _wallList[nb].second.y;
-				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteId(other);}}*/);
+				ecs::Ecs::addComponent<ecs::component::Hitbox>(_bindUp, x, y, false, true/*, [](ID self, ID other){if (!ecs::Ecs::idHasComponents<game::component::wall>(other)){ecs::Ecs::deleteLater(other);}}*/);
 				ecs::Ecs::addComponent<ecs::component::Position>(_bindUp, oldPosX + oldSizeX + x / 2, 0 + y / 2);
 				ecs::Ecs::addComponent<ecs::component::Speed>(_bindUp, -0.5f, 0.f);
 				session.sendCreate(_bindUp);
@@ -83,7 +83,7 @@ namespace game {namespace system {
 
 			for (auto id: ids) {
 				if (wallPos[id].x + ecs::Ecs::getComponentMap<ecs::component::Hitbox>()[id].width <  0) {
-					ecs::Ecs::deleteId(id);
+					ecs::Ecs::deleteLater(id);
 				}
 			}
 			updateDown(session);

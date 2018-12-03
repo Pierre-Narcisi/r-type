@@ -41,7 +41,9 @@ public:
 	void addEvent(long time, Time unit, std::function<void()> function);
 	static TimedEvent &get();
 
+	void	clear();
 private:
+
 	std::vector<TimedFuntion>		_timedFunctions;
  	long 					_initialTime;
 };

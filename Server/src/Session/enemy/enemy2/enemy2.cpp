@@ -39,11 +39,11 @@ namespace game {
 				//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/BigExplosion", 10, ecs::core::Vector2<float>(70,70));
 				ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::BIG_EXPLOSION);
 				ecs::Ecs::addComponent<ecs::component::Hitbox>(explosion, 64, 64);
-				ecs::Ecs::deleteId(other);
-				ecs::Ecs::deleteId(self);
+				ecs::Ecs::deleteLater(other);
+				ecs::Ecs::deleteLater(self);
 
 				auto onDestroy = [explosion, &session](){
-					ecs::Ecs::deleteId(explosion);
+					ecs::Ecs::deleteLater(explosion);
 
 						proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 
@@ -71,7 +71,7 @@ namespace game {
 		ID res;
 
 		if (pos[_id].x < -1) {
-			ecs::Ecs::deleteId(_id);
+			ecs::Ecs::deleteLater(_id);
 		}
 
 		if (ecs::core::Time::get(TimeUnit::Seconds) > _time + 1 && ship.size() > 0) {
@@ -104,11 +104,11 @@ namespace game {
 					//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/BigExplosion", 10, ecs::core::Vector2<float>(70,70));
 					ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::BIG_EXPLOSION);
 					ecs::Ecs::addComponent<ecs::component::Hitbox>(explosion, 64, 64);
-					ecs::Ecs::deleteId(other);
-					ecs::Ecs::deleteId(self);
+					ecs::Ecs::deleteLater(other);
+					ecs::Ecs::deleteLater(self);
 
 					auto onDestroy = [explosion, &session](){
-						ecs::Ecs::deleteId(explosion);
+						ecs::Ecs::deleteLater(explosion);
 
 							proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 
@@ -128,7 +128,7 @@ namespace game {
         	});
 			session.sendCreate(bullet);
 			m.addEvent(5, Time::Seconds, [bullet, &session](){
-				ecs::Ecs::deleteId(bullet);
+				ecs::Ecs::deleteLater(bullet);
 
 				proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, bullet};
 
