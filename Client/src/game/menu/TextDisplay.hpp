@@ -21,6 +21,7 @@ namespace ecs {namespace component {
 
 		TextDisplay(std::string path, std::string str) {
 			_str = str;
+			_baseStr = str;
 			_font = new sf::Font();
 			_font->loadFromFile(path);
 			_text = new sf::Text(_str, *_font);
@@ -30,6 +31,7 @@ namespace ecs {namespace component {
 
 		TextDisplay(std::string path, std::string str, float posX, float posY) {
 			_str = str;
+			_baseStr = str;
 			_pos.x = posX;
 			_pos.y = posY;
 			_font = new sf::Font();
@@ -43,6 +45,7 @@ namespace ecs {namespace component {
 		TextDisplay(std::string path, std::string str, float posX, float posY, bool input) {
 			_input = input;
 			_str = str;
+			_baseStr = str;
 			_pos.x = posX;
 			_pos.y = posY;
 			_font = new sf::Font();
@@ -58,6 +61,7 @@ namespace ecs {namespace component {
 			_color = color;
 			_size = size;
 			_str = str;
+			_baseStr = str;
 			_pos.x = posX;
 			_pos.y = posY;
 			_font = new sf::Font();
@@ -79,6 +83,7 @@ namespace ecs {namespace component {
 		sf::Color				_color = sf::Color::White;
 
         std::string             _str;
+		std::string             _baseStr;
         unsigned int            _size = 20;
 		bool					_input = false;
 		ecs::core::Vector2<float>		_pos = {0, 0};

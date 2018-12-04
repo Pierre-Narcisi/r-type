@@ -53,15 +53,12 @@ namespace rtype {
                 _rooms.push_back(rm);
             }
 
-            void    run(ServerConnection &srv) {
-                bool    continue_ = true;
-                auto    &game = ecs::Ecs::get();
-                auto    &rtype = ecs::graphical::Graphic::get();
-
+            void    refreshSessions(ServerConnection &srv) {
                 auto sessions = srv.getSessions();
                 if (sessions["status"] == false) {
                     return;
                 }
+                _rooms.clear();
                 for (auto &session: sessions["sessions"].value<json::Array>()) {
                     addRoom(
                         session["name"].to<std::string>(),
@@ -70,6 +67,14 @@ namespace rtype {
                         session["playerCount"].to<int>()
                     );
                 }
+            }
+
+            void    run(ServerConnection &srv) {
+                bool    continue_ = true;
+                auto    &game = ecs::Ecs::get();
+                auto    &rtype = ecs::graphical::Graphic::get();
+
+                refreshSessions(srv);
 
                 ID background = ecs::entity::Entity::getId();
                 ecs::Ecs::addComponent<game::Parallax>(background, "assets/space.png", 100.f);
@@ -222,28 +227,25 @@ namespace rtype {
                         auto &txt = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>();
 
                         for (auto id : ids) {
-                            if (id == name){
+                            if (id == name || id == actual_nbr || id == max_nbr || id == txt_max_nbr || txt_current_nbr)
+                                txt[id]._str = txt[id]._baseStr;
+                            if (id == name) {
                                 txt[id]._str = _rooms[_index].name;
                             }
-                            if (id == actual_nbr)
-                            {
+                            if (id == actual_nbr) {
                                 txt[id]._str = std::to_string(_rooms[_index].actualNbr);
                             }
-                            if (id == max_nbr)
-                            {
+                            if (id == max_nbr) {
                                 txt[id]._str = std::to_string(_rooms[_index].maxNbr);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         auto ids = ecs::Ecs::filter<ecs::component::TextDisplay>();
                         auto &txt = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>();
                          for (auto id : ids) {
                             if (id == name || id == actual_nbr || id == max_nbr || id == txt_max_nbr){
                                 txt[id]._str = "";
-                            }
-                            else if (id == txt_current_nbr)
-                            {
+                            } else if (id == txt_current_nbr) {
                                 txt[id]._str = "No Rooms";
                             }
                         }
@@ -259,12 +261,20 @@ namespace rtype {
                 game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);
                 game.addUpdate(2, &ecs::system::Controls::UpdateMouses);
 
+                
+                auto start = std::chrono::high_resolution_clock::now();
                 while (continue_ && ecs::graphical::Graphic::get().isOpen()) {
                     long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
                     ecs::Ecs::get().update();
 
                     auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
                     std::this_thread::sleep_for(std::chrono::microseconds(x));
+                    auto end = std::chrono::high_resolution_clock::now();
+		            auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+                    if (elapsed > 2) {
+                        start = end;
+                        refreshSessions(srv);
+                    }
                 }
                 game.clearUpdates();
             }
