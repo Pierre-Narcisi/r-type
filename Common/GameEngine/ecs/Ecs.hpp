@@ -42,6 +42,16 @@ namespace ecs{
 			get()._deleteIds.erase(id);
         }
 
+		static bool isDeleted(ID id) {
+        	auto &ids = get()._deleteLatersIds;
+
+			for (auto _id: ids)
+				if (_id == id)
+					return true;
+			return false;
+        }
+
+
 		static void deleteLater(ID id) {
         	get()._deleteLatersIds.push_back(id);
         }

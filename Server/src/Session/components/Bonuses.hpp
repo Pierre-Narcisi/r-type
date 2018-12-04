@@ -6,7 +6,7 @@
 
 #define NOSPRITE
 #include <random>
-#include "Session/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "component/physic/Speed.hpp"
 #include "component/physic/Position.hpp"
 #include "component/physic/Hitbox.hpp"
@@ -23,13 +23,13 @@ namespace game { namespace component{
 		Bonuses(ID id, rtype::session::Session &session):
 			_id(id), _session(&session) {}
 		~Bonuses() {
-			TimedEventAdmin	m;
+			//TimedEventAdmin	m;
 
 			auto *s = _session;
 			auto x = this->x;
 			auto y = this->y; 
 
-			m.addEvent(500, Time::MilliSeconds, std::function<void()>([s, x, y] {
+			//m.addEvent(500, Time::MilliSeconds, std::function<void()>([s, x, y] {
 				std::random_device generator;
 				std::uniform_int_distribution<int> distribution(1, 25);
 				int my_rand = distribution(generator);
@@ -38,8 +38,6 @@ namespace game { namespace component{
 					ecs::Ecs::addComponent<ecs::component::Position>(bonus, x, y);
 					ecs::Ecs::addComponent<ecs::component::Speed>(bonus, -1, 0);
 					ecs::Ecs::addComponent<game::component::Type>(bonus, game::component::Type::Types::BONUS);
-					//ecs::Ecs::addComponent<ecs::component::Drawable>(bonus, 0, true);
-					//ecs::Ecs::addComponent<ecs::component::Sprite>(bonus, "assets/Sprite/Becs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);onuses/bonuses1.png", ecs::core::Vector2<float>(64, 32));
 					ecs::Ecs::addComponent<ecs::component::OnlineComponent>(bonus, bonus, proto::SpriteId::BONUS);
 					auto sessionPtr = s;
 					ecs::Ecs::addComponent<ecs::component::Hitbox>(bonus, 64.f, 32.f, false, [sessionPtr, bonus](ID self, ID other){
@@ -54,7 +52,7 @@ namespace game { namespace component{
 					});
 					s->sendCreate(bonus);
 				}
-			}));
+			//}));
 		}
 		ID _id;
 		float x;

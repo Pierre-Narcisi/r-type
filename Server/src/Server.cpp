@@ -183,6 +183,29 @@ void	Server::quitSession(ClientConnection *me, json::Entity &req, json::Entity &
 	ERROR("sessionId: Not found");
 }
 
+void	Server::updateSession(ClientConnection *me, json::Entity &req, json::Entity &resp) {
+	if (!req["sessionId"].isNumber()) ERROR("sessionId is not a number!")
+
+	auto id = (uint32_t) req["sessionId"].to<int>();
+	for (auto &session: Server::instance().getSessionManager().getSessions()) {
+		if (session._id == id) {
+			auto it = session._players.begin();
+
+			for (; it != session._players.end(); ++it) {
+				if (it->player->_status.username == me->_status.username) {
+					auto data = session.getActualSheet();
+
+					resp["status"] = true;
+					resp["data"] = data;
+					return;
+				}
+			}
+			ERROR("You are not in");
+		}
+	}
+	ERROR("sessionId: Not found");
+}
+
 void	Server::stop() {
 	if (_stop) _stop();
 }

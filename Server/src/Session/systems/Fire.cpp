@@ -11,7 +11,7 @@
 #include "component/physic/Speed.hpp"
 #include "component/physic/Hitbox.hpp"
 #include "core/Time.hpp"
-#include "lib/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "Session/components/Types.hpp"
 #include "Session/components/Firerate.hpp"
 #include "ecs/DataBank.hpp"
@@ -28,16 +28,13 @@ void Fire::shootFire(ID id, float spX, float spY, rtype::session::Session &sessi
 	ecs::Ecs::addComponent<game::component::Type>(bullet, game::component::Type::Types::BULLET_SHIP);
 	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(bullet, bullet, proto::SpriteId::BULLET3);
 	ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].x + 1, ecs::Ecs::getComponentMap<ecs::component::Position>()[id].y);
-	//ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet3.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png");
 	ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 15.f, 15.f, false, [id, &session](ID self, ID other) {
 		game::component::Type type = ecs::Ecs::getComponentMap<game::component::Type>()[other];
 		if (type._type == game::component::Type::Types::BULLET_ENEMY || type._type == game::component::Type::Types::ENEMY) {
 			TimedEventAdmin t;
 			ID explosion = ecs::entity::Entity::getId();
-			//ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(explosion, 64, 64);
-			//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/Explosion", 12, ecs::core::Vector2<float>(70,70));
 			ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::EXPLOSION);
 			ecs::Ecs::deleteLater(other);
 			ecs::Ecs::deleteLater(self);

@@ -16,6 +16,7 @@
 namespace rtype {
 
 ServerConnection::~ServerConnection() {
+	_continue = false;
 	//stop();
 }
 
@@ -23,14 +24,18 @@ void	ServerConnection::stop() {
 	_continue = false;
 
 	if (_threadPtr) {
-		auto *t = reinterpret_cast<std::thread*>(_threadPtr);
+		auto *t1 = reinterpret_cast<std::thread*>(_threadPtr);
+		auto *t2 = reinterpret_cast<std::thread*>(_threadTasksPtr);
 		
 #if defined(_MSC_VER)
-		TerminateThread(t->native_handle(), 0);
+		TerminateThread(t1->native_handle(), 0);
+		TerminateThread(t2->native_handle(), 0);
 #else
-		pthread_kill(t->native_handle(), SIGINT);
+		pthread_kill(t1->native_handle(), SIGINT);
+		pthread_kill(t2->native_handle(), SIGINT);
 #endif
-		t->join();
+		t1->join();
+		t2->join();
 	}
 }
 
@@ -126,9 +131,24 @@ json::Entity	ServerConnection::quitSession(int sessionId) {
 	return _getJson();
 }
 
+void	ServerConnection::updateGame(int sessionId, std::function<void(json::Entity)> const callback) {
+	std::lock_guard<std::mutex>	_guard(_tasksMtx);
+	_tasks.push_back([this, sessionId, callback] {
+		_sendJson(json::makeObject {
+			{ "path", "session:update" },
+			{ "sessionId", sessionId }
+		});
+
+		callback(_getJson());
+	});
+}
+
 void	ServerConnection::run() {
 	_threadPtr = reinterpret_cast<void*>(
 		new std::thread(std::bind(&ServerConnection::_entryPoint, this))
+	);
+	_threadTasksPtr = reinterpret_cast<void*>(
+		new std::thread(std::bind(&ServerConnection::_entryPointTasks, this))
 	);
 }
 
@@ -138,6 +158,8 @@ void	ServerConnection::_entryPoint() {
 	while (_continue) {
 		auto			*p = reinterpret_cast<proto::PacketBase*>(buf); 
 		nw::UdpBuffer	wbuf{buf, sizeof(buf)};
+
+
 
 		_udpSock.recvFrom(wbuf, _responseEp);
 		if (p->type == proto::Type::PING) {
@@ -153,6 +175,21 @@ void	ServerConnection::_entryPoint() {
 			std::lock_guard<std::mutex>	_guard(_listMtx);
 			_availablePackets.emplace_back(sharedPtr);
 		}
+	}
+}
+
+void	ServerConnection::_entryPointTasks() {
+	while (_continue) {
+		decltype(_tasks)::value_type	task;
+		{
+			std::lock_guard<std::mutex>	_guard(_tasksMtx);
+			if (_tasks.size()) {
+				task = _tasks.front();
+				_tasks.pop_front();
+			}
+		}
+		if (task != nullptr) task();
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 }
 

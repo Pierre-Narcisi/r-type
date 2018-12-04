@@ -17,7 +17,7 @@ namespace ecs {namespace component {
 			this->left = KeyKeyboard::KEY_Q;
 			this->backward = KeyKeyboard::KEY_S;
 			this->right = KeyKeyboard::KEY_D;
-			this->speed = 500.f;
+			this->speed = 250.f;
 			this->lastMove = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		}
 		DeplacementKeyBoard(float speed) {
@@ -33,7 +33,7 @@ namespace ecs {namespace component {
 			this->left = left;
 			this->backward = backward;
 			this->right = right;
-			this->speed = 500.f;
+			this->speed = 250.f;
 			this->lastMove = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		}
 		DeplacementKeyBoard(KeyKeyboard forward, KeyKeyboard left, KeyKeyboard backward, KeyKeyboard right, float speed) {

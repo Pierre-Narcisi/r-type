@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
 else ()
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ggdb")
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -W -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter")
 endif ()
 
@@ -105,8 +106,15 @@ set(ECS_CONTROLS
 	Common/GameEngine/component/control/DeplacementKeyBoard.hpp
 	Common/GameEngine/component/control/DeplacementMouse.hpp
 	Common/GameEngine/system/control/Controls.cpp
-	Common/GameEngine/system/control/Controls.hpp)
+	Common/GameEngine/system/control/Controls.hpp
+)
 
+set(ECS_EVENTS
+	Common/GameEngine/TimedEvent/TimedEvent.cpp
+	Common/GameEngine/TimedEvent/TimedEvent.hpp
+	Common/GameEngine/TimedEvent/TimedEventAdmin.cpp
+	Common/GameEngine/TimedEvent/TimedEventAdmin.hpp
+)
 
 add_executable(rtype
 	${COMMONS_SRCS}
@@ -116,11 +124,7 @@ add_executable(rtype
 	${ECS_CORE}
 	${ECS_SFML}
 	${ECS_CONTROLS}
-
-	Client/lib/TimedEvent/TimedEvent.cpp
-	Client/lib/TimedEvent/TimedEvent.hpp
-	Client/lib/TimedEvent/TimedEventAdmin.cpp
-	Client/lib/TimedEvent/TimedEventAdmin.hpp
+	${ECS_EVENTS}
 
 	Client/includes/ServerConnection.hpp
 	Client/src/ServerConnection.cpp
@@ -136,7 +140,8 @@ add_executable(rtype
 	Client/src/game/menu/Menu.hpp
 
 	Client/src/Main.cpp
-	Common/GameEngine/component/online/OnlineComponent.hpp)
+	Common/GameEngine/component/online/OnlineComponent.hpp
+)
 
 find_package (Threads)
 target_link_libraries(rtype ${CONAN_LIBS})
@@ -159,6 +164,7 @@ add_executable(server
 	${ECS_PHYSIC}
 	${ECS_CORE}
 	${ECS_CONTROLS}
+	${ECS_EVENTS}
 
 	Server/src/Main.cpp
 
@@ -204,11 +210,6 @@ add_executable(server
 	Server/src/Session/systems/Bonuses.cpp
 	Server/src/Session/systems/Bonuses.hpp
 	Server/src/Session/systems/gen.cpp
-	
-	Server/src/Session/TimedEvent/TimedEvent.cpp
-	Server/src/Session/TimedEvent/TimedEvent.hpp
-	Server/src/Session/TimedEvent/TimedEventAdmin.cpp
-	Server/src/Session/TimedEvent/TimedEventAdmin.hpp
 )
 
 target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})

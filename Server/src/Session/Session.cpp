@@ -23,7 +23,7 @@
 #include "Network/GameProtocol.hpp"
 #include "Session/Manager.hpp"
 #include "Session/Session.hpp"
-#include "Session/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #undef NOSPRITE
 
 namespace rtype { namespace session {
@@ -90,9 +90,10 @@ void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &p
 
 void	Session::_entryPoint() {
 	_game.init();
+	std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 
 	while (_continue) {
-		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
+		start = std::chrono::high_resolution_clock::now();
 		decltype(_pool)::value_type	nextPacket;
 		while (true) {
 			{
@@ -137,26 +138,36 @@ void	Session::_entryPoint() {
 		}
 		_game.update();
 
+		// auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
+		// auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+		// auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();
+		// auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
 
-		auto x = static_cast<unsigned int>(16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) > 0 ? 16666 - (ecs::core::Time::get(TimeUnit::MicroSeconds) - time) : 0);
-		std::this_thread::sleep_for(std::chrono::microseconds(x));
+		// json::Entity	data(json::Entity::ARR);
+		// for (auto &elem: online) {
+		// 	auto id = elem.first;
+		// 	data.push(json::makeObject {
+		// 		{ "id", online[id].onlineId },
+		// 		{ "width", hitbox[id].width * 2 },
+		// 		{ "height", hitbox[id].height * 2 },
+		// 		{ "x", pos[id].x * 2 },
+		// 		{ "y", pos[id].y * 2 },
+		// 		{ "spriteId", (int) online[id].spriteId }
+		// 	});
+		// }
+		// {
+		// 	std::lock_guard<std::mutex>	_guard(_sheetMtx);
+
+		// 	_sheet = data;
+		// }
+
+		end = std::chrono::high_resolution_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+		auto sleepTime = _sleepTime - elapsed;
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime > 0 ? sleepTime : 0));
 	}
-	//TimedEvent::get().clear();
-}
-
-void	Session::sendCreate(ID id) {
-	auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
-	auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
-	auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();
-	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
-
-	proto::Create	pack{
-		proto::Type::CREATE, _id, 0, id,
-		hitbox[id].width * 2, hitbox[id].height * 2,
-		pos[id].x, pos[id].y,
-		online[id].spriteId
-	};
-	sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+	TimedEvent::get().clear();
 }
 
 void	Session::addPlayer(ClientConnection &player) {
@@ -200,7 +211,7 @@ void	Session::addPlayer(ClientConnection &player) {
 
 		float w = pack.w();
 		float h = pack.h();
-		t.addEvent(3, Time::Seconds, [id, w, h]{ 
+		t.addEvent(1, Time::Seconds, [id, w, h]{ 
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(id, w, h, true);
 		});
 
@@ -242,6 +253,21 @@ void	Session::addTask(decltype(_pool)::value_type const &task) {
 	std::lock_guard<std::mutex>	_guard(_pickLock);
 
 	_pool.push_back(task);
+}
+
+void	Session::sendCreate(ID id) {
+	auto ids = ecs::Ecs::filter<ecs::component::Position, ecs::component::Hitbox, ecs::component::OnlineComponent>();
+	auto &pos = ecs::Ecs::getComponentMap<ecs::component::Position>();
+	auto &hitbox = ecs::Ecs::getComponentMap<ecs::component::Hitbox>();
+	auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
+
+	proto::Create	pack{
+		proto::Type::CREATE, _id, 0, id,
+		hitbox[id].width * 2, hitbox[id].height * 2,
+		pos[id].x, pos[id].y,
+		online[id].spriteId
+	};
+	sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 }
 
 }}

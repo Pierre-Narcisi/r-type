@@ -51,6 +51,12 @@ public:
 
 	void	sendCreate(ID id);
 
+	json::Entity	getActualSheet() {
+		std::lock_guard<std::mutex>	_guard(_sheetMtx);
+
+		return _sheet;
+	}
+
 	void 	sendToPlayers(proto::PacketBase const &packet, std::size_t size);
 	void 	sendToPlayer(ClientConnection *player, proto::PacketBase const &packet, std::size_t size);
 private:
@@ -64,6 +70,10 @@ private:
 
 	std::list<PlayerContainer>	_players;
 	Game						_game;
+
+	std::mutex					_sheetMtx;
+	json::Entity				_sheet;
+	std::uint32_t				_sleepTime = 1000 / 30;
 
 	void	_rmPlayer(decltype(_players)::iterator player);
 

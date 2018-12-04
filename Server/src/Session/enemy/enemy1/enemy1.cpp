@@ -10,7 +10,7 @@
 #include "component/physic/Speed.hpp"
 #include "component/physic/Hitbox.hpp"
 #include "core/Time.hpp"
-#include "Session/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "enemy1.hpp"
 #include "Network/GameProtocol.hpp"
 #include "math.h"

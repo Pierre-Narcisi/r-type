@@ -11,6 +11,9 @@
 #include "ServerConnection.hpp"
 #include "Constant.hpp"
 #include "WindowsCtor.hpp"
+#include "game/menu/Menu.hpp"
+#include "game/menu/Selection.hpp"
+
 
 inline common::Opts	getOpts(int ac, char **av) {
 	common::Opts	_opts;
@@ -49,6 +52,18 @@ int main(int ac, char **av) {
 	}
 	
 	srv.run();
+
+	{
+		rtype::Menu menu;
+
+		menu.run(srv);
+	}
+
+	{
+		rtype::Selection selection;
+
+		selection.run(srv);
+	}
 
 	game.start(srv);
 

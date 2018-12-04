@@ -41,6 +41,7 @@ public:
 	void	createSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
 	void	joinSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
 	void	quitSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
+	void	updateSession(ClientConnection *me, json::Entity &req, json::Entity &resp);
 private:
 	Server() = default;
 	~Server() = default;

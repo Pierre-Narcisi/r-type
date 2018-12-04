@@ -8,12 +8,13 @@
 #include <boost/filesystem.hpp>
 #include "Game.hpp"
 #include "ecs/Ecs.hpp"
-#include "src/game/menu/Menu.hpp"
+#include "game/menu/Menu.hpp"
 #include "system/control/Controls.hpp"
 #include "component/online/OnlineComponent.hpp"
-#include "game/menu/Selection.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "SpriteMap.hpp"
 #include "Game.hpp"
+
 
 namespace rtype {
 
@@ -39,20 +40,33 @@ void 	Game::_keyboardFactory(ID keyboard, ServerConnection &srv) {
 	});
 }
 
+inline void	Game::_createElem(int componentId, int w, int h, int x, int y, proto::SpriteId spriteID) {
+	//std::cout << (int) spriteID << std::endl;
+	ID id = ecs::entity::Entity::getId();
+	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 3, true);
+	ecs::Ecs::addComponent<ecs::component::Position>(id, x, y);
+	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, componentId, spriteID);
+	
+	auto &path = rtype::Sprites[spriteID];
+	if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path))
+		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(
+			id,
+			path,
+			10,
+			ecs::core::Vector2<float> { (float) w, (float) h }
+		);
+	else
+		ecs::Ecs::addComponent<ecs::component::Sprite>(
+			id,
+			path,
+			ecs::core::Vector2<float> { (float) w, (float) h }
+		);
+}
+
+
 void	Game::start(ServerConnection &srv) {
-	{
-		rtype::Menu menu;
-
-		menu.run(srv);
-	}
-
-	{
-		rtype::Selection selection;
-
-		selection.run(srv);
-	}
-
-	auto &game = ecs::Ecs::get();
+	auto 			&game = ecs::Ecs::get();
+	std::shared_ptr<TimedEventAdmin>	m(new TimedEventAdmin);
 
 	ID background = ecs::entity::Entity::getId();
 	ecs::Ecs::addComponent<game::Parallax>(background, Sprites[proto::SpriteId::BACKGROUND], 100.f);
@@ -73,6 +87,51 @@ void	Game::start(ServerConnection &srv) {
 	_keyboardFactory<KeyKeyboard::KEY_D>(keyboard, srv);
 	_keyboardFactory<KeyKeyboard::SPACE>(keyboard, srv);
 
+	// if (rtype.isOpen()) {
+	// 	static std::function<void()>	refreshRequest;
+	// 	refreshRequest = [this, &srv, m] {
+	// 		srv.updateGame(srv._sessionId, [this, m] (json::Entity e) {				
+	// 			m->addEvent(2, Time::Seconds, [this, m, e] {
+	// 				auto &response = const_cast<json::Entity&>(e);
+	// 				if (response["status"] == true) {
+	// 					auto a = response["data"];
+						
+	// 					std::cout << response << std::endl;
+
+	// 					auto ids = ecs::Ecs::filter<ecs::component::OnlineComponent>();
+	// 					auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
+
+	// 					// for (auto id: ids) {
+	// 					// 	ecs::Ecs::deleteId(id);
+	// 					// }
+	// 					for (auto id: ids) {
+	// 						int		found = false;
+	// 						for (auto &elem: a.value<json::Array>()) {
+	// 							int		fromRemoteId = elem["id"].to<int>();
+	// 							if (online[id].onlineId == (ID)fromRemoteId) {
+	// 								found = true;
+	// 								break;
+	// 							}
+	// 						}
+	// 						if (!found) {
+	// 							ecs::Ecs::deleteId(id);
+	// 						}
+	// 						// _createElem(
+	// 						// 	elem["id"].to<int>(),
+	// 						// 	elem["width"].to<int>(),
+	// 						// 	elem["height"].to<int>(),
+	// 						// 	elem["x"].to<int>(),
+	// 						// 	elem["y"].to<int>(),
+	// 						// 	(proto::SpriteId) elem["spriteId"].to<int>()
+	// 						// );
+	// 					}
+	// 				}
+	// 				refreshRequest();
+	// 			});
+	// 		});
+	// 	};
+	// 	m->addEvent(2, Time::Seconds, refreshRequest);
+	// }
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		auto list = srv.getAvailablePackets();
@@ -117,25 +176,7 @@ void	Game::_onReceiveMove(proto::Move &packet) {
 }
 
 void	Game::_onReceiveCreate(proto::Create &packet) {
-	ID id = ecs::entity::Entity::getId();
-	ecs::Ecs::addComponent<ecs::component::Drawable>(id, 3, true);
-	ecs::Ecs::addComponent<ecs::component::Position>(id, packet.x(), packet.y());
-	ecs::Ecs::addComponent<ecs::component::OnlineComponent>(id, packet.componentId(), packet.spriteID);
-	
-	auto &path = rtype::Sprites[packet.spriteID];
-	if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path))
-		ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(
-			id,
-			path,
-			8,
-			ecs::core::Vector2<float> { (float) packet.w(), (float) packet.h() }
-		);
-	else
-		ecs::Ecs::addComponent<ecs::component::Sprite>(
-			id,
-			path,
-			ecs::core::Vector2<float> { (float) packet.w(), (float) packet.h() }
-		);
+	_createElem(packet.componentId(), packet.w(), packet.h(), packet.x(), packet.y(), packet.spriteID);
 }
 
 void	Game::_onReceiveDelete(proto::Delete &packet) {

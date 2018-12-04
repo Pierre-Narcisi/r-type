@@ -22,6 +22,7 @@ private:
 	void	_onReceiveMove(proto::Move &packet);
 	void	_onReceiveCreate(proto::Create &packet);
 	void	_onReceiveDelete(proto::Delete &packet);
+	void	_createElem(int componentId, int w, int h, int x, int y, proto::SpriteId spriteID);
 
 	template <KeyKeyboard KEY>
 	void 	_keyboardFactory(ID keyboard, ServerConnection &srv);

@@ -33,6 +33,7 @@ public:
 	json::Entity	makeSession(std::string const &name, int max = 4);
 	json::Entity	joinSession(int sessionId);
 	json::Entity	quitSession(int sessionId);
+	void			updateGame(int sessionId, std::function<void(json::Entity)> const callback);
 
 	void			run();
 	void			stop();
@@ -46,15 +47,19 @@ private:
 	json::Entity	_getJson();
 
 	void			_entryPoint();
+	void			_entryPointTasks();
 
 	nw::TcpSocket	_tcpSock;
 	nw::UdpSocket	_udpSock;
 	nw::UdpEndpoint	_serverEp;
 	nw::UdpEndpoint	_responseEp;
 
+	std::list<std::function<void()>>
+					_tasks;
 	std::list<std::shared_ptr<proto::PacketBase>>
 					_availablePackets;
 	std::mutex		_listMtx;
+	std::mutex		_tasksMtx;
 
 	bool			_isStarted = false;
 	long			_id;
@@ -62,6 +67,7 @@ private:
 	std::string		_username;
 
 	void			*_threadPtr = nullptr;
+	void			*_threadTasksPtr = nullptr;
 	bool			_continue = true;
 
 	friend			Game;

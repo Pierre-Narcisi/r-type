@@ -130,6 +130,7 @@ void	ClientConnection::_routerInit() {
 	sessionRouter->use("list", std::bind(&Server::listSessions, &Server::instance(), pl::_1, pl::_2));
 	sessionRouter->use("join", std::bind(&Server::joinSession, &Server::instance(), this, pl::_1, pl::_2));
 	sessionRouter->use("quit", std::bind(&Server::quitSession, &Server::instance(), this, pl::_1, pl::_2));
+	sessionRouter->use("update", std::bind(&Server::updateSession, &Server::instance(), this, pl::_1, pl::_2));
 
 	_router.use("login", std::bind(&ClientConnection::_login, this, pl::_1, pl::_2));
 	_router.use("session", sessionRouter);

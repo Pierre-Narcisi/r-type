@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Session/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "Session/components/ai.hpp"
 #include "core/Time.hpp"
 #include "Session/Session.hpp"
@@ -15,7 +15,7 @@ namespace game {namespace component {
 	struct enemyFactory {
 		enemyFactory() {
 		}
-		void createEnemy(rtype::session::Session &session) {
+		static void createEnemy(int y, rtype::session::Session &session) {
 			ID enemy = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<game::component::ai>(enemy, enemy, new T, 1300, y, std::ref(session));
 
@@ -28,7 +28,7 @@ namespace game {namespace component {
 			std::uniform_int_distribution<int> distribution(180,600);
 			y = distribution(generator);
 			for (int i = 0; i < nb; i++) {
-				TimedEvent::get().addEvent(2 * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, this, std::ref(session)));
+				TimedEvent::get().addEvent(2 * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, y, std::ref(session)));
 			}
 			distribution.reset();
 		}
@@ -39,7 +39,7 @@ namespace game {namespace component {
 			std::uniform_int_distribution<int> distribution(180,600);
 			y = distribution(generator);
 			for (int i = 0; i < nb; i++) {
-				TimedEvent::get().addEvent(freq * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, this, std::ref(session)));
+				TimedEvent::get().addEvent(freq * i, Time::Seconds, std::bind(&enemyFactory::createEnemy, y, std::ref(session)));
 			}
 			distribution.reset();
 		}

@@ -9,7 +9,7 @@
 #include "component/physic/Hitbox.hpp"
 #include "component/online/OnlineComponent.hpp"
 #include "core/Time.hpp"
-#include "Session/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "ecs/Ecs.hpp"
 #include "Session/components/Bonuses.hpp"
 #include "ecs/DataBank.hpp"

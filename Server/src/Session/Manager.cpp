@@ -74,7 +74,8 @@ void	Manager::_entryPoint() {
 		end = std::chrono::high_resolution_clock::now();
 		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(_sleepTime - elapsed));
+		auto sleepTime = _sleepTime - elapsed;
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime > 0 ? sleepTime : 0));
 		if (std::chrono::duration_cast<std::chrono::seconds>(end - pingCounterStart).count() > 10) {
 			pingCounterStart = end;
 			proto::Ping pingPacket{proto::Type::PING, 0, 0};

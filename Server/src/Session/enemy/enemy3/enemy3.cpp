@@ -12,7 +12,7 @@
 #include "component/physic/Hitbox.hpp"
 #include "component/online/OnlineComponent.hpp"
 #include "core/Time.hpp"
-#include "Session/TimedEvent/TimedEventAdmin.hpp"
+#include "GameEngine/TimedEvent/TimedEventAdmin.hpp"
 #include "ecs/Ecs.hpp"
 #include "Session/components/Bonuses.hpp"
 #include "ecs/DataBank.hpp"
@@ -26,8 +26,6 @@ namespace game {
 	void enemy3::init(ID _id, int posx, int posy, rtype::session::Session &session) {
 		_time = ecs::core::Time::get(TimeUnit::Seconds);
 		ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::ENEMY);
-		//ecs::Ecs::addComponent<ecs::component::Drawable>(_id, 1, true);	
-		//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(_id, "assets/Sprite/Enemy3/", 8, ecs::core::Vector2<float>(40, 40));
 		ecs::Ecs::addComponent<ecs::component::Position>(_id, posx, posy);
 		ecs::Ecs::addComponent<game::component::Bonuses>(_id, _id, std::ref(session));
 		ecs::Ecs::addComponent<ecs::component::Speed>(_id, -1.f, 0.f);
@@ -37,9 +35,7 @@ namespace game {
 			if (type._type == game::component::Type::Types::SHIP) {
 				TimedEventAdmin t;
 				ID explosion = ecs::entity::Entity::getId();
-				//ecs::Ecs::addComponent<ecs::component::Drawable>(explosion, 1, true);
 				ecs::Ecs::addComponent<ecs::component::Position>(explosion, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[other].y);
-				//ecs::Ecs::addComponent<ecs::component::AnimatedSprite>(explosion, "assets/Sprite/BigExplosion", 10, ecs::core::Vector2<float>(70,70));
 				ecs::Ecs::addComponent<ecs::component::OnlineComponent>(explosion, explosion, proto::SpriteId::BIG_EXPLOSION);
 				ecs::Ecs::addComponent<ecs::component::Hitbox>(explosion, 64, 64);
 				ecs::Ecs::deleteLater(other);
@@ -48,9 +44,9 @@ namespace game {
 				auto onDestroy = [explosion, &session](){
 					ecs::Ecs::deleteLater(explosion);
 
-						proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
+					proto::Delete	pack{proto::Type::DELETE, session.getId(), 0, explosion};
 
-						session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
+					session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(pack), sizeof(pack));
 				};
 
 				proto::Delete	packo{proto::Type::DELETE, session.getId(), 0, other};
@@ -60,7 +56,7 @@ namespace game {
 				session.sendToPlayers(reinterpret_cast<proto::PacketBase&>(packs), sizeof(packs));
 
 				session.sendCreate(explosion);
-				t.addEvent(1000, Time::MilliSeconds, [onDestroy]{ onDestroy(); });
+				t.addEvent(1000, Time::MilliSeconds, onDestroy);
 			}
 		}));
 	}
@@ -99,9 +95,7 @@ namespace game {
 			ID bullet = ecs::entity::Entity::getId();
 			ecs::Ecs::addComponent<ecs::component::Speed>(bullet, (float) sinf(angle) * 7.f, (float) cosf(angle) * 7.f);
 			ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);
-			//ecs::Ecs::addComponent<ecs::component::Drawable>(bullet, 1, true);
 			ecs::Ecs::addComponent<ecs::component::Position>(bullet, ecs::Ecs::getComponentMap<ecs::component::Position>()[_id].x, ecs::Ecs::getComponentMap<ecs::component::Position>()[_id].y);
-			//ecs::Ecs::addComponent<ecs::component::Sprite>(bullet, ecs::DataBank<std::string, ecs::graphical::BundleSprite>::get()["assets/Sprite/ClassicBullet/ClassicBullet2.png"], "assets/Sprite/ClassicBullet/ClassicBullet3.png", ecs::core::Vector2<float>(30, 30));
 			ecs::Ecs::addComponent<ecs::component::OnlineComponent>(bullet, bullet, proto::SpriteId::BULLET2);
 			ecs::Ecs::addComponent<game::component::Type>(_id, game::component::Type::Types::BULLET_ENEMY);
 			ecs::Ecs::addComponent<ecs::component::Hitbox>(bullet, 15.f, 15.f, false, [_id, &session](ID self, ID other){
