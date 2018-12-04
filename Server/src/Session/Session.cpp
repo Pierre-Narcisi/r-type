@@ -53,7 +53,10 @@ Session::~Session() {
 
 
 void 	Session::sendToPlayers(proto::PacketBase const &packet, std::size_t size) {
-	nw::UdpBuffer	wbuf{const_cast<char*>(reinterpret_cast<const char*>(&packet)), size};
+	nw::UdpBuffer	wbuf{
+		const_cast<char*>(reinterpret_cast<const char*>(&packet)),
+		size
+	};
 	//std::lock_guard<std::mutex>	_guard(_addPlayerMutex);
 
 	for (auto &playerW: _players) {
@@ -88,9 +91,6 @@ void 	Session::sendToPlayer(ClientConnection *player, proto::PacketBase const &p
 void	Session::_entryPoint() {
 	_game.init();
 
-	void	*ptr = (void*) &ecs::Ecs::get();
-
-	std::cout << "ECS_PTR = " << ptr << std::endl;
 	while (_continue) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		decltype(_pool)::value_type	nextPacket;
