@@ -27,8 +27,8 @@ namespace ecs {namespace system {
 		for (auto id : ids) {
 		if (ecs::Ecs::idHasComponents<component::Hitbox>(id)) {
 				tmpPos = position[id];
-				position[id].x += speed[id].x * 2.f;
-				position[id].y += speed[id].y * 2.f;
+				position[id].x += speed[id].x;
+				position[id].y += speed[id].y;
 				auto &pos1 = position[id];
 				auto &box1 = hitboxs[id];
 				for (auto od: hitboxIds) {

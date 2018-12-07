@@ -13,11 +13,17 @@
 namespace game {namespace system {
 	gen::gen() {
 		_nb = 0;
-		_time = ecs::core::Time::get(TimeUnit::Seconds);
+		_time = ecs::core::Time::get(TimeUnit::MilliSeconds);
 	}
 
-	void gen::updateGen(rtype::session::Session &session) {
-		if (_time + _nb * 2 < ecs::core::Time::get(TimeUnit::Seconds)) {
+	void gen::updateGen(int playernb, rtype::session::Session &session) {
+		if (!playernb) {
+			if (_time + _nb * 1500 < ecs::core::Time::get(TimeUnit::MilliSeconds)) {
+				_nb++;
+			}
+			return;
+		}
+		if (_time + _nb * (1500 / playernb) < ecs::core::Time::get(TimeUnit::MilliSeconds)) {
 			TimedEventAdmin m;
 			ID enemy = ecs::entity::Entity::getId();
 			m.addEvent(10, Time::Seconds, [enemy, &session](){

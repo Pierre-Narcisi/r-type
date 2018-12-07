@@ -227,7 +227,7 @@ namespace rtype {
                         auto &txt = ecs::Ecs::getComponentMap<ecs::component::TextDisplay>();
 
                         for (auto id : ids) {
-                            if (id == name || id == actual_nbr || id == max_nbr || id == txt_max_nbr || txt_current_nbr)
+                            if (id == name || id == actual_nbr || id == max_nbr || id == txt_max_nbr || id == txt_current_nbr)
                                 txt[id]._str = txt[id]._baseStr;
                             if (id == name) {
                                 txt[id]._str = _rooms[_index].name;
@@ -255,7 +255,7 @@ namespace rtype {
 
                 game.addUpdate(100, [&rtype](){ rtype.update(); });
                 game.addUpdate(1, &game::Parallaxs::UpdateParallaxs);
-                // /game.addUpdate(1, ecs::component::UpdateTextDisplay);
+                // game.addUpdate(1, ecs::component::UpdateTextDisplay);
                 game.addUpdate(10, &ecs::system::Controls::UpdateDeplacement);
                 game.addUpdate(10, &ecs::system::Speeds::UpdateSpeeds);
                 game.addUpdate(2, &ecs::system::Controls::UpdateKeyboards);

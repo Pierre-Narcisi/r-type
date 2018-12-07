@@ -52,8 +52,15 @@ void	Game::init() {
 	_ecs->addUpdate(2, &ecs::system::Speeds::UpdateSpeeds);
 	_ecs->addUpdate(8, &game::system::Bonuses::UpdateBonuses);
 	_ecs->addUpdate(9, std::bind(&game::system::ai::updateAi, std::ref(*_parent)));
-	_ecs->addUpdate(9, [this, gen]{
-		gen->updateGen(*_parent);
+	_ecs->addUpdate(9, [this, gen] {
+		int	counter = 0;
+		for (auto &itm: _parent->getPlayers()) {
+			auto b = ecs::Ecs::idHasComponents<ecs::component::Position>(itm.ecsId);
+
+			if (b) ++counter;
+		}
+
+		gen->updateGen(counter, *_parent);
 	});
 	_ecs->addUpdate(9, [this, walls]{
 		walls->updateWalls(*_parent);

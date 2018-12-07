@@ -57,6 +57,8 @@ public:
 		return _sheet;
 	}
 
+	auto	&getPlayers() { return _players; }
+
 	void 	sendToPlayers(proto::PacketBase const &packet, std::size_t size);
 	void 	sendToPlayer(ClientConnection *player, proto::PacketBase const &packet, std::size_t size);
 private:
@@ -73,7 +75,7 @@ private:
 
 	std::mutex					_sheetMtx;
 	json::Entity				_sheet;
-	std::uint32_t				_sleepTime = 1000 / 30;
+	std::uint32_t				_sleepTime = 1000 / 60;
 
 	void	_rmPlayer(decltype(_players)::iterator player);
 

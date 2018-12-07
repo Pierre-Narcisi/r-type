@@ -12,7 +12,7 @@ namespace game {namespace system {
 	class gen {
 		public:
 			gen();
-			void updateGen(rtype::session::Session &session);
+			void updateGen(int playerNbr, rtype::session::Session &session);
 		private:
 			int _nb;
 			long _time;

@@ -87,51 +87,6 @@ void	Game::start(ServerConnection &srv) {
 	_keyboardFactory<KeyKeyboard::KEY_D>(keyboard, srv);
 	_keyboardFactory<KeyKeyboard::SPACE>(keyboard, srv);
 
-	// if (rtype.isOpen()) {
-	// 	static std::function<void()>	refreshRequest;
-	// 	refreshRequest = [this, &srv, m] {
-	// 		srv.updateGame(srv._sessionId, [this, m] (json::Entity e) {				
-	// 			m->addEvent(2, Time::Seconds, [this, m, e] {
-	// 				auto &response = const_cast<json::Entity&>(e);
-	// 				if (response["status"] == true) {
-	// 					auto a = response["data"];
-						
-	// 					std::cout << response << std::endl;
-
-	// 					auto ids = ecs::Ecs::filter<ecs::component::OnlineComponent>();
-	// 					auto &online = ecs::Ecs::getComponentMap<ecs::component::OnlineComponent>();
-
-	// 					// for (auto id: ids) {
-	// 					// 	ecs::Ecs::deleteId(id);
-	// 					// }
-	// 					for (auto id: ids) {
-	// 						int		found = false;
-	// 						for (auto &elem: a.value<json::Array>()) {
-	// 							int		fromRemoteId = elem["id"].to<int>();
-	// 							if (online[id].onlineId == (ID)fromRemoteId) {
-	// 								found = true;
-	// 								break;
-	// 							}
-	// 						}
-	// 						if (!found) {
-	// 							ecs::Ecs::deleteId(id);
-	// 						}
-	// 						// _createElem(
-	// 						// 	elem["id"].to<int>(),
-	// 						// 	elem["width"].to<int>(),
-	// 						// 	elem["height"].to<int>(),
-	// 						// 	elem["x"].to<int>(),
-	// 						// 	elem["y"].to<int>(),
-	// 						// 	(proto::SpriteId) elem["spriteId"].to<int>()
-	// 						// );
-	// 					}
-	// 				}
-	// 				refreshRequest();
-	// 			});
-	// 		});
-	// 	};
-	// 	m->addEvent(2, Time::Seconds, refreshRequest);
-	// }
 	while (rtype.isOpen()) {
 		long time = ecs::core::Time::get(TimeUnit::MicroSeconds);
 		auto list = srv.getAvailablePackets();
